@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -59,6 +59,14 @@
   .range-btn.active{background:linear-gradient(135deg,var(--brand),var(--brand-deep)); color:#fff;}
   .updated{font-size:12px; color:var(--muted); font-family:'IBM Plex Mono', monospace;}
   .updated .stale{color:#f0a3a3;}
+
+  .toolbar-right{display:flex; align-items:center; gap:14px;}
+  .lang-toggle{display:flex; gap:6px; background:#0e0a1c; border:1px solid var(--line); border-radius:10px; padding:4px;}
+  .lang-btn{
+    border:none; background:transparent; padding:6px 12px; font-size:12px; font-weight:600;
+    color:var(--muted); border-radius:7px; cursor:pointer; font-family:'IBM Plex Mono', monospace;
+  }
+  .lang-btn.active{background:linear-gradient(135deg,var(--brand),var(--brand-deep)); color:#fff;}
 
   .date-range{
     display:flex; align-items:center; gap:6px; background:#0e0a1c; border:1px solid var(--line);
@@ -124,6 +132,7 @@
     .toolbar{flex-direction:column; align-items:stretch;}
     .range-group{flex-wrap:wrap;}
     .date-range{flex-wrap:wrap; justify-content:center;}
+    .toolbar-right{justify-content:center; flex-wrap:wrap;}
   }
 </style>
 </head>
@@ -151,63 +160,128 @@
         <text x="243" y="200" font-family="Poppins, sans-serif" font-weight="400" font-size="38" fill="#c4b5fd" text-anchor="middle">Level up your content</text>
       </svg>
     </div>
-    <div class="eyebrow">Dashboard de performance</div>
+    <div class="eyebrow" data-i18n="eyebrow">Performance Dashboard</div>
     <h1>Chacabuco <span class="accent">en Red</span></h1>
-    <p>chacabucoenred.com — datos actualizados automáticamente</p>
+    <p data-i18n="headerSub">chacabucoenred.com — auto-updated data</p>
   </header>
 
   <div class="toolbar">
     <div class="range-group">
-      <button class="range-btn" data-range="1">Yesterday</button>
-      <button class="range-btn active" data-range="7">Last 7 Days</button>
-      <button class="range-btn" data-range="30">Last 30 Days</button>
-      <button class="range-btn" data-range="mtd">Month to Date</button>
+      <button class="range-btn" data-range="1" data-i18n="rangeYesterday">Yesterday</button>
+      <button class="range-btn active" data-range="7" data-i18n="range7">Last 7 Days</button>
+      <button class="range-btn" data-range="30" data-i18n="range30">Last 30 Days</button>
+      <button class="range-btn" data-range="mtd" data-i18n="rangeMtd">Month to Date</button>
     </div>
     <div class="date-range" id="dateRangeBox">
-      <input type="date" id="dateFrom" aria-label="Desde">
+      <input type="date" id="dateFrom" data-i18n-aria="dateFromAria" aria-label="From">
       <span>–</span>
-      <input type="date" id="dateTo" aria-label="Hasta">
-      <button id="applyDateRange" type="button">Aplicar</button>
+      <input type="date" id="dateTo" data-i18n-aria="dateToAria" aria-label="To">
+      <button id="applyDateRange" type="button" data-i18n="apply">Apply</button>
     </div>
-    <div class="updated" id="updatedAt">Cargando datos...</div>
+    <div class="toolbar-right">
+      <div class="lang-toggle">
+        <button class="lang-btn" data-lang="en">EN</button>
+        <button class="lang-btn" data-lang="es">ES</button>
+      </div>
+      <div class="updated" id="updatedAt" data-i18n="loading">Loading data...</div>
+    </div>
   </div>
 
   <div class="kpis">
-    <div class="kpi"><div class="label">Inventory</div><div class="value" id="kpiInventory">—</div></div>
-    <div class="kpi"><div class="label">Impressions</div><div class="value" id="kpiImpressions">—</div></div>
-    <div class="kpi"><div class="label">RPM</div><div class="value" id="kpiRpm">—</div></div>
-    <div class="kpi"><div class="label">Revenue</div><div class="value" id="kpiRevenue">—</div></div>
+    <div class="kpi"><div class="label" data-i18n="lblInventory">Inventory</div><div class="value" id="kpiInventory">—</div></div>
+    <div class="kpi"><div class="label" data-i18n="lblImpressions">Impressions</div><div class="value" id="kpiImpressions">—</div></div>
+    <div class="kpi"><div class="label" data-i18n="lblRpm">RPM</div><div class="value" id="kpiRpm">—</div></div>
+    <div class="kpi"><div class="label" data-i18n="lblRevenue">Revenue</div><div class="value" id="kpiRevenue">—</div></div>
   </div>
 
   <div class="charts">
     <div class="chart-card">
       <div class="head">
-        <h3><span class="bar"></span>Daily Data</h3>
+        <h3><span class="bar"></span><span data-i18n="chartDaily">Daily Data</span></h3>
         <select id="metricSelect">
-          <option value="inventory">Inventory</option>
-          <option value="impression">Impressions</option>
-          <option value="revenue">Revenue</option>
-          <option value="ecpm">eCPM</option>
+          <option value="inventory" data-i18n="optInventory">Inventory</option>
+          <option value="impression" data-i18n="optImpressions">Impressions</option>
+          <option value="revenue" data-i18n="optRevenue">Revenue</option>
+          <option value="ecpm" data-i18n="optEcpm">eCPM</option>
         </select>
       </div>
       <div class="chart-wrap"><canvas id="lineChart"></canvas></div>
-      <div class="empty-state" id="lineEmpty" style="display:none;">Sin datos disponibles todavía.</div>
+      <div class="empty-state" id="lineEmpty" style="display:none;" data-i18n="emptyState">No data available yet.</div>
     </div>
     <div class="chart-card">
-      <div class="head"><h3><span class="bar"></span>Revenue</h3></div>
+      <div class="head"><h3><span class="bar"></span><span data-i18n="chartRevenue">Revenue</span></h3></div>
       <div class="chart-wrap"><canvas id="barChart"></canvas></div>
-      <div class="empty-state" id="barEmpty" style="display:none;">Sin datos disponibles todavía.</div>
+      <div class="empty-state" id="barEmpty" style="display:none;" data-i18n="emptyState">No data available yet.</div>
     </div>
   </div>
 
-  <div class="footer-note">Datos provistos por Uwizer · actualización automática diaria</div>
-  <div class="footer-note" style="margin-top:6px; opacity:.75;">Inventory: llamadas al player. Impressions: ads efectivamente servidos (pueden ser más de 1 por llamada en sesiones largas).</div>
+  <div class="footer-note" data-i18n="footer1">Data provided by Uwizer · daily automatic update</div>
+  <div class="footer-note" style="margin-top:6px; opacity:.75;" data-i18n="footer2">Inventory: player calls. Impressions: ads actually served (can be more than 1 per call in long sessions).</div>
 </div>
 
 <script>
+const TRANSLATIONS = {
+  eyebrow: { en: 'Performance Dashboard', es: 'Dashboard de Rendimiento' },
+  headerSub: { en: 'chacabucoenred.com — auto-updated data', es: 'chacabucoenred.com — datos actualizados automáticamente' },
+  rangeYesterday: { en: 'Yesterday', es: 'Ayer' },
+  range7: { en: 'Last 7 Days', es: 'Últimos 7 días' },
+  range30: { en: 'Last 30 Days', es: 'Últimos 30 días' },
+  rangeMtd: { en: 'Month to Date', es: 'Mes en curso' },
+  dateFromAria: { en: 'From', es: 'Desde' },
+  dateToAria: { en: 'To', es: 'Hasta' },
+  apply: { en: 'Apply', es: 'Aplicar' },
+  loading: { en: 'Loading data...', es: 'Cargando datos...' },
+  updatedPrefix: { en: 'Updated: ', es: 'Actualizado: ' },
+  stale: { en: '(outdated)', es: '(desactualizado)' },
+  noUpdateDate: { en: 'No update date available.', es: 'Sin fecha de actualización.' },
+  errorLoad: {
+    en: 'Could not load data.json — check that the file exists and the Action ran successfully.',
+    es: 'No se pudo cargar data.json — revisar que el archivo exista y que la Action haya corrido.'
+  },
+  lblInventory: { en: 'Inventory', es: 'Inventario' },
+  lblImpressions: { en: 'Impressions', es: 'Impresiones' },
+  lblRpm: { en: 'RPM', es: 'RPM' },
+  lblRevenue: { en: 'Revenue', es: 'Ingresos' },
+  chartDaily: { en: 'Daily Data', es: 'Datos diarios' },
+  chartRevenue: { en: 'Revenue', es: 'Ingresos' },
+  optInventory: { en: 'Inventory', es: 'Inventario' },
+  optImpressions: { en: 'Impressions', es: 'Impresiones' },
+  optRevenue: { en: 'Revenue', es: 'Ingresos' },
+  optEcpm: { en: 'eCPM', es: 'eCPM' },
+  emptyState: { en: 'No data available yet.', es: 'No hay datos disponibles todavía.' },
+  footer1: { en: 'Data provided by Uwizer · daily automatic update', es: 'Datos provistos por Uwizer · actualización automática diaria' },
+  footer2: {
+    en: 'Inventory: player calls. Impressions: ads actually served (can be more than 1 per call in long sessions).',
+    es: 'Inventario: llamadas al player. Impresiones: ads efectivamente servidos (pueden ser más de 1 por llamada en sesiones largas).'
+  }
+};
+
 let fullData = null;
+let hadLoadError = false;
+let currentLang = localStorage.getItem('lang') === 'es' ? 'es' : 'en';
 let currentMode = { type: 'days', value: 7 };
 let lineChart = null, barChart = null;
+
+function translate(lang){
+  currentLang = lang;
+  localStorage.setItem('lang', lang);
+  document.documentElement.lang = lang;
+  document.querySelectorAll('[data-i18n]').forEach(el=>{
+    const key = el.dataset.i18n;
+    if (TRANSLATIONS[key]) el.textContent = TRANSLATIONS[key][lang];
+  });
+  document.querySelectorAll('[data-i18n-aria]').forEach(el=>{
+    const key = el.dataset.i18nAria;
+    if (TRANSLATIONS[key]) el.setAttribute('aria-label', TRANSLATIONS[key][lang]);
+  });
+  document.querySelectorAll('.lang-btn').forEach(b=>b.classList.toggle('active', b.dataset.lang === lang));
+  if (hadLoadError) showLoadError();
+  else if (fullData) renderUpdatedAt();
+}
+
+document.querySelectorAll('.lang-btn').forEach(btn=>{
+  btn.addEventListener('click', ()=> translate(btn.dataset.lang));
+});
 
 function setActiveRangeBtn(btn){
   document.querySelectorAll('.range-btn').forEach(b=>b.classList.remove('active'));
@@ -243,22 +317,29 @@ async function load(){
     const res = await fetch('data.json', { cache: 'no-store' });
     if (!res.ok) throw new Error('HTTP ' + res.status);
     fullData = await res.json();
+    hadLoadError = false;
     renderUpdatedAt();
     setDateBounds();
     render();
   } catch (err) {
-    document.getElementById('updatedAt').innerHTML = '<span class="stale">No se pudo cargar data.json — revisar que el archivo exista y que la Action haya corrido.</span>';
+    hadLoadError = true;
+    showLoadError();
     console.error(err);
   }
 }
 
+function showLoadError(){
+  document.getElementById('updatedAt').innerHTML = '<span class="stale">' + TRANSLATIONS.errorLoad[currentLang] + '</span>';
+}
+
 function renderUpdatedAt(){
   const el = document.getElementById('updatedAt');
-  if (!fullData || !fullData.updated_at){ el.textContent = 'Sin fecha de actualización.'; return; }
+  if (!fullData || !fullData.updated_at){ el.textContent = TRANSLATIONS.noUpdateDate[currentLang]; return; }
   const updated = new Date(fullData.updated_at);
   const hoursAgo = (Date.now() - updated.getTime()) / 36e5;
-  const label = 'Actualizado: ' + updated.toLocaleString('es-AR', { dateStyle:'medium', timeStyle:'short' });
-  el.innerHTML = hoursAgo > 30 ? label + ' <span class="stale">(desactualizado)</span>' : label;
+  const locale = currentLang === 'es' ? 'es-AR' : 'en-US';
+  const label = TRANSLATIONS.updatedPrefix[currentLang] + updated.toLocaleString(locale, { dateStyle:'medium', timeStyle:'short' });
+  el.innerHTML = hoursAgo > 30 ? label + ' <span class="stale">' + TRANSLATIONS.stale[currentLang] + '</span>' : label;
 }
 
 function setDateBounds(){
@@ -372,6 +453,7 @@ function renderBarChart(rows){
   });
 }
 
+translate(currentLang);
 load();
 </script>
 </body>
