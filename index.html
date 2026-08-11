@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chacabuco en Red — Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500;600&family=Poppins:wght@400;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+  :root{
+    --bg:#0a0714; --panel:#140f26; --ink:#f5f2fb; --muted:#9b93b8;
+    --line:rgba(255,255,255,.09); --brand:#8b5cf6; --brand-bright:#a78bfa;
+    --brand-deep:#5b21b6; --mint:#7ee0c3; --radius:16px;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:radial-gradient(ellipse 900px 500px at 85% -10%, rgba(139,92,246,.20), transparent 60%), var(--bg);
+    color:var(--ink); font-family:'IBM Plex Sans', sans-serif; -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:1180px; margin:0 auto; padding:28px 24px 60px;}
+
+  header{
+    position:relative; background:linear-gradient(135deg,#150c2c,#0a0616 65%);
+    border:1px solid var(--line); border-radius:20px; padding:28px 30px; color:#fff;
+    overflow:hidden; margin-bottom:22px;
+  }
+  header .glow{
+    position:absolute; right:-60px; top:-80px; width:340px; height:340px; border-radius:50%;
+    background:radial-gradient(circle, rgba(167,139,250,.35), rgba(139,92,246,.12) 55%, transparent 72%);
+    filter:blur(2px);
+  }
+  header svg.net{position:absolute; right:0; top:0; height:100%; width:46%; opacity:.5;}
+  header .logo{position:relative; z-index:1; margin-bottom:14px; line-height:0;}
+  header .eyebrow{
+    font-family:'IBM Plex Mono', monospace; font-size:12px; letter-spacing:.12em;
+    text-transform:uppercase; color:var(--brand-bright); position:relative; z-index:1;
+  }
+  header h1{
+    font-family:'Space Grotesk', sans-serif; font-weight:700; font-size:32px;
+    margin:8px 0 4px; position:relative; z-index:1; letter-spacing:-.01em;
+  }
+  header h1 .accent{
+    background:linear-gradient(90deg,var(--brand-bright),#c4b5fd);
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+  }
+  header p{margin:0; color:var(--muted); font-size:14px; position:relative; z-index:1;}
+
+  .toolbar{
+    display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;
+    margin-bottom:20px;
+  }
+  .range-group{display:flex; gap:6px; background:#0e0a1c; border:1px solid var(--line); border-radius:10px; padding:4px;}
+  .range-btn{
+    border:none; background:transparent; padding:8px 14px; font-size:13px; font-weight:600;
+    color:var(--muted); border-radius:7px; cursor:pointer; font-family:'IBM Plex Sans', sans-serif;
+  }
+  .range-btn.active{background:linear-gradient(135deg,var(--brand),var(--brand-deep)); color:#fff;}
+  .updated{font-size:12px; color:var(--muted); font-family:'IBM Plex Mono', monospace;}
+  .updated .stale{color:#f0a3a3;}
+
+  .kpis{display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin-bottom:20px;}
+  .kpi{
+    background:var(--panel); border:1px solid var(--line); border-radius:var(--radius);
+    padding:18px 20px; position:relative; overflow:hidden;
+  }
+  .kpi::after{
+    content:''; position:absolute; right:-30px; top:-30px; width:110px; height:110px;
+    border-radius:50%; background:radial-gradient(circle, rgba(139,92,246,.22), transparent 70%);
+  }
+  .kpi .label{font-size:13px; color:var(--muted); font-weight:500; position:relative; z-index:1;}
+  .kpi .value{
+    font-family:'IBM Plex Mono', monospace; font-size:28px; font-weight:600; margin-top:8px;
+    background:linear-gradient(90deg,#fff,var(--brand-bright));
+    -webkit-background-clip:text; background-clip:text; color:transparent; position:relative; z-index:1;
+  }
+
+  .charts{display:grid; grid-template-columns:1.4fr 1fr; gap:16px;}
+  .chart-card{background:var(--panel); border:1px solid var(--line); border-radius:var(--radius); padding:18px 20px;}
+  .chart-card .head{display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;}
+  .chart-card .head h3{
+    font-family:'Space Grotesk', sans-serif; font-size:15px; margin:0; color:var(--ink);
+    display:flex; align-items:center; gap:8px;
+  }
+  .chart-card .head h3 .bar{width:3px; height:15px; background:var(--brand-bright); display:inline-block; border-radius:2px;}
+  select{
+    border:1px solid var(--line); border-radius:7px; padding:6px 10px; font-size:13px;
+    font-family:'IBM Plex Sans', sans-serif; background:#0e0a1c; color:var(--ink);
+  }
+  .chart-wrap{height:280px;}
+  .empty-state{text-align:center; color:var(--muted); font-size:13px; padding:60px 10px;}
+  .footer-note{
+    text-align:center; font-size:12px; color:var(--muted); margin-top:26px;
+    font-family:'IBM Plex Mono', monospace;
+  }
+
+  @media (max-width:800px){
+    .kpis{grid-template-columns:1fr;} .charts{grid-template-columns:1fr;} header svg.net{display:none;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="glow"></div>
+    <svg class="net" viewBox="0 0 300 200" xmlns="http://www.w3.org/2000/svg">
+      <g stroke="#a78bfa" stroke-width="1" opacity=".8">
+        <line x1="30" y1="40" x2="110" y2="80"/><line x1="110" y1="80" x2="90" y2="150"/>
+        <line x1="110" y1="80" x2="190" y2="60"/><line x1="190" y1="60" x2="250" y2="120"/>
+        <line x1="190" y1="60" x2="160" y2="20"/><line x1="90" y1="150" x2="180" y2="170"/>
+        <line x1="180" y1="170" x2="250" y2="120"/><line x1="30" y1="40" x2="90" y2="150"/>
+      </g>
+      <g fill="#c4b5fd">
+        <circle cx="30" cy="40" r="4"/><circle cx="110" cy="80" r="5"/><circle cx="90" cy="150" r="4"/>
+        <circle cx="190" cy="60" r="5"/><circle cx="250" cy="120" r="4"/><circle cx="160" cy="20" r="3.5"/>
+        <circle cx="180" cy="170" r="3.5"/>
+      </g>
+    </svg>
+    <div class="logo">
+      <svg viewBox="0 0 486 240" width="120" height="59" xmlns="http://www.w3.org/2000/svg">
+        <text x="243" y="140" font-family="Poppins, sans-serif" font-weight="700" font-size="120" fill="#ffffff" text-anchor="middle">uwizer</text>
+        <text x="243" y="200" font-family="Poppins, sans-serif" font-weight="400" font-size="38" fill="#c4b5fd" text-anchor="middle">Level up your content</text>
+      </svg>
+    </div>
+    <div class="eyebrow">Dashboard de performance</div>
+    <h1>Chacabuco <span class="accent">en Red</span></h1>
+    <p>chacabucoenred.com — datos actualizados automáticamente</p>
+  </header>
+
+  <div class="toolbar">
+    <div class="range-group">
+      <button class="range-btn" data-range="1">Yesterday</button>
+      <button class="range-btn active" data-range="7">Last 7 Days</button>
+      <button class="range-btn" data-range="30">Last 30 Days</button>
+    </div>
+    <div class="updated" id="updatedAt">Cargando datos...</div>
+  </div>
+
+  <div class="kpis">
+    <div class="kpi"><div class="label">Inventory (impresiones)</div><div class="value" id="kpiImpressions">—</div></div>
+    <div class="kpi"><div class="label">RPM</div><div class="value" id="kpiRpm">—</div></div>
+    <div class="kpi"><div class="label">Revenue</div><div class="value" id="kpiRevenue">—</div></div>
+  </div>
+
+  <div class="charts">
+    <div class="chart-card">
+      <div class="head">
+        <h3><span class="bar"></span>Daily Data</h3>
+        <select id="metricSelect">
+          <option value="impression">Impressions</option>
+          <option value="revenue">Revenue</option>
+          <option value="ecpm">eCPM</option>
+        </select>
+      </div>
+      <div class="chart-wrap"><canvas id="lineChart"></canvas></div>
+      <div class="empty-state" id="lineEmpty" style="display:none;">Sin datos disponibles todavía.</div>
+    </div>
+    <div class="chart-card">
+      <div class="head"><h3><span class="bar"></span>Revenue</h3></div>
+      <div class="chart-wrap"><canvas id="barChart"></canvas></div>
+      <div class="empty-state" id="barEmpty" style="display:none;">Sin datos disponibles todavía.</div>
+    </div>
+  </div>
+
+  <div class="footer-note">Datos provistos por Uwizer · actualización automática diaria</div>
+</div>
+
+<script>
+let fullData = null;
+let currentRange = 7;
+let lineChart = null, barChart = null;
+
+document.querySelectorAll('.range-btn').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    document.querySelectorAll('.range-btn').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    currentRange = parseInt(btn.dataset.range, 10);
+    render();
+  });
+});
+document.getElementById('metricSelect').addEventListener('change', render);
+
+async function load(){
+  try {
+    const res = await fetch('data.json', { cache: 'no-store' });
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    fullData = await res.json();
+    renderUpdatedAt();
+    render();
+  } catch (err) {
+    document.getElementById('updatedAt').innerHTML = '<span class="stale">No se pudo cargar data.json — revisar que el archivo exista y que la Action haya corrido.</span>';
+    console.error(err);
+  }
+}
+
+function renderUpdatedAt(){
+  const el = document.getElementById('updatedAt');
+  if (!fullData || !fullData.updated_at){ el.textContent = 'Sin fecha de actualización.'; return; }
+  const updated = new Date(fullData.updated_at);
+  const hoursAgo = (Date.now() - updated.getTime()) / 36e5;
+  const label = 'Actualizado: ' + updated.toLocaleString('es-AR', { dateStyle:'medium', timeStyle:'short' });
+  el.innerHTML = hoursAgo > 30 ? label + ' <span class="stale">(desactualizado)</span>' : label;
+}
+
+function render(){
+  if (!fullData) return;
+  const rows = fullData.daily.slice(-currentRange);
+
+  const totalImpr = rows.reduce((s,r)=>s+r.impression, 0);
+  const totalRev = rows.reduce((s,r)=>s+r.revenue, 0);
+  const rpm = totalImpr > 0 ? (totalRev/totalImpr)*1000 : 0;
+
+  document.getElementById('kpiImpressions').textContent = totalImpr.toLocaleString('en-US');
+  document.getElementById('kpiRpm').textContent = '$' + rpm.toFixed(2);
+  document.getElementById('kpiRevenue').textContent = '$' + totalRev.toFixed(2);
+
+  renderLineChart(rows);
+  renderBarChart(rows);
+}
+
+function renderLineChart(rows){
+  const metric = document.getElementById('metricSelect').value;
+  const canvas = document.getElementById('lineChart');
+  const empty = document.getElementById('lineEmpty');
+  if (!rows.length){ empty.style.display='block'; canvas.style.display='none'; return; }
+  empty.style.display='none'; canvas.style.display='block';
+
+  const labels = rows.map(r=>r.date);
+  const data = rows.map(r=>r[metric]);
+  const colors = { impression:'#a78bfa', revenue:'#8b5cf6', ecpm:'#7ee0c3' };
+
+  if (lineChart) lineChart.destroy();
+  lineChart = new Chart(canvas, {
+    type: 'line',
+    data: { labels, datasets:[{
+      data, borderColor: colors[metric], backgroundColor: colors[metric]+'26',
+      fill:true, tension:.35, pointRadius:3, pointBackgroundColor: colors[metric]
+    }]},
+    options: {
+      responsive:true, maintainAspectRatio:false,
+      plugins:{legend:{display:false}},
+      scales:{
+        y:{ beginAtZero:false, grid:{color:'rgba(255,255,255,.06)'}, ticks:{color:'#9b93b8'} },
+        x:{ grid:{display:false}, ticks:{color:'#9b93b8'} }
+      }
+    }
+  });
+}
+
+function renderBarChart(rows){
+  const canvas = document.getElementById('barChart');
+  const empty = document.getElementById('barEmpty');
+  if (!rows.length){ empty.style.display='block'; canvas.style.display='none'; return; }
+  empty.style.display='none'; canvas.style.display='block';
+
+  const labels = rows.map(r=>r.date.slice(5));
+  const data = rows.map(r=>r.revenue);
+
+  if (barChart) barChart.destroy();
+  const barGradient = canvas.getContext('2d').createLinearGradient(0,0,0,280);
+  barGradient.addColorStop(0, '#a78bfa');
+  barGradient.addColorStop(1, '#5b21b6');
+
+  barChart = new Chart(canvas, {
+    type: 'bar',
+    data: { labels, datasets:[{ data, backgroundColor: barGradient, borderRadius:5, maxBarThickness:36 }]},
+    options: {
+      responsive:true, maintainAspectRatio:false,
+      plugins:{legend:{display:false}},
+      scales:{
+        y:{ beginAtZero:true, grid:{color:'rgba(255,255,255,.06)'}, ticks:{color:'#9b93b8'} },
+        x:{ grid:{display:false}, ticks:{color:'#9b93b8'} }
+      }
+    }
+  });
+}
+
+load();
+</script>
+</body>
+</html>
