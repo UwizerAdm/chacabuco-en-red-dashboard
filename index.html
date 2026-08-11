@@ -396,6 +396,10 @@ function render(){
   renderBarChart(rows);
 }
 
+function formatMoneyARS(value){
+  return '$' + value.toLocaleString('es-AR', { minimumFractionDigits:2, maximumFractionDigits:2 });
+}
+
 function renderLineChart(rows){
   const metric = document.getElementById('metricSelect').value;
   const canvas = document.getElementById('lineChart');
@@ -416,7 +420,10 @@ function renderLineChart(rows){
     }]},
     options: {
       responsive:true, maintainAspectRatio:false,
-      plugins:{legend:{display:false}},
+      plugins:{
+        legend:{display:false},
+        tooltip: metric === 'revenue' ? { callbacks:{ label: ctx => formatMoneyARS(ctx.parsed.y) } } : {}
+      },
       scales:{
         y:{ beginAtZero:false, grid:{color:'rgba(255,255,255,.06)'}, ticks:{color:'#9b93b8'} },
         x:{ grid:{display:false}, ticks:{color:'#9b93b8'} }
@@ -444,7 +451,10 @@ function renderBarChart(rows){
     data: { labels, datasets:[{ data, backgroundColor: barGradient, borderRadius:5, maxBarThickness:36 }]},
     options: {
       responsive:true, maintainAspectRatio:false,
-      plugins:{legend:{display:false}},
+      plugins:{
+        legend:{display:false},
+        tooltip:{ callbacks:{ label: ctx => formatMoneyARS(ctx.parsed.y) } }
+      },
       scales:{
         y:{ beginAtZero:true, grid:{color:'rgba(255,255,255,.06)'}, ticks:{color:'#9b93b8'} },
         x:{ grid:{display:false}, ticks:{color:'#9b93b8'} }
