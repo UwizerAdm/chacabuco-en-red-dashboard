@@ -4,35 +4,64 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Chacabuco en Red — Dashboard</title>
+<script>
+  (function(){
+    var saved = localStorage.getItem('theme');
+    var theme = saved || (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
+    document.documentElement.setAttribute('data-theme', theme);
+  })();
+</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500;600&family=Poppins:wght@400;700&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <style>
-  :root{
+  :root, :root[data-theme="dark"]{
     --bg:#0a0714; --panel:#140f26; --ink:#f5f2fb; --muted:#9b93b8;
     --line:rgba(255,255,255,.09); --brand:#8b5cf6; --brand-bright:#a78bfa;
     --brand-deep:#5b21b6; --mint:#7ee0c3; --radius:16px;
+    --chip-bg:#0e0a1c; --body-glow:rgba(139,92,246,.20);
+    --header-1:#150c2c; --header-2:#0a0616; --header-ink:#f5f2fb;
+    --glow-1:rgba(167,139,250,.35); --glow-2:rgba(139,92,246,.12);
+    --net-stroke:#a78bfa; --net-fill:#c4b5fd; --net-opacity:.5;
+    --wordmark-fill:#ffffff; --wordmark-sub-fill:#c4b5fd; --accent-soft:#c4b5fd; --stale:#f0a3a3;
+    --picker-scheme:dark;
+  }
+  :root[data-theme="light"]{
+    --bg:#f7f5fb; --panel:#ffffff; --ink:#1a1625; --muted:#6b6380;
+    --line:rgba(123,42,183,.14); --brand:#7c3aed; --brand-bright:#7c3aed;
+    --brand-deep:#5b21b6; --mint:#0f9d78; --radius:16px;
+    --chip-bg:#efe9fa; --body-glow:rgba(139,92,246,.10);
+    --header-1:#efe7fb; --header-2:#f7f5fb; --header-ink:#1a1625;
+    --glow-1:rgba(139,92,246,.18); --glow-2:rgba(139,92,246,.08);
+    --net-stroke:#8b5cf6; --net-fill:#7c3aed; --net-opacity:.35;
+    --wordmark-fill:#7B2AB7; --wordmark-sub-fill:#8b5cf6; --accent-soft:#6d28d9; --stale:#c23b5b;
+    --picker-scheme:light;
   }
   *{box-sizing:border-box;}
   body{
     margin:0;
-    background:radial-gradient(ellipse 900px 500px at 85% -10%, rgba(139,92,246,.20), transparent 60%), var(--bg);
+    background:radial-gradient(ellipse 900px 500px at 85% -10%, var(--body-glow), transparent 60%), var(--bg);
     color:var(--ink); font-family:'IBM Plex Sans', sans-serif; -webkit-font-smoothing:antialiased;
+    transition:background-color .2s, color .2s;
   }
   .wrap{max-width:1480px; margin:0 auto; padding:28px 24px 60px;}
 
   header{
-    position:relative; background:linear-gradient(135deg,#150c2c,#0a0616 65%);
-    border:1px solid var(--line); border-radius:20px; padding:28px 30px; color:#fff;
-    overflow:hidden; margin-bottom:22px;
+    position:relative; background:linear-gradient(135deg,var(--header-1),var(--header-2) 65%);
+    border:1px solid var(--line); border-radius:20px; padding:28px 30px; color:var(--header-ink);
+    overflow:hidden; margin-bottom:22px; transition:background .2s, color .2s;
   }
   header .glow{
     position:absolute; right:-60px; top:-80px; width:340px; height:340px; border-radius:50%;
-    background:radial-gradient(circle, rgba(167,139,250,.35), rgba(139,92,246,.12) 55%, transparent 72%);
+    background:radial-gradient(circle, var(--glow-1), var(--glow-2) 55%, transparent 72%);
     filter:blur(2px);
   }
-  header svg.net{position:absolute; right:0; top:0; height:100%; width:46%; opacity:.5;}
+  header svg.net{position:absolute; right:0; top:0; height:100%; width:46%; opacity:var(--net-opacity);}
+  header svg.net .lines{stroke:var(--net-stroke);}
+  header svg.net .dots{fill:var(--net-fill);}
   header .logo{position:relative; z-index:1; margin-bottom:14px; line-height:0;}
+  header .logo .wordmark{fill:var(--wordmark-fill);}
+  header .logo .wordmark-sub{fill:var(--wordmark-sub-fill);}
   header .eyebrow{
     font-family:'IBM Plex Mono', monospace; font-size:12px; letter-spacing:.12em;
     text-transform:uppercase; color:var(--brand-bright); position:relative; z-index:1;
@@ -42,7 +71,7 @@
     margin:8px 0 4px; position:relative; z-index:1; letter-spacing:-.01em;
   }
   header h1 .accent{
-    background:linear-gradient(90deg,var(--brand-bright),#c4b5fd);
+    background:linear-gradient(90deg,var(--brand-bright),var(--accent-soft));
     -webkit-background-clip:text; background-clip:text; color:transparent;
   }
   header p{margin:0; color:var(--muted); font-size:14px; position:relative; z-index:1;}
@@ -51,32 +80,42 @@
     display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;
     margin-bottom:20px;
   }
-  .range-group{display:flex; gap:6px; background:#0e0a1c; border:1px solid var(--line); border-radius:10px; padding:4px;}
+  .range-group{display:flex; gap:6px; background:var(--chip-bg); border:1px solid var(--line); border-radius:10px; padding:4px;}
   .range-btn{
     border:none; background:transparent; padding:8px 14px; font-size:13px; font-weight:600;
     color:var(--muted); border-radius:7px; cursor:pointer; font-family:'IBM Plex Sans', sans-serif;
   }
   .range-btn.active{background:linear-gradient(135deg,var(--brand),var(--brand-deep)); color:#fff;}
   .updated{font-size:12px; color:var(--muted); font-family:'IBM Plex Mono', monospace;}
-  .updated .stale{color:#f0a3a3;}
+  .updated .stale{color:var(--stale);}
 
   .toolbar-right{display:flex; align-items:center; gap:14px;}
-  .lang-toggle{display:flex; gap:6px; background:#0e0a1c; border:1px solid var(--line); border-radius:10px; padding:4px;}
+  .lang-toggle{display:flex; gap:6px; background:var(--chip-bg); border:1px solid var(--line); border-radius:10px; padding:4px;}
   .lang-btn{
     border:none; background:transparent; padding:6px 12px; font-size:12px; font-weight:600;
     color:var(--muted); border-radius:7px; cursor:pointer; font-family:'IBM Plex Mono', monospace;
   }
   .lang-btn.active{background:linear-gradient(135deg,var(--brand),var(--brand-deep)); color:#fff;}
 
+  .theme-toggle{
+    display:flex; align-items:center; justify-content:center; width:32px; height:32px;
+    background:var(--chip-bg); border:1px solid var(--line); border-radius:10px; cursor:pointer; padding:0;
+  }
+  .theme-toggle svg{width:16px; height:16px; stroke:var(--muted);}
+  .theme-toggle .icon-sun{display:none;}
+  .theme-toggle .icon-moon{display:none;}
+  :root[data-theme="dark"] .theme-toggle .icon-sun{display:block;}
+  :root[data-theme="light"] .theme-toggle .icon-moon{display:block;}
+
   .date-range{
-    display:flex; align-items:center; gap:6px; background:#0e0a1c; border:1px solid var(--line);
+    display:flex; align-items:center; gap:6px; background:var(--chip-bg); border:1px solid var(--line);
     border-radius:10px; padding:4px 6px 4px 10px; transition:border-color .15s;
   }
   .date-range.active{border-color:var(--brand-bright);}
   .date-range span{color:var(--muted); font-size:12px;}
   .date-range input[type="date"]{
     border:none; background:transparent; color:var(--ink); font-size:13px; padding:4px 2px;
-    font-family:'IBM Plex Mono', monospace; color-scheme:dark;
+    font-family:'IBM Plex Mono', monospace; color-scheme:var(--picker-scheme);
   }
   .date-range button{
     border:none; background:linear-gradient(135deg,var(--brand),var(--brand-deep)); color:#fff;
@@ -96,7 +135,7 @@
   .kpi .label{font-size:13px; color:var(--muted); font-weight:500; position:relative; z-index:1;}
   .kpi .value{
     font-family:'IBM Plex Mono', monospace; font-size:28px; font-weight:600; margin-top:8px;
-    background:linear-gradient(90deg,#fff,var(--brand-bright));
+    background:linear-gradient(90deg,var(--ink),var(--brand-bright));
     -webkit-background-clip:text; background-clip:text; color:transparent; position:relative; z-index:1;
   }
 
@@ -110,7 +149,7 @@
   .chart-card .head h3 .bar{width:3px; height:15px; background:var(--brand-bright); display:inline-block; border-radius:2px;}
   select{
     border:1px solid var(--line); border-radius:7px; padding:6px 10px; font-size:13px;
-    font-family:'IBM Plex Sans', sans-serif; background:#0e0a1c; color:var(--ink);
+    font-family:'IBM Plex Sans', sans-serif; background:var(--chip-bg); color:var(--ink);
   }
   .chart-wrap{height:280px;}
   .empty-state{text-align:center; color:var(--muted); font-size:13px; padding:60px 10px;}
@@ -142,13 +181,13 @@
   <header>
     <div class="glow"></div>
     <svg class="net" viewBox="0 0 300 200" xmlns="http://www.w3.org/2000/svg">
-      <g stroke="#a78bfa" stroke-width="1" opacity=".8">
+      <g class="lines" stroke-width="1" opacity=".8">
         <line x1="30" y1="40" x2="110" y2="80"/><line x1="110" y1="80" x2="90" y2="150"/>
         <line x1="110" y1="80" x2="190" y2="60"/><line x1="190" y1="60" x2="250" y2="120"/>
         <line x1="190" y1="60" x2="160" y2="20"/><line x1="90" y1="150" x2="180" y2="170"/>
         <line x1="180" y1="170" x2="250" y2="120"/><line x1="30" y1="40" x2="90" y2="150"/>
       </g>
-      <g fill="#c4b5fd">
+      <g class="dots">
         <circle cx="30" cy="40" r="4"/><circle cx="110" cy="80" r="5"/><circle cx="90" cy="150" r="4"/>
         <circle cx="190" cy="60" r="5"/><circle cx="250" cy="120" r="4"/><circle cx="160" cy="20" r="3.5"/>
         <circle cx="180" cy="170" r="3.5"/>
@@ -156,8 +195,8 @@
     </svg>
     <div class="logo">
       <svg viewBox="0 0 486 240" width="120" height="59" xmlns="http://www.w3.org/2000/svg">
-        <text x="243" y="140" font-family="Poppins, sans-serif" font-weight="700" font-size="120" fill="#ffffff" text-anchor="middle">uwizer</text>
-        <text x="243" y="200" font-family="Poppins, sans-serif" font-weight="400" font-size="38" fill="#c4b5fd" text-anchor="middle">Level up your content</text>
+        <text class="wordmark" x="243" y="140" font-family="Poppins, sans-serif" font-weight="700" font-size="120" text-anchor="middle">uwizer</text>
+        <text class="wordmark-sub" x="243" y="200" font-family="Poppins, sans-serif" font-weight="400" font-size="38" text-anchor="middle">Level up your content</text>
       </svg>
     </div>
     <div class="eyebrow" data-i18n="eyebrow">Performance Dashboard</div>
@@ -179,6 +218,18 @@
       <button id="applyDateRange" type="button" data-i18n="apply">Apply</button>
     </div>
     <div class="toolbar-right">
+      <button class="theme-toggle" id="themeToggle" type="button" aria-label="Toggle theme">
+        <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="4"/>
+          <line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/>
+          <line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/>
+          <line x1="4.6" y1="4.6" x2="6.7" y2="6.7"/><line x1="17.3" y1="17.3" x2="19.4" y2="19.4"/>
+          <line x1="4.6" y1="19.4" x2="6.7" y2="17.3"/><line x1="17.3" y1="6.7" x2="19.4" y2="4.6"/>
+        </svg>
+        <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 12.8A9 9 0 1 1 11.2 3 7 7 0 0 0 21 12.8Z"/>
+        </svg>
+      </button>
       <div class="lang-toggle">
         <button class="lang-btn" data-lang="en">EN</button>
         <button class="lang-btn" data-lang="es">ES</button>
@@ -259,8 +310,27 @@ const TRANSLATIONS = {
 let fullData = null;
 let hadLoadError = false;
 let currentLang = localStorage.getItem('lang') === 'es' ? 'es' : 'en';
+let currentTheme = document.documentElement.getAttribute('data-theme') || 'dark';
 let currentMode = { type: 'days', value: 7 };
 let lineChart = null, barChart = null;
+
+function applyTheme(theme){
+  currentTheme = theme;
+  document.documentElement.setAttribute('data-theme', theme);
+  localStorage.setItem('theme', theme);
+  if (fullData) render();
+}
+
+document.getElementById('themeToggle').addEventListener('click', ()=>{
+  applyTheme(currentTheme === 'dark' ? 'light' : 'dark');
+});
+
+if (window.matchMedia){
+  window.matchMedia('(prefers-color-scheme: light)').addEventListener('change', e=>{
+    if (localStorage.getItem('theme')) return; // el usuario ya elige a mano, no lo pisamos
+    applyTheme(e.matches ? 'light' : 'dark');
+  });
+}
 
 function translate(lang){
   currentLang = lang;
@@ -400,6 +470,12 @@ function formatMoneyARS(value){
   return '$' + value.toLocaleString('es-AR', { minimumFractionDigits:2, maximumFractionDigits:2 });
 }
 
+function getChartPalette(){
+  return currentTheme === 'light'
+    ? { grid:'rgba(26,22,37,.08)', tick:'#6b6380', datasets:{ inventory:'#8b5cf6', impression:'#7c3aed', revenue:'#6d28d9', ecpm:'#0f9d78' } }
+    : { grid:'rgba(255,255,255,.06)', tick:'#9b93b8', datasets:{ inventory:'#c4b5fd', impression:'#a78bfa', revenue:'#8b5cf6', ecpm:'#7ee0c3' } };
+}
+
 function renderLineChart(rows){
   const metric = document.getElementById('metricSelect').value;
   const canvas = document.getElementById('lineChart');
@@ -409,14 +485,15 @@ function renderLineChart(rows){
 
   const labels = rows.map(r=>r.date);
   const data = rows.map(r=>r[metric]);
-  const colors = { inventory:'#c4b5fd', impression:'#a78bfa', revenue:'#8b5cf6', ecpm:'#7ee0c3' };
+  const palette = getChartPalette();
+  const color = palette.datasets[metric];
 
   if (lineChart) lineChart.destroy();
   lineChart = new Chart(canvas, {
     type: 'line',
     data: { labels, datasets:[{
-      data, borderColor: colors[metric], backgroundColor: colors[metric]+'26',
-      fill:true, tension:.35, pointRadius:3, pointBackgroundColor: colors[metric]
+      data, borderColor: color, backgroundColor: color+'26',
+      fill:true, tension:.35, pointRadius:3, pointBackgroundColor: color
     }]},
     options: {
       responsive:true, maintainAspectRatio:false,
@@ -425,8 +502,8 @@ function renderLineChart(rows){
         tooltip: metric === 'revenue' ? { callbacks:{ label: ctx => formatMoneyARS(ctx.parsed.y) } } : {}
       },
       scales:{
-        y:{ beginAtZero:false, grid:{color:'rgba(255,255,255,.06)'}, ticks:{color:'#9b93b8'} },
-        x:{ grid:{display:false}, ticks:{color:'#9b93b8'} }
+        y:{ beginAtZero:false, grid:{color:palette.grid}, ticks:{color:palette.tick} },
+        x:{ grid:{display:false}, ticks:{color:palette.tick} }
       }
     }
   });
@@ -440,10 +517,11 @@ function renderBarChart(rows){
 
   const labels = rows.map(r=>r.date.slice(5));
   const data = rows.map(r=>r.revenue);
+  const palette = getChartPalette();
 
   if (barChart) barChart.destroy();
   const barGradient = canvas.getContext('2d').createLinearGradient(0,0,0,280);
-  barGradient.addColorStop(0, '#a78bfa');
+  barGradient.addColorStop(0, palette.datasets.impression);
   barGradient.addColorStop(1, '#5b21b6');
 
   barChart = new Chart(canvas, {
@@ -456,8 +534,8 @@ function renderBarChart(rows){
         tooltip:{ callbacks:{ label: ctx => formatMoneyARS(ctx.parsed.y) } }
       },
       scales:{
-        y:{ beginAtZero:true, grid:{color:'rgba(255,255,255,.06)'}, ticks:{color:'#9b93b8'} },
-        x:{ grid:{display:false}, ticks:{color:'#9b93b8'} }
+        y:{ beginAtZero:true, grid:{color:palette.grid}, ticks:{color:palette.tick} },
+        x:{ grid:{display:false}, ticks:{color:palette.tick} }
       }
     }
   });
