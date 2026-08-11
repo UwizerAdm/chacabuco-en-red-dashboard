@@ -26,22 +26,62 @@ para compartir con el publisher (Chacabuco en Red) un link fijo que se actualiza
 - Pages configurado: deploy from branch `main`, carpeta `/ (root)`.
 - Secrets ya cargados: `PLAYVID_EMAIL`, `PLAYVID_PASSWORD`.
 
+## Pendiente: soporte multi-sitio (mismo login 360playvid)
+
+Juani va a sumar ~5 sitios más al mismo esquema de dashboard público. Los 5
+usan el **mismo login de 360playvid** que Chacabuco en Red (una sola cuenta,
+varios dominios) — esto es clave: la API ya devuelve **todos los dominios de
+la cuenta en el mismo array `success`** por cada request, así que no hace
+falta ningún fetch adicional ni pedirle nada nuevo a 360playvid. Solo hay que
+filtrar más de un dominio sobre la misma respuesta que ya se pide hoy.
+
+**Refactor a implementar (cuando Juani lo pida explícitamente — no adelantarse):**
+
+1. `fetch-data.js`: reemplazar el `TARGET_DOMAIN` fijo por un array `SITES`:
+```js
+   const SITES = [
+     { slug: 'chacabuco-en-red', domain: 'chacabucoenred.com', displayName: 'Chacabuco en Red' },
+     // ... resto de los sitios, con el domain EXACTO como lo devuelve la API
+   ];
+```
+   Por cada día del rango, hacer **un solo `fetch` a la API** (como ahora) y de
+   esa misma respuesta extraer la fila que matchea cada `site.domain` de la
+   lista — no un fetch por sitio.
+
+2. Escribir un `data.json` por sitio en `sites/<slug>/data.json`, con la misma
+   estructura que ya existe (`updated_at, domain, range_days, daily, totals`)
+   más un campo `displayName` para que el HTML no tenga el nombre hardcodeado.
+
+3. `index.html` pasa a vivir en `sites/<slug>/index.html` (copia idéntica del
+   actual, pero leyendo `displayName`/`domain` desde `data.json` en vez de
+   tenerlo en el markup — hoy dice "Chacabuco en Red" y "chacabucoenred.com"
+   hardcodeado en el `<h1>` y el `<p>` del header, hay que sacar eso).
+
+4. URLs resultantes, todas bajo el mismo repo/Pages, sin necesidad de crear
+   repos nuevos:
+   `https://uwizeradm.github.io/chacabuco-en-red-dashboard/sites/<slug>/`
+
+5. Mismo cron, mismos secrets (`PLAYVID_EMAIL`/`PLAYVID_PASSWORD`) — no hace
+   falta agregar secrets nuevos porque es el mismo login para todos los sitios.
+
+**Antes de programar esto:** correr un fetch de un solo día y loguear
+`data.success.map(r => r.domain)` para confirmar el nombre exacto de cada
+dominio nuevo tal como lo devuelve la API (evitar adivinar el string).
+
 ## Cosas importantes a tener en cuenta
 
-- **"Impressions" y "RPM" en este dashboard NO van a matchear 1:1 con el panel
-  nativo de 360playvid.** El panel nativo muestra "Inventory" (probablemente ad
-  requests, antes de fill), mientras que la API de Dashboard solo expone
-  `impression` (impresiones ya monetizadas). El **Revenue sí matchea exacto**
-  entre ambos paneles — eso confirma que la diferencia es de definición de
-  métrica, no un bug de timezone ni de cálculo.
-- Ya se le mandó un mail a 360playvid preguntando si pueden exponer el campo
-  real de "Inventory" en la API. Si lo confirman: hay que sumar ese campo en
-  `fetch-data.js` (nuevo campo en el objeto que arma cada `fetchDay`) y ajustar
-  `index.html` para mostrarlo en la card de Impressions/RPM en vez del cálculo
-  actual basado en `impression`.
+- **RESUELTO (ago 2026):** el mismatch de Inventory/RPM entre este dashboard y
+  el panel nativo de 360playvid se debía a que la API sí devuelve el campo
+  `inventory` (llamadas al player) por default junto con `impression`,
+  `ecpm` y `revenue` — el doc original no lo mencionaba y el script no lo
+  capturaba. Ya está arreglado: `fetch-data.js` guarda `inventory` en cada
+  día, y el RPM se calcula como `revenue / inventory * 1000` (mismo criterio
+  que 360playvid). Fill rate puede superar el 100% en sesiones largas (el
+  player puede servir más de un ad por cada llamada) — dato de Liat (contacto
+  de 360playvid), no es un error.
 - Los días sin inventario real (antes del lanzamiento, ej. julio 2026) se
   recortan del lado del front (`index.html`, función `render()`) buscando el
-  primer día con `impression > 0 || revenue > 0`. No se borran de `data.json`
+  primer día con `inventory > 0 || revenue > 0`. No se borran de `data.json`
   por si hace falta el histórico completo en el futuro.
 
 ## Estilo / marca (Uwizer)
