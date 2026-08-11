@@ -1,7 +1,192 @@
 {
-  "updated_at": null,
+  "updated_at": "2026-08-11T13:59:16.406Z",
   "domain": "chacabucoenred.com",
   "range_days": 30,
-  "daily": [],
-  "totals": { "impression": 0, "revenue": 0, "rpm": 0 }
+  "daily": [
+    {
+      "date": "2026-07-12",
+      "impression": 0,
+      "revenue": 0,
+      "ecpm": 0
+    },
+    {
+      "date": "2026-07-13",
+      "impression": 0,
+      "revenue": 0,
+      "ecpm": 0
+    },
+    {
+      "date": "2026-07-14",
+      "impression": 0,
+      "revenue": 0,
+      "ecpm": 0
+    },
+    {
+      "date": "2026-07-15",
+      "impression": 0,
+      "revenue": 0,
+      "ecpm": 0
+    },
+    {
+      "date": "2026-07-16",
+      "impression": 0,
+      "revenue": 0,
+      "ecpm": 0
+    },
+    {
+      "date": "2026-07-17",
+      "impression": 0,
+      "revenue": 0,
+      "ecpm": 0
+    },
+    {
+      "date": "2026-07-18",
+      "impression": 0,
+      "revenue": 0,
+      "ecpm": 0
+    },
+    {
+      "date": "2026-07-19",
+      "impression": 0,
+      "revenue": 0,
+      "ecpm": 0
+    },
+    {
+      "date": "2026-07-20",
+      "impression": 0,
+      "revenue": 0,
+      "ecpm": 0
+    },
+    {
+      "date": "2026-07-21",
+      "impression": 0,
+      "revenue": 0,
+      "ecpm": 0
+    },
+    {
+      "date": "2026-07-22",
+      "impression": 0,
+      "revenue": 0,
+      "ecpm": 0
+    },
+    {
+      "date": "2026-07-23",
+      "impression": 0,
+      "revenue": 0,
+      "ecpm": 0
+    },
+    {
+      "date": "2026-07-24",
+      "impression": 0,
+      "revenue": 0,
+      "ecpm": 0
+    },
+    {
+      "date": "2026-07-25",
+      "impression": 0,
+      "revenue": 0,
+      "ecpm": 0
+    },
+    {
+      "date": "2026-07-26",
+      "impression": 0,
+      "revenue": 0,
+      "ecpm": 0
+    },
+    {
+      "date": "2026-07-27",
+      "impression": 0,
+      "revenue": 0,
+      "ecpm": 0
+    },
+    {
+      "date": "2026-07-28",
+      "impression": 0,
+      "revenue": 0,
+      "ecpm": 0
+    },
+    {
+      "date": "2026-07-29",
+      "impression": 0,
+      "revenue": 0,
+      "ecpm": 0
+    },
+    {
+      "date": "2026-07-30",
+      "impression": 0,
+      "revenue": 0,
+      "ecpm": 0
+    },
+    {
+      "date": "2026-07-31",
+      "impression": 0,
+      "revenue": 0,
+      "ecpm": 0
+    },
+    {
+      "date": "2026-08-01",
+      "impression": 0,
+      "revenue": 0,
+      "ecpm": 0
+    },
+    {
+      "date": "2026-08-02",
+      "impression": 0,
+      "revenue": 0,
+      "ecpm": 0
+    },
+    {
+      "date": "2026-08-03",
+      "impression": 0,
+      "revenue": 0,
+      "ecpm": 0
+    },
+    {
+      "date": "2026-08-04",
+      "impression": 0,
+      "revenue": 0,
+      "ecpm": 0
+    },
+    {
+      "date": "2026-08-05",
+      "impression": 0,
+      "revenue": 0,
+      "ecpm": 0
+    },
+    {
+      "date": "2026-08-06",
+      "impression": 0,
+      "revenue": 0,
+      "ecpm": 0
+    },
+    {
+      "date": "2026-08-07",
+      "impression": 7905,
+      "revenue": 3.917910255999999,
+      "ecpm": 0.4956243208096141
+    },
+    {
+      "date": "2026-08-08",
+      "impression": 14851,
+      "revenue": 9.248293568,
+      "ecpm": 0.6227387763786949
+    },
+    {
+      "date": "2026-08-09",
+      "impression": 11269,
+      "revenue": 10.387496367999997,
+      "ecpm": 0.9217762328511845
+    },
+    {
+      "date": "2026-08-10",
+      "impression": 17076,
+      "revenue": 16.316158176000002,
+      "ecpm": 0.9555023527758252
+    }
+  ],
+  "totals": {
+    "impression": 51101,
+    "revenue": 39.869858367999996,
+    "rpm": 0.7802167935656835
+  }
 }
