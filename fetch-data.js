@@ -37,6 +37,7 @@ async function fetchDay(dateStr) {
   );
   return {
     date: dateStr,
+    inventory: match ? (match.inventory ?? match.impression) : 0,
     impression: match ? match.impression : 0,
     revenue: match ? match.revenue : 0,
     ecpm: match ? match.ecpm : 0,
@@ -57,20 +58,22 @@ async function main() {
       daily.push(await fetchDay(d));
     } catch (err) {
       console.error('Error consultando', d, '-', err.message);
-      daily.push({ date: d, impression: 0, revenue: 0, ecpm: 0 });
+      daily.push({ date: d, inventory: 0, impression: 0, revenue: 0, ecpm: 0 });
     }
   }
 
+  const totalInv = daily.reduce((s, r) => s + r.inventory, 0);
   const totalImpr = daily.reduce((s, r) => s + r.impression, 0);
   const totalRev = daily.reduce((s, r) => s + r.revenue, 0);
-  const rpm = totalImpr > 0 ? (totalRev / totalImpr) * 1000 : 0;
+  const rpm = totalInv > 0 ? (totalRev / totalInv) * 1000 : 0;
+  const fillrate = totalInv > 0 ? (totalImpr / totalInv) * 100 : 0;
 
   const output = {
     updated_at: new Date().toISOString(),
     domain: TARGET_DOMAIN,
     range_days: RANGE_DAYS,
     daily,
-    totals: { impression: totalImpr, revenue: totalRev, rpm },
+    totals: { inventory: totalInv, impression: totalImpr, revenue: totalRev, rpm, fillrate },
   };
 
   require('fs').writeFileSync('data.json', JSON.stringify(output, null, 2));
