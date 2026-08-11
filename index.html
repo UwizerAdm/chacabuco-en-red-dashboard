@@ -139,7 +139,7 @@
   </div>
 
   <div class="kpis">
-    <div class="kpi"><div class="label">Inventory (impresiones)</div><div class="value" id="kpiImpressions">—</div></div>
+    <div class="kpi"><div class="label">Impressions</div><div class="value" id="kpiImpressions">—</div></div>
     <div class="kpi"><div class="label">RPM</div><div class="value" id="kpiRpm">—</div></div>
     <div class="kpi"><div class="label">Revenue</div><div class="value" id="kpiRevenue">—</div></div>
   </div>
@@ -165,6 +165,7 @@
   </div>
 
   <div class="footer-note">Datos provistos por Uwizer · actualización automática diaria</div>
+  <div class="footer-note" style="margin-top:6px; opacity:.7;">Impressions y RPM reflejan impresiones monetizadas (no ad requests) — pueden diferir levemente del panel interno de 360playvid.</div>
 </div>
 
 <script>
@@ -206,7 +207,10 @@ function renderUpdatedAt(){
 
 function render(){
   if (!fullData) return;
-  const rows = fullData.daily.slice(-currentRange);
+  const all = fullData.daily;
+  const firstActive = all.findIndex(r => r.impression > 0 || r.revenue > 0);
+  const trimmed = firstActive === -1 ? all : all.slice(firstActive);
+  const rows = trimmed.slice(-currentRange);
 
   const totalImpr = rows.reduce((s,r)=>s+r.impression, 0);
   const totalRev = rows.reduce((s,r)=>s+r.revenue, 0);
