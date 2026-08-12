@@ -76,8 +76,8 @@ async function main() {
     totals: { inventory: totalInv, impression: totalImpr, revenue: totalRev, rpm, fillrate },
   };
 
-  require('fs').writeFileSync('data.json', JSON.stringify(output, null, 2));
-  console.log('data.json actualizado:', output.updated_at);
+  require('fs').writeFileSync('chacabuco-en-red/data.json', JSON.stringify(output, null, 2));
+  console.log('chacabuco-en-red/data.json actualizado:', output.updated_at);
 }
 
 main();

@@ -7,11 +7,12 @@ GitHub Action que corre con credenciales guardadas como secreto.
 ## Puesta en marcha (una sola vez)
 
 1. Crear un repo en GitHub (puede ser privado o público, no afecta el resultado)
-   y subir estos 4 archivos manteniendo la estructura:
-   - `index.html`
-   - `data.json`
+   y subir estos archivos manteniendo la estructura:
+   - `chacabuco-en-red/index.html`
+   - `chacabuco-en-red/data.json`
    - `fetch-data.js`
    - `.github/workflows/update-data.yml`
+   - `CNAME` (solo si se usa un dominio propio, ver paso 3)
 
 2. Ir a **Settings → Secrets and variables → Actions → New repository secret**
    y crear dos secretos:
@@ -24,8 +25,15 @@ GitHub Action que corre con credenciales guardadas como secreto.
 3. Ir a **Settings → Pages** → en "Build and deployment" elegir
    **Deploy from a branch**, branch `main`, carpeta `/ (root)`. Guardar.
    GitHub te da una URL del tipo:
-   `https://<tu-usuario>.github.io/<nombre-repo>/`
-   Esa es la URL que le mandás a Chacabuco.
+   `https://<tu-usuario>.github.io/<nombre-repo>/chacabuco-en-red/`
+
+   Si en cambio se usa un dominio propio (ej. `dashboard.uwizer.com`):
+   agregar un archivo `CNAME` en la raíz del repo con ese dominio adentro,
+   y crear un registro DNS tipo `CNAME` en el proveedor del dominio
+   (`dashboard` → `<tu-usuario>.github.io`, sin proxy/orange-cloud si es
+   Cloudflare, al menos hasta que GitHub emita el certificado HTTPS).
+   La URL final queda `https://dashboard.uwizer.com/chacabuco-en-red/`
+   — esa es la que se comparte con el publisher.
 
 4. Ir a la pestaña **Actions** del repo → elegir el workflow
    "Actualizar datos Chacabuco en Red" → **Run workflow** (botón manual)
