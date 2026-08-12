@@ -152,7 +152,28 @@
     content:''; position:absolute; right:-30px; top:-30px; width:110px; height:110px;
     border-radius:50%; background:radial-gradient(circle, rgba(139,92,246,.22), transparent 70%);
   }
-  .kpi .label{font-size:13px; color:var(--muted); font-weight:500; position:relative; z-index:1;}
+  .kpi .label{
+    font-size:13px; color:var(--muted); font-weight:500; position:relative; z-index:1;
+    display:flex; align-items:center; gap:6px;
+  }
+  .info-btn{
+    display:inline-flex; align-items:center; justify-content:center;
+    width:16px; height:16px; padding:0; border:none; background:none;
+    color:var(--muted); cursor:pointer; border-radius:50%; flex-shrink:0;
+  }
+  .info-btn svg{display:block;}
+  .info-btn:hover, .info-btn:focus-visible{color:var(--brand-bright);}
+  .info-btn:focus-visible{outline:2px solid var(--brand-bright); outline-offset:2px;}
+
+  .kpi-tooltip{
+    position:fixed; z-index:50; max-width:260px; min-width:180px;
+    background:var(--panel); border:1px solid var(--line); border-radius:10px;
+    padding:10px 12px; font-family:'IBM Plex Sans', sans-serif; font-size:12.5px;
+    line-height:1.45; color:var(--ink); box-shadow:0 8px 24px rgba(0,0,0,.28);
+    opacity:0; pointer-events:none; transform:translateY(4px);
+    transition:opacity .12s, transform .12s;
+  }
+  .kpi-tooltip.visible{opacity:1; transform:translateY(0);}
   .kpi .value{
     font-family:'IBM Plex Mono', monospace; font-size:28px; font-weight:600; margin-top:8px;
     background:linear-gradient(90deg,var(--ink),var(--brand-bright));
@@ -265,11 +286,57 @@
   </div>
 
   <div class="kpis">
-    <div class="kpi"><div class="label" data-i18n="lblInventory">Inventory</div><div class="value" id="kpiInventory">—</div></div>
-    <div class="kpi"><div class="label" data-i18n="lblImpressions">Impressions</div><div class="value" id="kpiImpressions">—</div></div>
-    <div class="kpi"><div class="label" data-i18n="lblRpm">RPM</div><div class="value" id="kpiRpm">—</div></div>
-    <div class="kpi"><div class="label" data-i18n="lblRevenue">Revenue</div><div class="value" id="kpiRevenue">—</div></div>
+    <div class="kpi">
+      <div class="label">
+        <span data-i18n="lblInventory">Inventory</span>
+        <button class="info-btn" type="button" data-tip="tipInventory" data-i18n-aria="tipInventory" aria-label="" aria-describedby="kpiTooltip">
+          <svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.4">
+            <circle cx="8" cy="8" r="6.5"/><line x1="8" y1="7" x2="8" y2="11"/>
+            <circle cx="8" cy="5.2" r="0.9" fill="currentColor" stroke="none"/>
+          </svg>
+        </button>
+      </div>
+      <div class="value" id="kpiInventory">—</div>
+    </div>
+    <div class="kpi">
+      <div class="label">
+        <span data-i18n="lblImpressions">Impressions</span>
+        <button class="info-btn" type="button" data-tip="tipImpressions" data-i18n-aria="tipImpressions" aria-label="" aria-describedby="kpiTooltip">
+          <svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.4">
+            <circle cx="8" cy="8" r="6.5"/><line x1="8" y1="7" x2="8" y2="11"/>
+            <circle cx="8" cy="5.2" r="0.9" fill="currentColor" stroke="none"/>
+          </svg>
+        </button>
+      </div>
+      <div class="value" id="kpiImpressions">—</div>
+    </div>
+    <div class="kpi">
+      <div class="label">
+        <span data-i18n="lblRpm">RPM</span>
+        <button class="info-btn" type="button" data-tip="tipRpm" data-i18n-aria="tipRpm" aria-label="" aria-describedby="kpiTooltip">
+          <svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.4">
+            <circle cx="8" cy="8" r="6.5"/><line x1="8" y1="7" x2="8" y2="11"/>
+            <circle cx="8" cy="5.2" r="0.9" fill="currentColor" stroke="none"/>
+          </svg>
+        </button>
+      </div>
+      <div class="value" id="kpiRpm">—</div>
+    </div>
+    <div class="kpi">
+      <div class="label">
+        <span data-i18n="lblRevenue">Revenue</span>
+        <button class="info-btn" type="button" data-tip="tipRevenue" data-i18n-aria="tipRevenue" aria-label="" aria-describedby="kpiTooltip">
+          <svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.4">
+            <circle cx="8" cy="8" r="6.5"/><line x1="8" y1="7" x2="8" y2="11"/>
+            <circle cx="8" cy="5.2" r="0.9" fill="currentColor" stroke="none"/>
+          </svg>
+        </button>
+      </div>
+      <div class="value" id="kpiRevenue">—</div>
+    </div>
   </div>
+
+  <div class="kpi-tooltip" id="kpiTooltip" role="tooltip"></div>
 
   <div class="charts">
     <div class="chart-card">
@@ -319,6 +386,22 @@ const TRANSLATIONS = {
   lblImpressions: { en: 'Impressions', es: 'Impresiones' },
   lblRpm: { en: 'RPM', es: 'RPM' },
   lblRevenue: { en: 'Revenue', es: 'Ingresos' },
+  tipInventory: {
+    en: 'Number of available opportunities to show a video ad — i.e., how many times the player generated an ad opportunity.',
+    es: 'Cantidad de oportunidades disponibles para mostrar un anuncio de video. Es decir, cuántas veces el player generó una oportunidad publicitaria.'
+  },
+  tipImpressions: {
+    en: 'Number of ads that were actually served out of that inventory.',
+    es: 'Cantidad de anuncios que efectivamente fueron servidos sobre ese inventario.'
+  },
+  tipRpm: {
+    en: 'Average revenue per 1,000 units of inventory. Shows how the site is performing economically on average, regardless of whether each individual impression sold at a different price.',
+    es: 'Ingreso promedio por cada 1.000 unidades de inventario. Permite saber cuánto está rindiendo económicamente el sitio en promedio, más allá de si cada impresión individual se vendió a un precio distinto.'
+  },
+  tipRevenue: {
+    en: 'Money generated by those ad impressions.',
+    es: 'Dinero generado por esas impresiones publicitarias.'
+  },
   chartDaily: { en: 'Daily Data', es: 'Datos diarios' },
   chartRevenue: { en: 'Revenue', es: 'Ingresos' },
   optInventory: { en: 'Inventory', es: 'Inventario' },
@@ -338,6 +421,7 @@ let currentLang = localStorage.getItem('lang') === 'es' ? 'es' : 'en';
 let currentTheme = document.documentElement.getAttribute('data-theme') || 'dark';
 let currentMode = { type: 'days', value: 7 };
 let lineChart = null, barChart = null;
+let activeInfoBtn = null;
 
 function applyTheme(theme){
   currentTheme = theme;
@@ -372,11 +456,56 @@ function translate(lang){
   document.querySelectorAll('.lang-btn').forEach(b=>b.classList.toggle('active', b.dataset.lang === lang));
   if (hadLoadError) showLoadError();
   else if (fullData) renderUpdatedAt();
+  if (activeInfoBtn) showTooltip(activeInfoBtn);
 }
 
 document.querySelectorAll('.lang-btn').forEach(btn=>{
   btn.addEventListener('click', ()=> translate(btn.dataset.lang));
 });
+
+const kpiTooltip = document.getElementById('kpiTooltip');
+const supportsHover = window.matchMedia('(hover: hover)').matches;
+
+function showTooltip(btn){
+  kpiTooltip.textContent = TRANSLATIONS[btn.dataset.tip][currentLang];
+  kpiTooltip.classList.add('visible');
+  activeInfoBtn = btn;
+  positionTooltip(btn);
+}
+function hideTooltip(){
+  kpiTooltip.classList.remove('visible');
+  activeInfoBtn = null;
+}
+function positionTooltip(btn){
+  const iconRect = btn.getBoundingClientRect();
+  const margin = 8;
+  const tipRect = kpiTooltip.getBoundingClientRect();
+  const left = Math.max(margin, Math.min(
+    iconRect.left + iconRect.width / 2 - tipRect.width / 2,
+    window.innerWidth - tipRect.width - margin
+  ));
+  let top = iconRect.top - tipRect.height - 8;
+  if (top < margin) top = iconRect.bottom + 8;
+  kpiTooltip.style.left = left + 'px';
+  kpiTooltip.style.top = top + 'px';
+}
+
+document.querySelectorAll('.info-btn').forEach(btn=>{
+  let justFocused = false; // el click de un mismo tap no debe cerrar lo que el focus recién abrió
+  if (supportsHover) {
+    btn.addEventListener('mouseenter', ()=> showTooltip(btn));
+    btn.addEventListener('mouseleave', ()=> { if (activeInfoBtn === btn) hideTooltip(); });
+  }
+  btn.addEventListener('focus', ()=> { justFocused = true; showTooltip(btn); });
+  btn.addEventListener('blur', ()=> { if (activeInfoBtn === btn) hideTooltip(); });
+  btn.addEventListener('click', e=>{
+    e.stopPropagation();
+    if (justFocused) { justFocused = false; return; }
+    activeInfoBtn === btn ? hideTooltip() : showTooltip(btn);
+  });
+});
+document.addEventListener('click', hideTooltip);
+window.addEventListener('resize', ()=> { if (activeInfoBtn) positionTooltip(activeInfoBtn); });
 
 function setActiveRangeBtn(btn){
   document.querySelectorAll('.range-btn').forEach(b=>b.classList.remove('active'));
