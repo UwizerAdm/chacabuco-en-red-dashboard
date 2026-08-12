@@ -279,7 +279,6 @@
           <option value="inventory" data-i18n="optInventory">Inventory</option>
           <option value="impression" data-i18n="optImpressions">Impressions</option>
           <option value="revenue" data-i18n="optRevenue">Revenue</option>
-          <option value="ecpm" data-i18n="optEcpm">eCPM</option>
         </select>
       </div>
       <div class="chart-wrap"><canvas id="lineChart"></canvas></div>
@@ -325,7 +324,6 @@ const TRANSLATIONS = {
   optInventory: { en: 'Inventory', es: 'Inventario' },
   optImpressions: { en: 'Impressions', es: 'Impresiones' },
   optRevenue: { en: 'Revenue', es: 'Ingresos' },
-  optEcpm: { en: 'eCPM', es: 'eCPM' },
   emptyState: { en: 'No data available yet.', es: 'No hay datos disponibles todavía.' },
   footer1: { en: 'Data provided by Uwizer · daily automatic update', es: 'Datos provistos por Uwizer · actualización automática diaria' },
   footer2: {
@@ -499,8 +497,8 @@ function formatMoneyARS(value){
 
 function getChartPalette(){
   return currentTheme === 'light'
-    ? { grid:'rgba(26,22,37,.08)', tick:'#6b6380', datasets:{ inventory:'#8b5cf6', impression:'#7c3aed', revenue:'#6d28d9', ecpm:'#0f9d78' } }
-    : { grid:'rgba(255,255,255,.06)', tick:'#9b93b8', datasets:{ inventory:'#c4b5fd', impression:'#a78bfa', revenue:'#8b5cf6', ecpm:'#7ee0c3' } };
+    ? { grid:'rgba(26,22,37,.08)', tick:'#6b6380', datasets:{ inventory:'#8b5cf6', impression:'#7c3aed', revenue:'#6d28d9' } }
+    : { grid:'rgba(255,255,255,.06)', tick:'#9b93b8', datasets:{ inventory:'#c4b5fd', impression:'#a78bfa', revenue:'#8b5cf6' } };
 }
 
 function renderLineChart(rows){
