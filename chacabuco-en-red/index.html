@@ -24,7 +24,7 @@
     --header-1:#150c2c; --header-2:#0a0616; --header-ink:#f5f2fb;
     --glow-1:rgba(167,139,250,.35); --glow-2:rgba(139,92,246,.12);
     --net-stroke:#a78bfa; --net-fill:#c4b5fd; --net-opacity:.5;
-    --wordmark-fill:#ffffff; --wordmark-sub-fill:#c4b5fd; --accent-soft:#c4b5fd; --stale:#f0a3a3;
+    --wordmark-fill:#ffffff; --accent-soft:#c4b5fd; --stale:#f0a3a3;
     --picker-scheme:dark;
   }
   :root[data-theme="light"]{
@@ -35,7 +35,7 @@
     --header-1:#efe7fb; --header-2:#f7f5fb; --header-ink:#1a1625;
     --glow-1:rgba(139,92,246,.18); --glow-2:rgba(139,92,246,.08);
     --net-stroke:#8b5cf6; --net-fill:#7c3aed; --net-opacity:.35;
-    --wordmark-fill:#7B2AB7; --wordmark-sub-fill:#8b5cf6; --accent-soft:#6d28d9; --stale:#c23b5b;
+    --wordmark-fill:#7B2AB7; --accent-soft:#6d28d9; --stale:#c23b5b;
     --picker-scheme:light;
   }
   *{box-sizing:border-box;}
@@ -49,8 +49,8 @@
 
   header{
     position:relative; background:linear-gradient(135deg,var(--header-1),var(--header-2) 65%);
-    border:1px solid var(--line); border-radius:20px; padding:28px 30px; color:var(--header-ink);
-    overflow:hidden; margin-bottom:22px; transition:background .2s, color .2s;
+    border:1px solid var(--line); border-radius:20px; padding:28px 30px 56px; color:var(--header-ink);
+    overflow:hidden; margin-bottom:18px; transition:background .2s, color .2s;
   }
   header .glow{
     position:absolute; right:-60px; top:-80px; width:340px; height:340px; border-radius:50%;
@@ -60,9 +60,14 @@
   header svg.net{position:absolute; right:0; top:0; height:100%; width:46%; opacity:var(--net-opacity);}
   header svg.net .lines{stroke:var(--net-stroke);}
   header svg.net .dots{fill:var(--net-fill);}
-  header .logo{position:relative; z-index:1; margin-bottom:14px; line-height:0;}
-  header .logo .wordmark{fill:var(--wordmark-fill);}
-  header .logo .wordmark-sub{fill:var(--wordmark-sub-fill);}
+
+  .publisher-badge{
+    position:relative; z-index:1; display:inline-block; margin-bottom:18px;
+    background:#fff; border-radius:12px; padding:12px 16px; line-height:0;
+    box-shadow:0 4px 14px rgba(0,0,0,.18);
+  }
+  .publisher-logo{display:block; height:40px; width:auto;}
+
   header .eyebrow{
     font-family:'IBM Plex Mono', monospace; font-size:12px; letter-spacing:.12em;
     text-transform:uppercase; color:var(--brand-bright); position:relative; z-index:1;
@@ -77,9 +82,23 @@
   }
   header p{margin:0; color:var(--muted); font-size:14px; position:relative; z-index:1;}
 
+  .powered-by{
+    position:absolute; right:20px; bottom:14px; z-index:1;
+    display:flex; align-items:center; gap:6px; opacity:.7;
+  }
+  .powered-by span{
+    font-family:'IBM Plex Mono', monospace; font-size:10px; letter-spacing:.06em;
+    text-transform:uppercase; color:var(--muted);
+  }
+  .powered-by .powered-logo{height:14px; width:auto; display:block;}
+  .powered-by .powered-logo .wordmark{fill:var(--wordmark-fill);}
+
+  .toolbar-panel{
+    background:var(--panel); border:1px solid var(--line); border-radius:var(--radius);
+    padding:12px 16px; margin-bottom:20px;
+  }
   .toolbar{
     display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;
-    margin-bottom:20px;
   }
   .range-group{display:flex; gap:6px; background:var(--chip-bg); border:1px solid var(--line); border-radius:10px; padding:4px;}
   .range-btn{
@@ -169,8 +188,8 @@
 
   @media (max-width:800px){
     .kpis{grid-template-columns:repeat(2,1fr);} .charts{grid-template-columns:1fr;} header svg.net{display:none;}
-    .toolbar{flex-direction:column; align-items:stretch;}
-    .range-group{flex-wrap:wrap;}
+    .toolbar{justify-content:center;}
+    .range-group{flex-wrap:wrap; justify-content:center;}
     .date-range{flex-wrap:wrap; justify-content:center;}
     .toolbar-right{justify-content:center; flex-wrap:wrap;}
   }
@@ -194,48 +213,54 @@
         <circle cx="180" cy="170" r="3.5"/>
       </g>
     </svg>
-    <div class="logo">
-      <svg viewBox="0 0 486 240" width="120" height="59" xmlns="http://www.w3.org/2000/svg">
-        <text class="wordmark" x="243" y="140" font-family="Poppins, sans-serif" font-weight="700" font-size="120" text-anchor="middle">uwizer</text>
-        <text class="wordmark-sub" x="243" y="200" font-family="Poppins, sans-serif" font-weight="400" font-size="38" text-anchor="middle">Level up your content</text>
-      </svg>
+    <div class="publisher-badge">
+      <img class="publisher-logo" src="chacabuco-logo.png" alt="Chacabuco en Red">
     </div>
     <div class="eyebrow" data-i18n="eyebrow">Performance Dashboard</div>
     <h1>Chacabuco <span class="accent">en Red</span></h1>
     <p data-i18n="headerSub">chacabucoenred.com</p>
+
+    <div class="powered-by">
+      <span data-i18n="poweredBy">Powered by</span>
+      <svg class="powered-logo" viewBox="0 0 486 240" xmlns="http://www.w3.org/2000/svg">
+        <text class="wordmark" x="243" y="170" font-family="Poppins, sans-serif" font-weight="700" font-size="120" text-anchor="middle">uwizer</text>
+      </svg>
+    </div>
   </header>
 
-  <div class="toolbar">
-    <div class="range-group">
-      <button class="range-btn" data-range="1" data-i18n="rangeYesterday">Yesterday</button>
-      <button class="range-btn active" data-range="7" data-i18n="range7">Last 7 Days</button>
-      <button class="range-btn" data-range="30" data-i18n="range30">Last 30 Days</button>
-      <button class="range-btn" data-range="mtd" data-i18n="rangeMtd">Month to Date</button>
-    </div>
-    <div class="date-range" id="dateRangeBox">
-      <input type="date" id="dateFrom" data-i18n-aria="dateFromAria" aria-label="From">
-      <span>–</span>
-      <input type="date" id="dateTo" data-i18n-aria="dateToAria" aria-label="To">
-      <button id="applyDateRange" type="button" data-i18n="apply">Apply</button>
-    </div>
-    <div class="toolbar-right">
-      <button class="theme-toggle" id="themeToggle" type="button" aria-label="Toggle theme">
-        <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <circle cx="12" cy="12" r="4"/>
-          <line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/>
-          <line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/>
-          <line x1="4.6" y1="4.6" x2="6.7" y2="6.7"/><line x1="17.3" y1="17.3" x2="19.4" y2="19.4"/>
-          <line x1="4.6" y1="19.4" x2="6.7" y2="17.3"/><line x1="17.3" y1="6.7" x2="19.4" y2="4.6"/>
-        </svg>
-        <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M21 12.8A9 9 0 1 1 11.2 3 7 7 0 0 0 21 12.8Z"/>
-        </svg>
-      </button>
-      <div class="lang-toggle">
-        <button class="lang-btn" data-lang="en">EN</button>
-        <button class="lang-btn" data-lang="es">ES</button>
+  <div class="toolbar-panel">
+    <div class="toolbar">
+      <div class="range-group">
+        <button class="range-btn" data-range="1" data-i18n="rangeYesterday">Yesterday</button>
+        <button class="range-btn active" data-range="7" data-i18n="range7">Last 7 Days</button>
+        <button class="range-btn" data-range="30" data-i18n="range30">Last 30 Days</button>
+        <button class="range-btn" data-range="mtd" data-i18n="rangeMtd">Month to Date</button>
       </div>
-      <div class="updated" id="updatedAt" data-i18n="loading">Loading data...</div>
+      <div class="date-range" id="dateRangeBox">
+        <input type="date" id="dateFrom" data-i18n-aria="dateFromAria" aria-label="From">
+        <span>–</span>
+        <input type="date" id="dateTo" data-i18n-aria="dateToAria" aria-label="To">
+        <button id="applyDateRange" type="button" data-i18n="apply">Apply</button>
+      </div>
+      <div class="toolbar-right">
+        <button class="theme-toggle" id="themeToggle" type="button" aria-label="Toggle theme">
+          <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="4"/>
+            <line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/>
+            <line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/>
+            <line x1="4.6" y1="4.6" x2="6.7" y2="6.7"/><line x1="17.3" y1="17.3" x2="19.4" y2="19.4"/>
+            <line x1="4.6" y1="19.4" x2="6.7" y2="17.3"/><line x1="17.3" y1="6.7" x2="19.4" y2="4.6"/>
+          </svg>
+          <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 12.8A9 9 0 1 1 11.2 3 7 7 0 0 0 21 12.8Z"/>
+          </svg>
+        </button>
+        <div class="lang-toggle">
+          <button class="lang-btn" data-lang="en">EN</button>
+          <button class="lang-btn" data-lang="es">ES</button>
+        </div>
+        <div class="updated" id="updatedAt" data-i18n="loading">Loading data...</div>
+      </div>
     </div>
   </div>
 
@@ -275,6 +300,7 @@
 const TRANSLATIONS = {
   eyebrow: { en: 'Performance Dashboard', es: 'Dashboard de Rendimiento' },
   headerSub: { en: 'chacabucoenred.com', es: 'chacabucoenred.com' },
+  poweredBy: { en: 'Powered by', es: 'Desarrollado por' },
   rangeYesterday: { en: 'Yesterday', es: 'Ayer' },
   range7: { en: 'Last 7 Days', es: 'Últimos 7 días' },
   range30: { en: 'Last 30 Days', es: 'Últimos 30 días' },
