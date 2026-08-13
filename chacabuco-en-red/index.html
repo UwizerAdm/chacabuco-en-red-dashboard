@@ -15,6 +15,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500;600&family=Poppins:wght@400;700&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>
 <style>
   :root, :root[data-theme="dark"]{
     --bg:#0a0714; --panel:#140f26; --ink:#f5f2fb; --muted:#9b93b8;
@@ -143,6 +144,15 @@
     font-family:'IBM Plex Sans', sans-serif;
   }
 
+  .export-group{display:flex; gap:6px; background:var(--chip-bg); border:1px solid var(--line); border-radius:10px; padding:4px;}
+  .export-btn{
+    display:flex; align-items:center; gap:5px; border:none; background:transparent;
+    padding:8px 12px; font-size:13px; font-weight:600; color:var(--muted);
+    border-radius:7px; cursor:pointer; font-family:'IBM Plex Sans', sans-serif;
+  }
+  .export-btn:hover, .export-btn:focus-visible{color:var(--brand-bright);}
+  .export-icon{flex-shrink:0;}
+
   .kpis{display:grid; grid-template-columns:repeat(4,1fr); gap:16px; margin-bottom:20px;}
   .kpi{
     background:var(--panel); border:1px solid var(--line); border-radius:var(--radius);
@@ -213,6 +223,7 @@
     .range-group{flex-wrap:wrap; justify-content:center;}
     .date-range{flex-wrap:wrap; justify-content:center;}
     .toolbar-right{justify-content:center; flex-wrap:wrap;}
+    .export-group{justify-content:center;}
   }
 </style>
 </head>
@@ -262,6 +273,22 @@
         <span>–</span>
         <input type="date" id="dateTo" data-i18n-aria="dateToAria" aria-label="To">
         <button id="applyDateRange" type="button" data-i18n="apply">Apply</button>
+      </div>
+      <div class="export-group">
+        <button class="export-btn" id="exportCsvBtn" type="button" data-i18n-aria="exportCsvAria" aria-label="">
+          <svg class="export-icon" viewBox="0 0 16 16" width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M8 1.5v8M8 9.5 5 6.5M8 9.5l3-3"/>
+            <path d="M2.5 11v2a1 1 0 0 0 1 1h9a1 1 0 0 0 1-1v-2"/>
+          </svg>
+          CSV
+        </button>
+        <button class="export-btn" id="exportXlsxBtn" type="button" data-i18n-aria="exportXlsxAria" aria-label="">
+          <svg class="export-icon" viewBox="0 0 16 16" width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M8 1.5v8M8 9.5 5 6.5M8 9.5l3-3"/>
+            <path d="M2.5 11v2a1 1 0 0 0 1 1h9a1 1 0 0 0 1-1v-2"/>
+          </svg>
+          Excel
+        </button>
       </div>
       <div class="toolbar-right">
         <button class="theme-toggle" id="themeToggle" type="button" aria-label="Toggle theme">
@@ -412,7 +439,14 @@ const TRANSLATIONS = {
   footer2: {
     en: 'Inventory: player calls. Impressions: ads actually served (can be more than 1 per call in long sessions).',
     es: 'Inventario: llamadas al player. Impresiones: ads efectivamente servidos (pueden ser más de 1 por llamada en sesiones largas).'
-  }
+  },
+  csvRangePrefix: { en: 'Range: ', es: 'Rango: ' },
+  csvDateCol: { en: 'Date', es: 'Fecha' },
+  csvTotal: { en: 'Total', es: 'Total' },
+  csvTo: { en: 'to', es: 'a' },
+  csvCustomRange: { en: 'Custom Range', es: 'Rango personalizado' },
+  exportCsvAria: { en: 'Export current range as CSV', es: 'Exportar el rango actual como CSV' },
+  exportXlsxAria: { en: 'Export current range as Excel', es: 'Exportar el rango actual como Excel' }
 };
 
 let fullData = null;
@@ -556,13 +590,18 @@ function showLoadError(){
   document.getElementById('updatedAt').innerHTML = '<span class="stale">' + TRANSLATIONS.errorLoad[currentLang] + '</span>';
 }
 
+function formatUpdatedLabel(){
+  if (!fullData || !fullData.updated_at) return TRANSLATIONS.noUpdateDate[currentLang];
+  const updated = new Date(fullData.updated_at);
+  const locale = currentLang === 'es' ? 'es-AR' : 'en-US';
+  return TRANSLATIONS.updatedPrefix[currentLang] + updated.toLocaleString(locale, { dateStyle:'medium', timeStyle:'short' });
+}
+
 function renderUpdatedAt(){
   const el = document.getElementById('updatedAt');
-  if (!fullData || !fullData.updated_at){ el.textContent = TRANSLATIONS.noUpdateDate[currentLang]; return; }
-  const updated = new Date(fullData.updated_at);
-  const hoursAgo = (Date.now() - updated.getTime()) / 36e5;
-  const locale = currentLang === 'es' ? 'es-AR' : 'en-US';
-  const label = TRANSLATIONS.updatedPrefix[currentLang] + updated.toLocaleString(locale, { dateStyle:'medium', timeStyle:'short' });
+  const label = formatUpdatedLabel();
+  if (!fullData || !fullData.updated_at){ el.textContent = label; return; }
+  const hoursAgo = (Date.now() - new Date(fullData.updated_at).getTime()) / 36e5;
   el.innerHTML = hoursAgo > 30 ? label + ' <span class="stale">' + TRANSLATIONS.stale[currentLang] + '</span>' : label;
 }
 
@@ -601,6 +640,113 @@ function getRows(){
     inventory: r.inventory ?? r.impression // fallback por si data.json todavía no tiene el campo nuevo
   }));
 }
+
+function getRangeInfo(){
+  if (currentMode.type === 'custom') {
+    return { label: TRANSLATIONS.csvCustomRange[currentLang], slug: `custom-${currentMode.from}-to-${currentMode.to}` };
+  }
+  if (currentMode.type === 'mtd') {
+    return { label: TRANSLATIONS.rangeMtd[currentLang], slug: 'month-to-date' };
+  }
+  const byDays = { 1: ['rangeYesterday','yesterday'], 7: ['range7','last-7-days'], 30: ['range30','last-30-days'] };
+  const [key, slug] = byDays[currentMode.value] || ['range7', `last-${currentMode.value}-days`];
+  return { label: TRANSLATIONS[key][currentLang], slug };
+}
+
+function buildExportData(){
+  const rows = getRows();
+  const totalInv = rows.reduce((s,r)=>s+r.inventory, 0);
+  const totalImpr = rows.reduce((s,r)=>s+r.impression, 0);
+  const totalRev = rows.reduce((s,r)=>s+r.revenue, 0);
+  const totalRpm = totalInv > 0 ? (totalRev/totalInv)*1000 : 0;
+  const { label: rangeLabel, slug } = getRangeInfo();
+  const dateSpan = rows.length ? `${rows[0].date} ${TRANSLATIONS.csvTo[currentLang]} ${rows[rows.length-1].date}` : '';
+
+  return {
+    slug,
+    metaLines: [
+      'Chacabuco en Red',
+      'chacabucoenred.com',
+      TRANSLATIONS.csvRangePrefix[currentLang] + rangeLabel + (dateSpan ? ` (${dateSpan})` : ''),
+      formatUpdatedLabel()
+    ],
+    headers: [
+      TRANSLATIONS.csvDateCol[currentLang], TRANSLATIONS.lblInventory[currentLang],
+      TRANSLATIONS.lblImpressions[currentLang], TRANSLATIONS.lblRevenue[currentLang], TRANSLATIONS.lblRpm[currentLang]
+    ],
+    dataRows: rows.map(r => {
+      const rpm = r.inventory > 0 ? (r.revenue/r.inventory)*1000 : 0;
+      return [r.date, r.inventory, r.impression, r.revenue, rpm];
+    }),
+    totalRow: [TRANSLATIONS.csvTotal[currentLang], totalInv, totalImpr, totalRev, totalRpm]
+  };
+}
+
+function buildExportFilename(slug, ext){
+  const today = new Date();
+  const todayStr = today.getFullYear() + '-' + String(today.getMonth()+1).padStart(2,'0') + '-' + String(today.getDate()).padStart(2,'0');
+  return `chacabuco-en-red_${slug}_${todayStr}.${ext}`;
+}
+
+function csvEscape(field){
+  const s = String(field);
+  return /[",\n]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s;
+}
+
+function formatNumberForCsv(v){
+  return typeof v === 'number' && !Number.isInteger(v) ? v.toFixed(2) : v;
+}
+
+function exportCsv(){
+  if (!fullData) return;
+  const data = buildExportData();
+  const lines = [];
+  data.metaLines.forEach(l => lines.push([l]));
+  lines.push([]);
+  lines.push(data.headers);
+  data.dataRows.forEach(row => lines.push(row.map(formatNumberForCsv)));
+  lines.push(data.totalRow.map(formatNumberForCsv));
+  const csv = lines.map(fields => fields.map(csvEscape).join(',')).join('\r\n');
+  const blob = new Blob(['﻿' + csv], { type: 'text/csv;charset=utf-8;' });
+  downloadBlob(blob, buildExportFilename(data.slug, 'csv'));
+}
+
+function exportXlsx(){
+  if (!fullData) return;
+  const data = buildExportData();
+  const aoa = [];
+  data.metaLines.forEach(l => aoa.push([l]));
+  aoa.push([]);
+  const headerRowIdx = aoa.length;
+  aoa.push(data.headers);
+  data.dataRows.forEach(row => aoa.push(row));
+  aoa.push(data.totalRow);
+  const ws = XLSX.utils.aoa_to_sheet(aoa);
+  // Revenue (col D) y RPM (col E) con 2 decimales, no el float crudo
+  for (let r = headerRowIdx + 1; r < aoa.length; r++){
+    [3, 4].forEach(c=>{
+      const cell = ws[XLSX.utils.encode_cell({ r, c })];
+      if (cell && cell.t === 'n') cell.z = '0.00';
+    });
+  }
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, 'Report');
+  XLSX.writeFile(wb, buildExportFilename(data.slug, 'xlsx'));
+}
+
+function downloadBlob(blob, filename){
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
+document.getElementById('exportCsvBtn').addEventListener('click', exportCsv);
+document.getElementById('exportXlsxBtn').addEventListener('click', exportXlsx);
 
 function render(){
   if (!fullData) return;
