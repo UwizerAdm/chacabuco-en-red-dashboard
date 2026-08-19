@@ -264,9 +264,9 @@
     <div class="toolbar">
       <div class="range-group">
         <button class="range-btn" data-range="1" data-i18n="rangeYesterday">Yesterday</button>
-        <button class="range-btn active" data-range="7" data-i18n="range7">Last 7 Days</button>
+        <button class="range-btn" data-range="7" data-i18n="range7">Last 7 Days</button>
         <button class="range-btn" data-range="30" data-i18n="range30">Last 30 Days</button>
-        <button class="range-btn" data-range="mtd" data-i18n="rangeMtd">Month to Date</button>
+        <button class="range-btn active" data-range="mtd" data-i18n="rangeMtd">Month to Date</button>
       </div>
       <div class="date-range" id="dateRangeBox">
         <input type="date" id="dateFrom" data-i18n-aria="dateFromAria" aria-label="From">
@@ -455,7 +455,7 @@ let fullData = null;
 let hadLoadError = false;
 let currentLang = localStorage.getItem('lang') === 'es' ? 'es' : 'en';
 let currentTheme = document.documentElement.getAttribute('data-theme') || 'dark';
-let currentMode = { type: 'days', value: 7 };
+let currentMode = { type: 'mtd' };
 let lineChart = null, barChart = null;
 let activeInfoBtn = null;
 
