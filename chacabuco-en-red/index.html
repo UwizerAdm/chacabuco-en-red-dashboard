@@ -390,6 +390,8 @@
 </div>
 
 <script>
+const UWIZER_FEE = 0.125; // % que se descuenta del revenue crudo de 360playvid antes de mostrarlo/exportarlo
+
 const TRANSLATIONS = {
   eyebrow: { en: 'Performance Dashboard', es: 'Dashboard de Rendimiento' },
   headerSub: { en: 'chacabucoenred.com', es: 'chacabucoenred.com' },
@@ -412,7 +414,7 @@ const TRANSLATIONS = {
   lblInventory: { en: 'Inventory', es: 'Inventario' },
   lblImpressions: { en: 'Impressions', es: 'Impresiones' },
   lblRpm: { en: 'RPM', es: 'RPM' },
-  lblRevenue: { en: 'Revenue', es: 'Ingresos' },
+  lblRevenue: { en: 'Total Revenue', es: 'Ingresos Totales' },
   tipInventory: {
     en: 'Number of available opportunities to show a video ad — i.e., how many times the player generated an ad opportunity.',
     es: 'Cantidad de oportunidades disponibles para mostrar un anuncio de video. Es decir, cuántas veces el player generó una oportunidad publicitaria.'
@@ -430,10 +432,10 @@ const TRANSLATIONS = {
     es: 'Dinero generado por esas impresiones publicitarias.'
   },
   chartDaily: { en: 'Daily Data', es: 'Datos diarios' },
-  chartRevenue: { en: 'Revenue', es: 'Ingresos' },
+  chartRevenue: { en: 'Total Revenue', es: 'Ingresos Totales' },
   optInventory: { en: 'Inventory', es: 'Inventario' },
   optImpressions: { en: 'Impressions', es: 'Impresiones' },
-  optRevenue: { en: 'Revenue', es: 'Ingresos' },
+  optRevenue: { en: 'Total Revenue', es: 'Ingresos Totales' },
   emptyState: { en: 'No data available yet.', es: 'No hay datos disponibles todavía.' },
   footer1: { en: 'Data provided by Uwizer · daily automatic update', es: 'Datos provistos por Uwizer · actualización automática diaria' },
   footer2: {
@@ -637,7 +639,8 @@ function getRows(){
   }
   return rows.map(r => ({
     ...r,
-    inventory: r.inventory ?? r.impression // fallback por si data.json todavía no tiene el campo nuevo
+    inventory: r.inventory ?? r.impression, // fallback por si data.json todavía no tiene el campo nuevo
+    revenue: (r.revenue ?? 0) * (1 - UWIZER_FEE) // data.json guarda el revenue crudo de 360playvid; acá se descuenta nuestro fee para todo lo que se muestra/exporta
   }));
 }
 

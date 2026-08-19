@@ -83,6 +83,15 @@ dominio nuevo tal como lo devuelve la API (evitar adivinar el string).
   recortan del lado del front (`index.html`, función `render()`) buscando el
   primer día con `inventory > 0 || revenue > 0`. No se borran de `data.json`
   por si hace falta el histórico completo en el futuro.
+- **Fee de Uwizer sobre el revenue (ago 2026):** `data.json` guarda el
+  `revenue` crudo tal cual lo reporta 360playvid — **no** es el número que
+  ve el publisher. `index.html` descuenta un 12,5% (constante `UWIZER_FEE`
+  en el `<script>`) dentro de `getRows()`, el único punto donde se arma el
+  revenue para todo lo demás (KPI card, ambos charts, tooltips, export
+  CSV/Excel). Por eso el RPM mostrado también es más bajo que
+  `revenue_crudo / inventory * 1000` — usa el revenue ya neto. Si el % del
+  fee cambia, solo hay que tocar `UWIZER_FEE`. El label de esta métrica es
+  "Total Revenue" / "Ingresos Totales" (no "Revenue"/"Ingresos" a secas).
 
 ## Estilo / marca (Uwizer)
 
