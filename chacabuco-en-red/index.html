@@ -605,6 +605,7 @@ function renderBranding(){
     img.className = 'publisher-logo';
     img.src = logo.file;
     img.alt = name;
+    if (logo.height) img.style.height = logo.height + 'px';
     badge.appendChild(img);
   } else {
     badge.classList.add('is-placeholder');

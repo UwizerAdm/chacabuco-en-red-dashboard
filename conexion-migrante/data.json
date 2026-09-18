@@ -5,8 +5,9 @@
   "displayName": "Conexión Migrante",
   "titleAccent": null,
   "logo": {
-    "type": "placeholder",
-    "initials": "CM"
+    "type": "image",
+    "file": "conexion-migrante-logo.png",
+    "height": 64
   },
   "range_days": 30,
   "daily": [

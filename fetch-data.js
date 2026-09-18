@@ -26,7 +26,11 @@ const SITES = [
     slug: 'conexion-migrante',
     domain: 'conexionmigrante.com',
     displayName: 'Conexión Migrante',
-    logo: { type: 'placeholder', initials: 'CM' },
+    // Logo cuadrado (ícono + texto en 2 líneas) en vez de horizontal como el
+    // de Chacabuco — a 40px de alto el texto queda ilegible, así que este
+    // sitio necesita más alto en el chip. `height` es opcional en `logo`;
+    // si no está, el front usa el default (40px).
+    logo: { type: 'image', file: 'conexion-migrante-logo.png', height: 64 },
   },
   {
     slug: 'tsn-necochea',
