@@ -2,8 +2,45 @@
 // Las credenciales viven en variables de entorno (GitHub Secrets), no en este archivo.
 
 const API_URL = 'https://config.360playvid.info/services/dashboardApi';
-const TARGET_DOMAIN = 'chacabucoenred.com';
 const RANGE_DAYS = 30;
+
+// Todos los sitios comparten el mismo login de 360playvid (una cuenta, varios
+// dominios) — la API devuelve todos los dominios de la cuenta en el mismo
+// array `success` por request, así que se hace un solo fetch por día y de
+// esa misma respuesta se extrae la fila de cada sitio.
+//
+// logo: 'image' -> hay un archivo de logo real en la carpeta del sitio.
+//       'placeholder' -> todavía no hay logo, el front dibuja un chip con
+//       las iniciales. Para reemplazar un placeholder por el logo real:
+//       cambiar acá el `logo` de ese sitio a { type: 'image', file: '...png' }
+//       y subir el archivo a <slug>/<file>. Ese es el único lugar a tocar.
+const SITES = [
+  {
+    slug: 'chacabuco-en-red',
+    domain: 'chacabucoenred.com',
+    displayName: 'Chacabuco en Red',
+    titleAccent: 'en Red', // qué parte del displayName va con el degradé violeta en el <h1>
+    logo: { type: 'image', file: 'chacabuco-logo.png' },
+  },
+  {
+    slug: 'conexion-migrante',
+    domain: 'conexionmigrante.com',
+    displayName: 'Conexión Migrante',
+    logo: { type: 'placeholder', initials: 'CM' },
+  },
+  {
+    slug: 'tsn-necochea',
+    domain: 'tsnnecochea.com.ar',
+    displayName: 'TSN Necochea',
+    logo: { type: 'placeholder', initials: 'TSN' },
+  },
+  {
+    slug: 'la-hora',
+    domain: 'lahora.com.ec',
+    displayName: 'La Hora',
+    logo: { type: 'placeholder', initials: 'LH' },
+  },
+];
 
 const EMAIL = process.env.PLAYVID_EMAIL;
 const PASSWORD = process.env.PLAYVID_PASSWORD;
@@ -32,16 +69,20 @@ async function fetchDay(dateStr) {
   });
   if (!res.ok) throw new Error('HTTP ' + res.status + ' para ' + dateStr);
   const data = await res.json();
-  const match = (data.success || []).find((r) =>
-    (r.domain || '').toLowerCase().includes(TARGET_DOMAIN)
-  );
-  return {
-    date: dateStr,
-    inventory: match ? (match.inventory ?? match.impression) : 0,
-    impression: match ? match.impression : 0,
-    revenue: match ? match.revenue : 0,
-    ecpm: match ? match.ecpm : 0,
-  };
+  const rows = data.success || [];
+
+  const bySite = {};
+  for (const site of SITES) {
+    const match = rows.find((r) => (r.domain || '').toLowerCase().includes(site.domain));
+    bySite[site.slug] = {
+      date: dateStr,
+      inventory: match ? (match.inventory ?? match.impression) : 0,
+      impression: match ? match.impression : 0,
+      revenue: match ? match.revenue : 0,
+      ecpm: match ? match.ecpm : 0,
+    };
+  }
+  return bySite;
 }
 
 async function main() {
@@ -51,33 +92,44 @@ async function main() {
   }
 
   const dates = getDateList(RANGE_DAYS);
-  const daily = [];
+  const dailyBySite = {};
+  for (const site of SITES) dailyBySite[site.slug] = [];
 
   for (const d of dates) {
     try {
-      daily.push(await fetchDay(d));
+      const bySite = await fetchDay(d);
+      for (const site of SITES) dailyBySite[site.slug].push(bySite[site.slug]);
     } catch (err) {
       console.error('Error consultando', d, '-', err.message);
-      daily.push({ date: d, inventory: 0, impression: 0, revenue: 0, ecpm: 0 });
+      for (const site of SITES) {
+        dailyBySite[site.slug].push({ date: d, inventory: 0, impression: 0, revenue: 0, ecpm: 0 });
+      }
     }
   }
 
-  const totalInv = daily.reduce((s, r) => s + r.inventory, 0);
-  const totalImpr = daily.reduce((s, r) => s + r.impression, 0);
-  const totalRev = daily.reduce((s, r) => s + r.revenue, 0);
-  const rpm = totalInv > 0 ? (totalRev / totalInv) * 1000 : 0;
-  const fillrate = totalInv > 0 ? (totalImpr / totalInv) * 100 : 0;
+  for (const site of SITES) {
+    const daily = dailyBySite[site.slug];
+    const totalInv = daily.reduce((s, r) => s + r.inventory, 0);
+    const totalImpr = daily.reduce((s, r) => s + r.impression, 0);
+    const totalRev = daily.reduce((s, r) => s + r.revenue, 0);
+    const rpm = totalInv > 0 ? (totalRev / totalInv) * 1000 : 0;
+    const fillrate = totalInv > 0 ? (totalImpr / totalInv) * 100 : 0;
 
-  const output = {
-    updated_at: new Date().toISOString(),
-    domain: TARGET_DOMAIN,
-    range_days: RANGE_DAYS,
-    daily,
-    totals: { inventory: totalInv, impression: totalImpr, revenue: totalRev, rpm, fillrate },
-  };
+    const output = {
+      updated_at: new Date().toISOString(),
+      slug: site.slug,
+      domain: site.domain,
+      displayName: site.displayName,
+      titleAccent: site.titleAccent || null,
+      logo: site.logo,
+      range_days: RANGE_DAYS,
+      daily,
+      totals: { inventory: totalInv, impression: totalImpr, revenue: totalRev, rpm, fillrate },
+    };
 
-  require('fs').writeFileSync('chacabuco-en-red/data.json', JSON.stringify(output, null, 2));
-  console.log('chacabuco-en-red/data.json actualizado:', output.updated_at);
+    require('fs').writeFileSync(`${site.slug}/data.json`, JSON.stringify(output, null, 2));
+    console.log(`${site.slug}/data.json actualizado:`, output.updated_at);
+  }
 }
 
 main();

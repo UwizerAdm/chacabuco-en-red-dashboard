@@ -1,6 +1,10 @@
 {
   "updated_at": "2026-09-18T11:56:55.479Z",
+  "slug": "chacabuco-en-red",
   "domain": "chacabucoenred.com",
+  "displayName": "Chacabuco en Red",
+  "titleAccent": "en Red",
+  "logo": { "type": "image", "file": "chacabuco-logo.png" },
   "range_days": 30,
   "daily": [
     {
