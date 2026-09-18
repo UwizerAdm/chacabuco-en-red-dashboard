@@ -7,12 +7,18 @@ por día con un único GitHub Action.
 
 ## Sitios
 
-| Sitio | Dominio | URL pública |
+El repo tiene un dominio propio configurado (`CNAME` → `dashboard.uwizer.com`),
+así que las URLs que se comparten con cada publisher son:
+
+| Sitio | Dominio (360playvid) | URL pública del dashboard |
 |---|---|---|
-| Chacabuco en Red | chacabucoenred.com | https://uwizeradm.github.io/chacabuco-en-red-dashboard/chacabuco-en-red/ |
-| Conexión Migrante | conexionmigrante.com | https://uwizeradm.github.io/chacabuco-en-red-dashboard/conexion-migrante/ |
-| TSN Necochea | tsnnecochea.com.ar | https://uwizeradm.github.io/chacabuco-en-red-dashboard/tsn-necochea/ |
-| La Hora | lahora.com.ec | https://uwizeradm.github.io/chacabuco-en-red-dashboard/la-hora/ |
+| Chacabuco en Red | chacabucoenred.com | https://dashboard.uwizer.com/chacabuco-en-red/ |
+| Conexión Migrante | conexionmigrante.com | https://dashboard.uwizer.com/conexion-migrante/ |
+| TSN Necochea | tsnnecochea.com.ar | https://dashboard.uwizer.com/tsn-necochea/ |
+| La Hora | lahora.com.ec | https://dashboard.uwizer.com/la-hora/ |
+
+(La URL de GitHub Pages sin dominio propio también sirve como fallback:
+`https://uwizeradm.github.io/chacabuco-en-red-dashboard/<slug>/`.)
 
 Cada sitio vive en su propia carpeta (`<slug>/index.html` + `<slug>/data.json`)
 pero comparte el mismo `index.html` (misma plantilla para los 4, sin nombre de
@@ -44,13 +50,15 @@ sitio hardcodeado: lee `displayName`/`domain`/`logo` desde su propio
    GitHub te da URLs del tipo:
    `https://<tu-usuario>.github.io/<nombre-repo>/<slug>/`
 
-   Si en cambio se usa un dominio propio (ej. `dashboard.uwizer.com`):
-   agregar un archivo `CNAME` en la raíz del repo con ese dominio adentro,
-   y crear un registro DNS tipo `CNAME` en el proveedor del dominio
-   (`dashboard` → `<tu-usuario>.github.io`, sin proxy/orange-cloud si es
-   Cloudflare, al menos hasta que GitHub emita el certificado HTTPS).
-   La URL final de cada sitio queda `https://dashboard.uwizer.com/<slug>/`
-   — esas son las que se comparten con cada publisher.
+   Este repo además tiene dominio propio (`CNAME` → `dashboard.uwizer.com`),
+   por lo que cada sitio también queda disponible en
+   `https://dashboard.uwizer.com/<slug>/` — esas son las URLs que se
+   comparten con cada publisher (ver tabla arriba). Para configurar un
+   dominio propio desde cero: agregar el archivo `CNAME` en la raíz del
+   repo con ese dominio adentro, y crear un registro DNS tipo `CNAME` en el
+   proveedor del dominio (`dashboard` → `<tu-usuario>.github.io`, sin
+   proxy/orange-cloud si es Cloudflare, al menos hasta que GitHub emita el
+   certificado HTTPS).
 
 4. Ir a la pestaña **Actions** del repo → elegir el workflow
    "Actualizar datos de los dashboards" → **Run workflow** (botón manual)

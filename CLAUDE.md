@@ -76,8 +76,10 @@ muestra completo en color plano.
 
 - Repo: `UwizerAdm/chacabuco-en-red-dashboard` (GitHub, público — necesario para
   GitHub Pages gratis).
-- URLs públicas (una por sitio, ver tabla arriba):
-  `https://uwizeradm.github.io/chacabuco-en-red-dashboard/<slug>/`
+- Dominio propio configurado (`CNAME` → `dashboard.uwizer.com`). URLs
+  públicas que se comparten con cada publisher (una por sitio, ver tabla
+  arriba): `https://dashboard.uwizer.com/<slug>/`
+  (fallback sin dominio propio: `https://uwizeradm.github.io/chacabuco-en-red-dashboard/<slug>/`).
 - Pages configurado: deploy from branch `main`, carpeta `/ (root)`.
 - Secrets ya cargados: `PLAYVID_EMAIL`, `PLAYVID_PASSWORD` (mismos para los 4
   sitios, no hace falta agregar secrets nuevos al sumar un sitio más).
