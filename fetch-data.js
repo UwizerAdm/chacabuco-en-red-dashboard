@@ -44,7 +44,8 @@ const SITES = [
     slug: 'la-hora',
     domain: 'lahora.com.ec',
     displayName: 'La Hora',
-    logo: { type: 'placeholder', initials: 'LH' },
+    // Logo circular cuadrado, mismo caso que Conexión Migrante/TSN Necochea.
+    logo: { type: 'image', file: 'la-hora-logo.png', height: 64 },
   },
 ];
 
