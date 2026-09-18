@@ -36,7 +36,9 @@ const SITES = [
     slug: 'tsn-necochea',
     domain: 'tsnnecochea.com.ar',
     displayName: 'TSN Necochea',
-    logo: { type: 'placeholder', initials: 'TSN' },
+    // Logo cuadrado (isotipo "tsn" + "necochea" abajo), mismo caso que
+    // Conexión Migrante: necesita más alto que el default para leerse.
+    logo: { type: 'image', file: 'tsn-necochea-logo.png', height: 64 },
   },
   {
     slug: 'la-hora',

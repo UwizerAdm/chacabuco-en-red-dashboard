@@ -5,8 +5,9 @@
   "displayName": "TSN Necochea",
   "titleAccent": null,
   "logo": {
-    "type": "placeholder",
-    "initials": "TSN"
+    "type": "image",
+    "file": "tsn-necochea-logo.png",
+    "height": 64
   },
   "range_days": 30,
   "daily": [
