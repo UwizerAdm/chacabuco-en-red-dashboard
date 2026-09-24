@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-09-23T12:22:47.237Z",
+  "updated_at": "2026-09-24T12:22:46.512Z",
   "slug": "conexion-migrante",
   "domain": "conexionmigrante.com",
   "displayName": "Conexión Migrante",
@@ -11,13 +11,6 @@
   },
   "range_days": 30,
   "daily": [
-    {
-      "date": "2026-08-24",
-      "inventory": 0,
-      "impression": 0,
-      "revenue": 0,
-      "ecpm": 0
-    },
     {
       "date": "2026-08-25",
       "inventory": 0,
@@ -176,14 +169,14 @@
       "date": "2026-09-16",
       "inventory": 175,
       "impression": 137,
-      "revenue": 0.11194270500000003,
-      "ecpm": 0.8171000364963503
+      "revenue": 0.111942705,
+      "ecpm": 0.8171000364963504
     },
     {
       "date": "2026-09-17",
       "inventory": 1168,
       "impression": 920,
-      "revenue": 1.3796314,
+      "revenue": 1.3796314000000005,
       "ecpm": 1.4995993478260872
     },
     {
@@ -197,15 +190,15 @@
       "date": "2026-09-19",
       "inventory": 761,
       "impression": 1706,
-      "revenue": 3.2403232049999993,
-      "ecpm": 1.8993688188745592
+      "revenue": 3.240323205,
+      "ecpm": 1.8993688188745597
     },
     {
       "date": "2026-09-20",
       "inventory": 1244,
       "impression": 2328,
-      "revenue": 3.765107955,
-      "ecpm": 1.6173144136597937
+      "revenue": 3.765107954999999,
+      "ecpm": 1.617314413659794
     },
     {
       "date": "2026-09-21",
@@ -220,13 +213,20 @@
       "impression": 1160,
       "revenue": 1.12842583,
       "ecpm": 0.9727808879310345
+    },
+    {
+      "date": "2026-09-23",
+      "inventory": 1192,
+      "impression": 1300,
+      "revenue": 1.5824078549999998,
+      "ecpm": 1.2172368115384615
     }
   ],
   "totals": {
-    "inventory": 7095,
-    "impression": 9785,
-    "revenue": 15.012645759999998,
-    "rpm": 2.115947252995067,
-    "fillrate": 137.9140239605356
+    "inventory": 8287,
+    "impression": 11085,
+    "revenue": 16.595053615,
+    "rpm": 2.0025405593097623,
+    "fillrate": 133.7637263183299
   }
 }

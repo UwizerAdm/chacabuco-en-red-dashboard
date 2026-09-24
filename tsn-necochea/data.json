@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-09-23T12:22:47.237Z",
+  "updated_at": "2026-09-24T12:22:46.512Z",
   "slug": "tsn-necochea",
   "domain": "tsnnecochea.com.ar",
   "displayName": "TSN Necochea",
@@ -11,13 +11,6 @@
   },
   "range_days": 30,
   "daily": [
-    {
-      "date": "2026-08-24",
-      "inventory": 0,
-      "impression": 0,
-      "revenue": 0,
-      "ecpm": 0
-    },
     {
       "date": "2026-08-25",
       "inventory": 0,
@@ -176,36 +169,36 @@
       "date": "2026-09-16",
       "inventory": 4779,
       "impression": 6389,
-      "revenue": 3.353358652,
+      "revenue": 3.353358652000001,
       "ecpm": 0.5248644000626075
     },
     {
       "date": "2026-09-17",
       "inventory": 6074,
       "impression": 6219,
-      "revenue": 3.9343396750000017,
+      "revenue": 3.9343396750000013,
       "ecpm": 0.6326322037305032
     },
     {
       "date": "2026-09-18",
       "inventory": 8970,
       "impression": 7044,
-      "revenue": 5.499389609000002,
-      "ecpm": 0.7807197059909144
+      "revenue": 5.499389609,
+      "ecpm": 0.780719705990914
     },
     {
       "date": "2026-09-19",
       "inventory": 11749,
       "impression": 8253,
-      "revenue": 6.092814329,
-      "ecpm": 0.7382544927904999
+      "revenue": 6.0928143289999985,
+      "ecpm": 0.7382544927905
     },
     {
       "date": "2026-09-20",
       "inventory": 10058,
       "impression": 8511,
       "revenue": 5.384301537999998,
-      "ecpm": 0.6326285440018798
+      "ecpm": 0.6326285440018797
     },
     {
       "date": "2026-09-21",
@@ -218,15 +211,22 @@
       "date": "2026-09-22",
       "inventory": 7038,
       "impression": 7417,
-      "revenue": 4.570909503999999,
-      "ecpm": 0.6162747072940542
+      "revenue": 4.5709095039999985,
+      "ecpm": 0.6162747072940541
+    },
+    {
+      "date": "2026-09-23",
+      "inventory": 6964,
+      "impression": 6508,
+      "revenue": 3.331638876999999,
+      "ecpm": 0.5119297598340503
     }
   ],
   "totals": {
-    "inventory": 57529,
-    "impression": 52338,
-    "revenue": 34.012207642,
-    "rpm": 0.5912184748909246,
-    "fillrate": 90.97672478228371
+    "inventory": 64493,
+    "impression": 58846,
+    "revenue": 37.343846518999996,
+    "rpm": 0.5790372058828089,
+    "fillrate": 91.24401097793559
   }
 }
