@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-09-25T12:23:03.188Z",
+  "updated_at": "2026-09-26T11:54:01.159Z",
   "slug": "tsn-necochea",
   "domain": "tsnnecochea.com.ar",
   "displayName": "TSN Necochea",
@@ -11,13 +11,6 @@
   },
   "range_days": 30,
   "daily": [
-    {
-      "date": "2026-08-26",
-      "inventory": 0,
-      "impression": 0,
-      "revenue": 0,
-      "ecpm": 0
-    },
     {
       "date": "2026-08-27",
       "inventory": 0,
@@ -162,29 +155,29 @@
       "date": "2026-09-16",
       "inventory": 4779,
       "impression": 6389,
-      "revenue": 3.3533586520000003,
+      "revenue": 3.3533586520000007,
       "ecpm": 0.5248644000626075
     },
     {
       "date": "2026-09-17",
       "inventory": 6074,
       "impression": 6219,
-      "revenue": 3.9343396750000013,
-      "ecpm": 0.6326322037305034
+      "revenue": 3.9343396750000017,
+      "ecpm": 0.6326322037305032
     },
     {
       "date": "2026-09-18",
       "inventory": 8970,
       "impression": 7044,
-      "revenue": 5.499389609000001,
-      "ecpm": 0.7807197059909141
+      "revenue": 5.499389609,
+      "ecpm": 0.7807197059909142
     },
     {
       "date": "2026-09-19",
       "inventory": 11749,
       "impression": 8253,
-      "revenue": 6.092814329000001,
-      "ecpm": 0.7382544927905001
+      "revenue": 6.092814328999999,
+      "ecpm": 0.7382544927905
     },
     {
       "date": "2026-09-20",
@@ -197,36 +190,43 @@
       "date": "2026-09-21",
       "inventory": 8861,
       "impression": 8505,
-      "revenue": 5.177094335,
-      "ecpm": 0.6087118559670781
+      "revenue": 5.177094334999998,
+      "ecpm": 0.6087118559670783
     },
     {
       "date": "2026-09-22",
       "inventory": 7038,
       "impression": 7417,
       "revenue": 4.570909503999999,
-      "ecpm": 0.616274707294054
+      "ecpm": 0.6162747072940542
     },
     {
       "date": "2026-09-23",
       "inventory": 6964,
       "impression": 6508,
-      "revenue": 3.331638877,
-      "ecpm": 0.5119297598340502
+      "revenue": 3.3316388769999983,
+      "ecpm": 0.5119297598340503
     },
     {
       "date": "2026-09-24",
       "inventory": 4768,
       "impression": 4676,
-      "revenue": 2.9441760039999996,
+      "revenue": 2.944176004000001,
       "ecpm": 0.6296355868263472
+    },
+    {
+      "date": "2026-09-25",
+      "inventory": 6010,
+      "impression": 6800,
+      "revenue": 4.524275567000001,
+      "ecpm": 0.665334642205882
     }
   ],
   "totals": {
-    "inventory": 69261,
-    "impression": 63522,
-    "revenue": 40.28802252300001,
-    "rpm": 0.5816841010525405,
-    "fillrate": 91.71395157447915
+    "inventory": 75271,
+    "impression": 70322,
+    "revenue": 44.81229809,
+    "rpm": 0.5953461238724077,
+    "fillrate": 93.4250906723705
   }
 }
