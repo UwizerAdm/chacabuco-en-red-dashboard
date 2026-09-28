@@ -104,6 +104,18 @@ por request, solo hay que filtrar un dominio más sobre la misma respuesta.
 
 ## Cosas importantes a tener en cuenta
 
+- **Cron de GitHub Actions puede demorarse o saltearse (visto sep 2026):** el
+  `schedule: cron: '0 7 * * *'` no siempre dispara puntual — GitHub demora o
+  directamente saltea corridas programadas en repos de poca actividad (es un
+  comportamiento conocido de Actions, no un bug nuestro). Si un número de
+  algún sitio no coincide con el panel nativo de 360playvid, **antes que
+  nada** revisar `gh run list --workflow=update-data.yml` para ver si al
+  `data.json` le falta el día más reciente, y si es así correr
+  `gh workflow run update-data.yml` a mano. Caso real: el 2026-09-28 el cron
+  de las 07:00 UTC no había corrido, el dashboard de Chacabuco en Red tenía
+  Inventario MTD = 513.923 vs 526.046 del panel nativo (faltaba el
+  27/09 = 12.123) — al correr el workflow a mano los números coincidieron
+  exacto.
 - **RESUELTO (ago 2026):** el mismatch de Inventory/RPM entre este dashboard y
   el panel nativo de 360playvid se debía a que la API sí devuelve el campo
   `inventory` (llamadas al player) por default junto con `impression`,
