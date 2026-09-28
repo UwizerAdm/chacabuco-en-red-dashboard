@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-09-28T13:31:39.916Z",
+  "updated_at": "2026-09-28T14:39:12.980Z",
   "slug": "la-hora",
   "domain": "lahora.com.ec",
   "displayName": "La Hora",
@@ -162,70 +162,70 @@
       "date": "2026-09-19",
       "inventory": 3845,
       "impression": 3845,
-      "revenue": 1.922500000000001,
+      "revenue": 1.9225000000000003,
       "ecpm": 0
     },
     {
       "date": "2026-09-20",
       "inventory": 3454,
       "impression": 3454,
-      "revenue": 1.7270000000000003,
+      "revenue": 1.727,
       "ecpm": 0
     },
     {
       "date": "2026-09-21",
       "inventory": 3405,
       "impression": 3405,
-      "revenue": 1.7025000000000001,
+      "revenue": 1.7025000000000008,
       "ecpm": 0
     },
     {
       "date": "2026-09-22",
       "inventory": 6119,
       "impression": 6119,
-      "revenue": 3.0594999999999994,
+      "revenue": 3.0595000000000008,
       "ecpm": 0
     },
     {
       "date": "2026-09-23",
       "inventory": 7231,
       "impression": 7231,
-      "revenue": 3.615499999999992,
+      "revenue": 3.6154999999999955,
       "ecpm": 0
     },
     {
       "date": "2026-09-24",
       "inventory": 5578,
       "impression": 5578,
-      "revenue": 2.789000000000001,
+      "revenue": 2.7889999999999997,
       "ecpm": 0
     },
     {
       "date": "2026-09-25",
       "inventory": 5359,
       "impression": 5359,
-      "revenue": 2.679500000000001,
+      "revenue": 2.6795000000000004,
       "ecpm": 0
     },
     {
       "date": "2026-09-26",
       "inventory": 3555,
       "impression": 3555,
-      "revenue": 1.7775000000000005,
+      "revenue": 1.7775000000000003,
       "ecpm": 0
     },
     {
       "date": "2026-09-27",
       "inventory": 6631,
       "impression": 6631,
-      "revenue": 3.315499999999999,
+      "revenue": 3.3155,
       "ecpm": 0
     }
   ],
   "totals": {
     "inventory": 50045,
     "impression": 50045,
-    "revenue": 25.022499999999994,
+    "revenue": 25.022499999999997,
     "rpm": 0.4999999999999999,
     "fillrate": 100
   }
