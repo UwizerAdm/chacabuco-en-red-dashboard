@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-09-28T14:39:12.979Z",
+  "updated_at": "2026-09-29T13:30:12.298Z",
   "slug": "conexion-migrante",
   "domain": "conexionmigrante.com",
   "displayName": "Conexión Migrante",
@@ -11,13 +11,6 @@
   },
   "range_days": 30,
   "daily": [
-    {
-      "date": "2026-08-29",
-      "inventory": 0,
-      "impression": 0,
-      "revenue": 0,
-      "ecpm": 0
-    },
     {
       "date": "2026-08-30",
       "inventory": 0,
@@ -149,42 +142,42 @@
       "inventory": 1168,
       "impression": 920,
       "revenue": 1.3796314,
-      "ecpm": 1.499599347826087
+      "ecpm": 1.4995993478260872
     },
     {
       "date": "2026-09-18",
       "inventory": 950,
       "impression": 1692,
-      "revenue": 2.827872355,
+      "revenue": 2.8278723550000007,
       "ecpm": 1.671319358747044
     },
     {
       "date": "2026-09-19",
       "inventory": 761,
       "impression": 1706,
-      "revenue": 3.240323205000001,
-      "ecpm": 1.8993688188745592
+      "revenue": 3.240323205,
+      "ecpm": 1.8993688188745597
     },
     {
       "date": "2026-09-20",
       "inventory": 1244,
       "impression": 2328,
-      "revenue": 3.765107955,
-      "ecpm": 1.6173144136597937
+      "revenue": 3.765107955000001,
+      "ecpm": 1.6173144136597934
     },
     {
       "date": "2026-09-21",
       "inventory": 1290,
       "impression": 1842,
-      "revenue": 2.5593423100000003,
-      "ecpm": 1.389436650380022
+      "revenue": 2.559342310000001,
+      "ecpm": 1.3894366503800217
     },
     {
       "date": "2026-09-22",
       "inventory": 1507,
       "impression": 1160,
-      "revenue": 1.12842583,
-      "ecpm": 0.9727808879310345
+      "revenue": 1.1284258300000003,
+      "ecpm": 0.9727808879310346
     },
     {
       "date": "2026-09-23",
@@ -204,29 +197,36 @@
       "date": "2026-09-25",
       "inventory": 1682,
       "impression": 1424,
-      "revenue": 2.2555700300000003,
-      "ecpm": 1.5839677176966291
+      "revenue": 2.25557003,
+      "ecpm": 1.5839677176966294
     },
     {
       "date": "2026-09-26",
       "inventory": 1092,
       "impression": 1590,
-      "revenue": 1.9736966899999997,
+      "revenue": 1.9736966900000004,
       "ecpm": 1.241318672955975
     },
     {
       "date": "2026-09-27",
       "inventory": 1607,
       "impression": 815,
-      "revenue": 0.8272008849999998,
-      "ecpm": 1.014970411042945
+      "revenue": 0.8272008849999996,
+      "ecpm": 1.0149704110429452
+    },
+    {
+      "date": "2026-09-28",
+      "inventory": 5038,
+      "impression": 1122,
+      "revenue": 1.0960619249999999,
+      "ecpm": 0.9768822860962568
     }
   ],
   "totals": {
-    "inventory": 14001,
-    "impression": 16457,
-    "revenue": 23.907293165000002,
-    "rpm": 1.7075418302264125,
-    "fillrate": 117.54160417113064
+    "inventory": 19039,
+    "impression": 17579,
+    "revenue": 25.003355090000007,
+    "rpm": 1.3132703970796789,
+    "fillrate": 92.33153001733284
   }
 }
