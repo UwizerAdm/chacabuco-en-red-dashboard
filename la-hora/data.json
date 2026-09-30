@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-09-29T13:30:12.299Z",
+  "updated_at": "2026-09-30T13:07:13.618Z",
   "slug": "la-hora",
   "domain": "lahora.com.ec",
   "displayName": "La Hora",
@@ -11,13 +11,6 @@
   },
   "range_days": 30,
   "daily": [
-    {
-      "date": "2026-08-30",
-      "inventory": 0,
-      "impression": 0,
-      "revenue": 0,
-      "ecpm": 0
-    },
     {
       "date": "2026-08-31",
       "inventory": 0,
@@ -148,7 +141,7 @@
       "date": "2026-09-18",
       "inventory": 3726,
       "impression": 3726,
-      "revenue": 1.8630000000000004,
+      "revenue": 1.8630000000000002,
       "ecpm": 0
     },
     {
@@ -176,28 +169,28 @@
       "date": "2026-09-22",
       "inventory": 6119,
       "impression": 6119,
-      "revenue": 3.0595000000000003,
+      "revenue": 3.059499999999999,
       "ecpm": 0
     },
     {
       "date": "2026-09-23",
       "inventory": 7231,
       "impression": 7231,
-      "revenue": 3.6154999999999964,
+      "revenue": 3.615499999999997,
       "ecpm": 0
     },
     {
       "date": "2026-09-24",
       "inventory": 5578,
       "impression": 5578,
-      "revenue": 2.7890000000000006,
+      "revenue": 2.7889999999999997,
       "ecpm": 0
     },
     {
       "date": "2026-09-25",
       "inventory": 5359,
       "impression": 5359,
-      "revenue": 2.679500000000001,
+      "revenue": 2.679499999999999,
       "ecpm": 0
     },
     {
@@ -211,21 +204,28 @@
       "date": "2026-09-27",
       "inventory": 6631,
       "impression": 6631,
-      "revenue": 3.3155,
+      "revenue": 3.3154999999999966,
       "ecpm": 0
     },
     {
       "date": "2026-09-28",
       "inventory": 8969,
       "impression": 8969,
-      "revenue": 4.484499999999994,
+      "revenue": 4.484499999999996,
+      "ecpm": 0
+    },
+    {
+      "date": "2026-09-29",
+      "inventory": 8958,
+      "impression": 8958,
+      "revenue": 4.478999999999996,
       "ecpm": 0
     }
   ],
   "totals": {
-    "inventory": 59014,
-    "impression": 59014,
-    "revenue": 29.506999999999994,
+    "inventory": 67972,
+    "impression": 67972,
+    "revenue": 33.98599999999999,
     "rpm": 0.4999999999999999,
     "fillrate": 100
   }

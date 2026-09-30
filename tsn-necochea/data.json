@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-09-29T13:30:12.299Z",
+  "updated_at": "2026-09-30T13:07:13.617Z",
   "slug": "tsn-necochea",
   "domain": "tsnnecochea.com.ar",
   "displayName": "TSN Necochea",
@@ -11,13 +11,6 @@
   },
   "range_days": 30,
   "daily": [
-    {
-      "date": "2026-08-30",
-      "inventory": 0,
-      "impression": 0,
-      "revenue": 0,
-      "ecpm": 0
-    },
     {
       "date": "2026-08-31",
       "inventory": 0,
@@ -135,7 +128,7 @@
       "inventory": 4779,
       "impression": 6389,
       "revenue": 3.3533586520000007,
-      "ecpm": 0.5248644000626076
+      "ecpm": 0.5248644000626075
     },
     {
       "date": "2026-09-17",
@@ -149,27 +142,27 @@
       "inventory": 8970,
       "impression": 7044,
       "revenue": 5.499389609,
-      "ecpm": 0.7807197059909142
+      "ecpm": 0.7807197059909141
     },
     {
       "date": "2026-09-19",
       "inventory": 11749,
       "impression": 8253,
       "revenue": 6.092814328999999,
-      "ecpm": 0.7382544927904999
+      "ecpm": 0.7382544927905
     },
     {
       "date": "2026-09-20",
       "inventory": 10058,
       "impression": 8511,
       "revenue": 5.384301538,
-      "ecpm": 0.63262854400188
+      "ecpm": 0.6326285440018798
     },
     {
       "date": "2026-09-21",
       "inventory": 8861,
       "impression": 8505,
-      "revenue": 5.177094335,
+      "revenue": 5.177094334999999,
       "ecpm": 0.6087118559670782
     },
     {
@@ -177,27 +170,27 @@
       "inventory": 7038,
       "impression": 7417,
       "revenue": 4.570909503999999,
-      "ecpm": 0.616274707294054
+      "ecpm": 0.6162747072940541
     },
     {
       "date": "2026-09-23",
       "inventory": 6964,
       "impression": 6508,
       "revenue": 3.3316388769999996,
-      "ecpm": 0.5119297598340502
+      "ecpm": 0.5119297598340501
     },
     {
       "date": "2026-09-24",
       "inventory": 4768,
       "impression": 4676,
-      "revenue": 2.9441760039999996,
-      "ecpm": 0.6296355868263472
+      "revenue": 2.944176004,
+      "ecpm": 0.6296355868263471
     },
     {
       "date": "2026-09-25",
       "inventory": 6010,
       "impression": 6800,
-      "revenue": 4.524275567,
+      "revenue": 4.524275566999999,
       "ecpm": 0.6653346422058821
     },
     {
@@ -211,22 +204,29 @@
       "date": "2026-09-27",
       "inventory": 5814,
       "impression": 6086,
-      "revenue": 4.826183712,
-      "ecpm": 0.7929976523167925
+      "revenue": 4.826183711999998,
+      "ecpm": 0.7929976523167923
     },
     {
       "date": "2026-09-28",
       "inventory": 7093,
       "impression": 5689,
       "revenue": 4.703678608999999,
-      "ecpm": 0.8268023570047459
+      "ecpm": 0.8268023570047461
+    },
+    {
+      "date": "2026-09-29",
+      "inventory": 6605,
+      "impression": 6459,
+      "revenue": 4.902585023000001,
+      "ecpm": 0.75903158739743
     }
   ],
   "totals": {
-    "inventory": 94478,
-    "impression": 88195,
-    "revenue": 58.272081259000004,
-    "rpm": 0.6167793693664133,
-    "fillrate": 93.34977455068905
+    "inventory": 101083,
+    "impression": 94654,
+    "revenue": 63.17466628199999,
+    "rpm": 0.6249781494613336,
+    "fillrate": 93.63988009853288
   }
 }
