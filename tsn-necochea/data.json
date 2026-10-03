@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-02T13:17:19.608Z",
+  "updated_at": "2026-10-03T12:07:11.728Z",
   "slug": "tsn-necochea",
   "domain": "tsnnecochea.com.ar",
   "displayName": "TSN Necochea",
@@ -11,13 +11,6 @@
   },
   "range_days": 30,
   "daily": [
-    {
-      "date": "2026-09-02",
-      "inventory": 0,
-      "impression": 0,
-      "revenue": 0,
-      "ecpm": 0
-    },
     {
       "date": "2026-09-03",
       "inventory": 0,
@@ -114,55 +107,55 @@
       "inventory": 4779,
       "impression": 6389,
       "revenue": 3.3533586520000007,
-      "ecpm": 0.5248644000626077
+      "ecpm": 0.5248644000626073
     },
     {
       "date": "2026-09-17",
       "inventory": 6074,
       "impression": 6219,
-      "revenue": 3.934339675000001,
-      "ecpm": 0.6326322037305033
+      "revenue": 3.9343396750000017,
+      "ecpm": 0.6326322037305031
     },
     {
       "date": "2026-09-18",
       "inventory": 8970,
       "impression": 7044,
       "revenue": 5.499389609000001,
-      "ecpm": 0.7807197059909141
+      "ecpm": 0.7807197059909139
     },
     {
       "date": "2026-09-19",
       "inventory": 11749,
       "impression": 8253,
       "revenue": 6.092814328999999,
-      "ecpm": 0.7382544927905003
+      "ecpm": 0.7382544927905001
     },
     {
       "date": "2026-09-20",
       "inventory": 10058,
       "impression": 8511,
-      "revenue": 5.384301537999999,
+      "revenue": 5.384301537999997,
       "ecpm": 0.63262854400188
     },
     {
       "date": "2026-09-21",
       "inventory": 8861,
       "impression": 8505,
-      "revenue": 5.177094334999998,
+      "revenue": 5.177094335,
       "ecpm": 0.6087118559670783
     },
     {
       "date": "2026-09-22",
       "inventory": 7038,
       "impression": 7417,
-      "revenue": 4.570909504,
-      "ecpm": 0.6162747072940542
+      "revenue": 4.570909504000001,
+      "ecpm": 0.6162747072940543
     },
     {
       "date": "2026-09-23",
       "inventory": 6964,
       "impression": 6508,
-      "revenue": 3.331638877,
+      "revenue": 3.331638877000001,
       "ecpm": 0.5119297598340502
     },
     {
@@ -176,57 +169,64 @@
       "date": "2026-09-25",
       "inventory": 6010,
       "impression": 6800,
-      "revenue": 4.524275567,
-      "ecpm": 0.6653346422058823
+      "revenue": 4.524275566999999,
+      "ecpm": 0.665334642205882
     },
     {
       "date": "2026-09-26",
       "inventory": 6300,
       "impression": 6098,
-      "revenue": 3.929920848,
-      "ecpm": 0.6444606179075105
+      "revenue": 3.929920847999999,
+      "ecpm": 0.6444606179075103
     },
     {
       "date": "2026-09-27",
       "inventory": 5814,
       "impression": 6086,
-      "revenue": 4.826183711999999,
-      "ecpm": 0.7929976523167926
+      "revenue": 4.826183712000001,
+      "ecpm": 0.7929976523167925
     },
     {
       "date": "2026-09-28",
       "inventory": 7093,
       "impression": 5689,
-      "revenue": 4.703678608999999,
+      "revenue": 4.703678608999997,
       "ecpm": 0.8268023570047458
     },
     {
       "date": "2026-09-29",
       "inventory": 6605,
       "impression": 6459,
-      "revenue": 4.902585022999999,
-      "ecpm": 0.75903158739743
+      "revenue": 4.902585023,
+      "ecpm": 0.7590315873974299
     },
     {
       "date": "2026-09-30",
       "inventory": 6577,
       "impression": 7318,
       "revenue": 5.040136857,
-      "ecpm": 0.6887314644711671
+      "ecpm": 0.6887314644711673
     },
     {
       "date": "2026-10-01",
       "inventory": 6858,
       "impression": 6950,
-      "revenue": 4.472722317,
+      "revenue": 4.472722316999999,
       "ecpm": 0.6435571679136692
+    },
+    {
+      "date": "2026-10-02",
+      "inventory": 6812,
+      "impression": 6483,
+      "revenue": 4.300950591,
+      "ecpm": 0.6634198042572886
     }
   ],
   "totals": {
-    "inventory": 114518,
-    "impression": 108922,
-    "revenue": 72.687525456,
-    "rpm": 0.6347257676173178,
-    "fillrate": 95.11343194956251
+    "inventory": 121330,
+    "impression": 115405,
+    "revenue": 76.988476047,
+    "rpm": 0.6345378393389929,
+    "fillrate": 95.1166240830792
   }
 }
