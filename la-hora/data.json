@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-03T12:07:11.728Z",
+  "updated_at": "2026-10-04T12:55:00.547Z",
   "slug": "la-hora",
   "domain": "lahora.com.ec",
   "displayName": "La Hora",
@@ -11,13 +11,6 @@
   },
   "range_days": 30,
   "daily": [
-    {
-      "date": "2026-09-03",
-      "inventory": 0,
-      "impression": 0,
-      "revenue": 0,
-      "ecpm": 0
-    },
     {
       "date": "2026-09-04",
       "inventory": 0,
@@ -120,14 +113,14 @@
       "date": "2026-09-18",
       "inventory": 3726,
       "impression": 3726,
-      "revenue": 1.8630000000000004,
+      "revenue": 1.863,
       "ecpm": 0
     },
     {
       "date": "2026-09-19",
       "inventory": 3845,
       "impression": 3845,
-      "revenue": 1.9225000000000008,
+      "revenue": 1.9225000000000003,
       "ecpm": 0
     },
     {
@@ -141,7 +134,7 @@
       "date": "2026-09-21",
       "inventory": 3405,
       "impression": 3405,
-      "revenue": 1.7025000000000003,
+      "revenue": 1.7025000000000001,
       "ecpm": 0
     },
     {
@@ -155,7 +148,7 @@
       "date": "2026-09-23",
       "inventory": 7231,
       "impression": 7231,
-      "revenue": 3.615499999999997,
+      "revenue": 3.6154999999999973,
       "ecpm": 0
     },
     {
@@ -176,56 +169,63 @@
       "date": "2026-09-26",
       "inventory": 3555,
       "impression": 3555,
-      "revenue": 1.7775000000000003,
+      "revenue": 1.7775000000000007,
       "ecpm": 0
     },
     {
       "date": "2026-09-27",
       "inventory": 6631,
       "impression": 6631,
-      "revenue": 3.3154999999999992,
+      "revenue": 3.3154999999999974,
       "ecpm": 0
     },
     {
       "date": "2026-09-28",
       "inventory": 8969,
       "impression": 8969,
-      "revenue": 4.4845,
+      "revenue": 4.484499999999997,
       "ecpm": 0
     },
     {
       "date": "2026-09-29",
       "inventory": 8958,
       "impression": 8958,
-      "revenue": 4.478999999999991,
+      "revenue": 4.4789999999999965,
       "ecpm": 0
     },
     {
       "date": "2026-09-30",
       "inventory": 8574,
       "impression": 8574,
-      "revenue": 4.286999999999994,
+      "revenue": 4.286999999999991,
       "ecpm": 0
     },
     {
       "date": "2026-10-01",
       "inventory": 5363,
       "impression": 5363,
-      "revenue": 2.681499999999996,
+      "revenue": 2.6814999999999993,
       "ecpm": 0
     },
     {
       "date": "2026-10-02",
       "inventory": 8606,
       "impression": 8606,
-      "revenue": 4.302999999999998,
+      "revenue": 4.3029999999999955,
+      "ecpm": 0
+    },
+    {
+      "date": "2026-10-03",
+      "inventory": 6288,
+      "impression": 6288,
+      "revenue": 3.1439999999999984,
       "ecpm": 0
     }
   ],
   "totals": {
-    "inventory": 90515,
-    "impression": 90515,
-    "revenue": 45.25749999999998,
+    "inventory": 96803,
+    "impression": 96803,
+    "revenue": 48.40149999999998,
     "rpm": 0.4999999999999998,
     "fillrate": 100
   }
