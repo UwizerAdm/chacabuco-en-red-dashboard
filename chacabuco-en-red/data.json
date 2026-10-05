@@ -8,8 +8,393 @@
     "type": "image",
     "file": "chacabuco-logo.png"
   },
-  "range_days": 30,
+  "range_days": 85,
   "daily": [
+    {
+      "date": "2026-07-12",
+      "inventory": 0,
+      "impression": 0,
+      "revenue": 0,
+      "ecpm": 0
+    },
+    {
+      "date": "2026-07-13",
+      "inventory": 0,
+      "impression": 0,
+      "revenue": 0,
+      "ecpm": 0
+    },
+    {
+      "date": "2026-07-14",
+      "inventory": 0,
+      "impression": 0,
+      "revenue": 0,
+      "ecpm": 0
+    },
+    {
+      "date": "2026-07-15",
+      "inventory": 0,
+      "impression": 0,
+      "revenue": 0,
+      "ecpm": 0
+    },
+    {
+      "date": "2026-07-16",
+      "inventory": 0,
+      "impression": 0,
+      "revenue": 0,
+      "ecpm": 0
+    },
+    {
+      "date": "2026-07-17",
+      "inventory": 0,
+      "impression": 0,
+      "revenue": 0,
+      "ecpm": 0
+    },
+    {
+      "date": "2026-07-18",
+      "inventory": 0,
+      "impression": 0,
+      "revenue": 0,
+      "ecpm": 0
+    },
+    {
+      "date": "2026-07-19",
+      "inventory": 0,
+      "impression": 0,
+      "revenue": 0,
+      "ecpm": 0
+    },
+    {
+      "date": "2026-07-20",
+      "inventory": 0,
+      "impression": 0,
+      "revenue": 0,
+      "ecpm": 0
+    },
+    {
+      "date": "2026-07-21",
+      "inventory": 0,
+      "impression": 0,
+      "revenue": 0,
+      "ecpm": 0
+    },
+    {
+      "date": "2026-07-22",
+      "inventory": 0,
+      "impression": 0,
+      "revenue": 0,
+      "ecpm": 0
+    },
+    {
+      "date": "2026-07-23",
+      "inventory": 0,
+      "impression": 0,
+      "revenue": 0,
+      "ecpm": 0
+    },
+    {
+      "date": "2026-07-24",
+      "inventory": 0,
+      "impression": 0,
+      "revenue": 0,
+      "ecpm": 0
+    },
+    {
+      "date": "2026-07-25",
+      "inventory": 0,
+      "impression": 0,
+      "revenue": 0,
+      "ecpm": 0
+    },
+    {
+      "date": "2026-07-26",
+      "inventory": 0,
+      "impression": 0,
+      "revenue": 0,
+      "ecpm": 0
+    },
+    {
+      "date": "2026-07-27",
+      "inventory": 0,
+      "impression": 0,
+      "revenue": 0,
+      "ecpm": 0
+    },
+    {
+      "date": "2026-07-28",
+      "inventory": 0,
+      "impression": 0,
+      "revenue": 0,
+      "ecpm": 0
+    },
+    {
+      "date": "2026-07-29",
+      "inventory": 0,
+      "impression": 0,
+      "revenue": 0,
+      "ecpm": 0
+    },
+    {
+      "date": "2026-07-30",
+      "inventory": 0,
+      "impression": 0,
+      "revenue": 0,
+      "ecpm": 0
+    },
+    {
+      "date": "2026-07-31",
+      "inventory": 0,
+      "impression": 0,
+      "revenue": 0,
+      "ecpm": 0
+    },
+    {
+      "date": "2026-08-01",
+      "inventory": 0,
+      "impression": 0,
+      "revenue": 0,
+      "ecpm": 0
+    },
+    {
+      "date": "2026-08-02",
+      "inventory": 0,
+      "impression": 0,
+      "revenue": 0,
+      "ecpm": 0
+    },
+    {
+      "date": "2026-08-03",
+      "inventory": 0,
+      "impression": 0,
+      "revenue": 0,
+      "ecpm": 0
+    },
+    {
+      "date": "2026-08-04",
+      "inventory": 0,
+      "impression": 0,
+      "revenue": 0,
+      "ecpm": 0
+    },
+    {
+      "date": "2026-08-05",
+      "inventory": 0,
+      "impression": 0,
+      "revenue": 0,
+      "ecpm": 0
+    },
+    {
+      "date": "2026-08-06",
+      "inventory": 0,
+      "impression": 0,
+      "revenue": 0,
+      "ecpm": 0
+    },
+    {
+      "date": "2026-08-07",
+      "inventory": 11043,
+      "impression": 7905,
+      "revenue": 3.917910255999998,
+      "ecpm": 0.49562432080961405
+    },
+    {
+      "date": "2026-08-08",
+      "inventory": 19307,
+      "impression": 14851,
+      "revenue": 9.248293568000001,
+      "ecpm": 0.6227387763786949
+    },
+    {
+      "date": "2026-08-09",
+      "inventory": 12719,
+      "impression": 11269,
+      "revenue": 10.387496367999999,
+      "ecpm": 0.9217762328511842
+    },
+    {
+      "date": "2026-08-10",
+      "inventory": 20981,
+      "impression": 17076,
+      "revenue": 16.316158175999995,
+      "ecpm": 0.9555023527758247
+    },
+    {
+      "date": "2026-08-11",
+      "inventory": 23682,
+      "impression": 13802,
+      "revenue": 11.331273728000003,
+      "ecpm": 0.820987808143747
+    },
+    {
+      "date": "2026-08-12",
+      "inventory": 14995,
+      "impression": 11188,
+      "revenue": 7.583752031999997,
+      "ecpm": 0.677846981766178
+    },
+    {
+      "date": "2026-08-13",
+      "inventory": 23483,
+      "impression": 13591,
+      "revenue": 7.8541005440000005,
+      "ecpm": 0.5778898200279596
+    },
+    {
+      "date": "2026-08-14",
+      "inventory": 32648,
+      "impression": 18903,
+      "revenue": 11.41532856,
+      "ecpm": 0.6038897825741943
+    },
+    {
+      "date": "2026-08-15",
+      "inventory": 29982,
+      "impression": 18795,
+      "revenue": 9.123796831999998,
+      "ecpm": 0.4854374478318697
+    },
+    {
+      "date": "2026-08-16",
+      "inventory": 23031,
+      "impression": 14329,
+      "revenue": 6.207460128,
+      "ecpm": 0.4332095839207204
+    },
+    {
+      "date": "2026-08-17",
+      "inventory": 26745,
+      "impression": 12990,
+      "revenue": 5.2576518079999985,
+      "ecpm": 0.40474609761354885
+    },
+    {
+      "date": "2026-08-18",
+      "inventory": 33348,
+      "impression": 15171,
+      "revenue": 7.348595071999999,
+      "ecpm": 0.48438435646958006
+    },
+    {
+      "date": "2026-08-19",
+      "inventory": 34940,
+      "impression": 17215,
+      "revenue": 7.316313120000001,
+      "ecpm": 0.4249964054603544
+    },
+    {
+      "date": "2026-08-20",
+      "inventory": 24623,
+      "impression": 11566,
+      "revenue": 5.017958159999999,
+      "ecpm": 0.43385424174304005
+    },
+    {
+      "date": "2026-08-21",
+      "inventory": 27773,
+      "impression": 18977,
+      "revenue": 7.611834912,
+      "ecpm": 0.40110844243031035
+    },
+    {
+      "date": "2026-08-22",
+      "inventory": 17290,
+      "impression": 16113,
+      "revenue": 7.212395392,
+      "ecpm": 0.4476134420654131
+    },
+    {
+      "date": "2026-08-23",
+      "inventory": 16069,
+      "impression": 9621,
+      "revenue": 4.03674256,
+      "ecpm": 0.4195761937428544
+    },
+    {
+      "date": "2026-08-24",
+      "inventory": 21092,
+      "impression": 12967,
+      "revenue": 5.327507952000001,
+      "ecpm": 0.41085123405568
+    },
+    {
+      "date": "2026-08-25",
+      "inventory": 20045,
+      "impression": 13199,
+      "revenue": 6.212491055999999,
+      "ecpm": 0.4706789193120693
+    },
+    {
+      "date": "2026-08-26",
+      "inventory": 19611,
+      "impression": 17347,
+      "revenue": 11.305991168,
+      "ecpm": 0.6517548376088085
+    },
+    {
+      "date": "2026-08-27",
+      "inventory": 23688,
+      "impression": 18275,
+      "revenue": 11.851748432000006,
+      "ecpm": 0.648522486019152
+    },
+    {
+      "date": "2026-08-28",
+      "inventory": 22498,
+      "impression": 16511,
+      "revenue": 9.107948879999997,
+      "ecpm": 0.551629149052147
+    },
+    {
+      "date": "2026-08-29",
+      "inventory": 21140,
+      "impression": 12732,
+      "revenue": 5.486515648,
+      "ecpm": 0.4309233151115301
+    },
+    {
+      "date": "2026-08-30",
+      "inventory": 22246,
+      "impression": 13762,
+      "revenue": 6.556384447999997,
+      "ecpm": 0.476412181950298
+    },
+    {
+      "date": "2026-08-31",
+      "inventory": 22400,
+      "impression": 15737,
+      "revenue": 6.469158959999998,
+      "ecpm": 0.41107955518840933
+    },
+    {
+      "date": "2026-09-01",
+      "inventory": 29578,
+      "impression": 15313,
+      "revenue": 6.903262463999997,
+      "ecpm": 0.4508105834258473
+    },
+    {
+      "date": "2026-09-02",
+      "inventory": 23227,
+      "impression": 13933,
+      "revenue": 8.667684256000005,
+      "ecpm": 0.6220974848202109
+    },
+    {
+      "date": "2026-09-03",
+      "inventory": 21257,
+      "impression": 15596,
+      "revenue": 8.644082416000002,
+      "ecpm": 0.554249962554501
+    },
+    {
+      "date": "2026-09-04",
+      "inventory": 20322,
+      "impression": 14639,
+      "revenue": 7.565560655999998,
+      "ecpm": 0.5168085699842879
+    },
     {
       "date": "2026-09-05",
       "inventory": 19977,
@@ -222,10 +607,10 @@
     }
   ],
   "totals": {
-    "inventory": 521345,
-    "impression": 205427,
-    "revenue": 143.05110895999997,
-    "rpm": 0.27438856987215754,
-    "fillrate": 39.40327422340293
+    "inventory": 1181108,
+    "impression": 628800,
+    "revenue": 374.3365065119998,
+    "rpm": 0.31693672933550515,
+    "fillrate": 53.23814587658369
   }
 }

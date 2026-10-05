@@ -9,8 +9,127 @@
     "file": "tsn-necochea-logo.png",
     "height": 64
   },
-  "range_days": 30,
+  "range_days": 47,
   "daily": [
+    {
+      "date": "2026-08-19",
+      "inventory": 0,
+      "impression": 0,
+      "revenue": 0,
+      "ecpm": 0
+    },
+    {
+      "date": "2026-08-20",
+      "inventory": 0,
+      "impression": 0,
+      "revenue": 0,
+      "ecpm": 0
+    },
+    {
+      "date": "2026-08-21",
+      "inventory": 0,
+      "impression": 0,
+      "revenue": 0,
+      "ecpm": 0
+    },
+    {
+      "date": "2026-08-22",
+      "inventory": 0,
+      "impression": 0,
+      "revenue": 0,
+      "ecpm": 0
+    },
+    {
+      "date": "2026-08-23",
+      "inventory": 0,
+      "impression": 0,
+      "revenue": 0,
+      "ecpm": 0
+    },
+    {
+      "date": "2026-08-24",
+      "inventory": 0,
+      "impression": 0,
+      "revenue": 0,
+      "ecpm": 0
+    },
+    {
+      "date": "2026-08-25",
+      "inventory": 0,
+      "impression": 0,
+      "revenue": 0,
+      "ecpm": 0
+    },
+    {
+      "date": "2026-08-26",
+      "inventory": 0,
+      "impression": 0,
+      "revenue": 0,
+      "ecpm": 0
+    },
+    {
+      "date": "2026-08-27",
+      "inventory": 0,
+      "impression": 0,
+      "revenue": 0,
+      "ecpm": 0
+    },
+    {
+      "date": "2026-08-28",
+      "inventory": 0,
+      "impression": 0,
+      "revenue": 0,
+      "ecpm": 0
+    },
+    {
+      "date": "2026-08-29",
+      "inventory": 0,
+      "impression": 0,
+      "revenue": 0,
+      "ecpm": 0
+    },
+    {
+      "date": "2026-08-30",
+      "inventory": 0,
+      "impression": 0,
+      "revenue": 0,
+      "ecpm": 0
+    },
+    {
+      "date": "2026-08-31",
+      "inventory": 0,
+      "impression": 0,
+      "revenue": 0,
+      "ecpm": 0
+    },
+    {
+      "date": "2026-09-01",
+      "inventory": 0,
+      "impression": 0,
+      "revenue": 0,
+      "ecpm": 0
+    },
+    {
+      "date": "2026-09-02",
+      "inventory": 0,
+      "impression": 0,
+      "revenue": 0,
+      "ecpm": 0
+    },
+    {
+      "date": "2026-09-03",
+      "inventory": 0,
+      "impression": 0,
+      "revenue": 0,
+      "ecpm": 0
+    },
+    {
+      "date": "2026-09-04",
+      "inventory": 0,
+      "impression": 0,
+      "revenue": 0,
+      "ecpm": 0
+    },
     {
       "date": "2026-09-05",
       "inventory": 0,
