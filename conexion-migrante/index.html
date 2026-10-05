@@ -271,6 +271,7 @@
         <button class="range-btn" data-range="7" data-i18n="range7">Last 7 Days</button>
         <button class="range-btn" data-range="30" data-i18n="range30">Last 30 Days</button>
         <button class="range-btn active" data-range="mtd" data-i18n="rangeMtd">Month to Date</button>
+        <button class="range-btn" data-range="all" data-i18n="rangeAll">All Time</button>
       </div>
       <div class="date-range" id="dateRangeBox">
         <input type="date" id="dateFrom" data-i18n-aria="dateFromAria" aria-label="From">
@@ -403,6 +404,7 @@ const TRANSLATIONS = {
   range7: { en: 'Last 7 Days', es: 'Últimos 7 días' },
   range30: { en: 'Last 30 Days', es: 'Últimos 30 días' },
   rangeMtd: { en: 'Month to Date', es: 'Mes en curso' },
+  rangeAll: { en: 'All Time', es: 'Todo el historial' },
   dateFromAria: { en: 'From', es: 'Desde' },
   dateToAria: { en: 'To', es: 'Hasta' },
   apply: { en: 'Apply', es: 'Aplicar' },
@@ -555,9 +557,8 @@ function setActiveRangeBtn(btn){
 document.querySelectorAll('.range-btn').forEach(btn=>{
   btn.addEventListener('click', ()=>{
     setActiveRangeBtn(btn);
-    currentMode = btn.dataset.range === 'mtd'
-      ? { type: 'mtd' }
-      : { type: 'days', value: parseInt(btn.dataset.range, 10) };
+    const r = btn.dataset.range;
+    currentMode = r === 'mtd' ? { type: 'mtd' } : r === 'all' ? { type: 'all' } : { type: 'days', value: parseInt(r, 10) };
     render();
   });
 });
@@ -679,6 +680,8 @@ function getRows(){
     const lastDate = trimmed.length ? trimmed[trimmed.length-1].date : null;
     const monthPrefix = lastDate ? lastDate.slice(0,7) : null;
     rows = monthPrefix ? trimmed.filter(r => r.date.slice(0,7) === monthPrefix) : [];
+  } else if (currentMode.type === 'all') {
+    rows = trimmed;
   } else {
     rows = trimmed.slice(-currentMode.value);
   }
@@ -695,6 +698,9 @@ function getRangeInfo(){
   }
   if (currentMode.type === 'mtd') {
     return { label: TRANSLATIONS.rangeMtd[currentLang], slug: 'month-to-date' };
+  }
+  if (currentMode.type === 'all') {
+    return { label: TRANSLATIONS.rangeAll[currentLang], slug: 'all-time' };
   }
   const byDays = { 1: ['rangeYesterday','yesterday'], 7: ['range7','last-7-days'], 30: ['range30','last-30-days'] };
   const [key, slug] = byDays[currentMode.value] || ['range7', `last-${currentMode.value}-days`];

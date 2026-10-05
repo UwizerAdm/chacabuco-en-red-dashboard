@@ -36,31 +36,50 @@ adivinar el dominio a partir del nombre del sitio.
   las 4 carpetas (o resolverlo con un script que las sincronice) — hoy son
   copias idénticas.
 - `<slug>/data.json` — generado automáticamente por `fetch-data.js`. NO
-  editar a mano salvo para debug. Estructura: `{ updated_at, slug, domain,
-  displayName, titleAccent, logo, range_days, daily: [{date, impression,
-  revenue, ecpm}], totals }`.
+  editar a mano salvo para debug (o para una migración puntual, como se hizo
+  para agregar campos nuevos sin perder el histórico real). Estructura:
+  `{ updated_at, slug, domain, displayName, titleAccent, logo, range_days,
+  daily: [{date, impression, revenue, ecpm}], totals }`. **`daily` es
+  acumulativo (implementado oct 2026):** arranca el día que se sumó el sitio
+  y crece para siempre, un día más por corrida — no es una ventana de 30
+  días. `range_days` es simplemente `daily.length` (el total acumulado a la
+  fecha), no una constante fija.
 - `fetch-data.js` — corre server-side (GitHub Actions), nunca en el navegador.
   Define el array `SITES` (slug/domain/displayName/titleAccent/logo por
-  sitio) y por cada día del rango hace **un solo fetch** a
-  `https://config.360playvid.info/services/dashboardApi` (la API no da
-  desglose diario nativo, así que se pide día por día) — de esa misma
-  respuesta extrae la fila que matchea el `domain` de cada sitio en `SITES`
-  y escribe `<slug>/data.json`. Usa `PLAYVID_EMAIL` / `PLAYVID_PASSWORD`
-  desde variables de entorno — **nunca hardcodear estas credenciales en
-  ningún archivo**.
+  sitio). Por cada corrida: lee el `data.json` existente de cada sitio,
+  calcula desde qué día le faltan datos (el siguiente al último que ya
+  tiene guardado; si el sitio es nuevo y no tiene `data.json` todavía, arranca
+  con una ventana de bootstrap de `BOOTSTRAP_DAYS` = 30 días) y pide a la API
+  **un solo fetch por día** (nunca uno por sitio) solo para los días que
+  faltan — de esa misma respuesta extrae la fila que matchea el `domain` de
+  cada sitio en `SITES` y agrega (nunca pisa) ese día al `daily` existente.
+  Si el cron se salteó uno o más días (pasa, ver más abajo), el próximo run
+  rellena el hueco completo solo, sin intervención manual. Usa
+  `PLAYVID_EMAIL` / `PLAYVID_PASSWORD` desde variables de entorno — **nunca
+  hardcodear estas credenciales en ningún archivo**.
+- El dashboard (`<slug>/index.html`) tiene un botón **"Todo el historial" /
+  "All Time"** (`currentMode.type === 'all'`) además de
+  Ayer/7 días/30 días/Mes en curso/rango personalizado — muestra todos los
+  días que haya en `daily` desde que el sitio arrancó.
 - `.github/workflows/update-data.yml` — cron diario (07:00 UTC) que corre
   `fetch-data.js` con los secrets del repo y comitea los 4 `data.json`
   actualizados.
 
 ## Logo por sitio
 
-En `fetch-data.js`, cada entrada de `SITES` tiene un campo `logo`:
+En `fetch-data.js`, cada entrada de `SITES` tiene un campo `logo`. Los 4
+sitios ya tienen logo real (ninguno quedó con placeholder):
 - `{ type: 'image', file: 'archivo.png' }` — el archivo vive en
   `<slug>/archivo.png` (ej. Chacabuco en Red: `chacabuco-logo.png`).
+- `{ type: 'image', file: '...', height: 64 }` — el campo `height` (px) es
+  opcional, default 40px si no está. Se usa cuando el logo no es horizontal
+  como el de Chacabuco sino cuadrado/circular con texto chico abajo (isotipo
+  + wordmark en 2 líneas) — a 40px ese texto queda ilegible. Caso de
+  Conexión Migrante, TSN Necochea y La Hora, los tres con `height: 64`.
 - `{ type: 'placeholder', initials: 'XX' }` — todavía no hay logo real; el
   header dibuja un chip con esas iniciales sobre fondo violeta suave (mismo
-  tamaño/radio que el chip con imagen). Es el caso hoy de Conexión Migrante
-  (`CM`), TSN Necochea (`TSN`) y La Hora (`LH`).
+  tamaño/radio que el chip con imagen). Usar si se suma un sitio nuevo sin
+  logo listo todavía.
 
 Para reemplazar un placeholder por el logo real: subir el archivo a la
 carpeta del sitio y cambiar ese `logo` en `fetch-data.js` — es el único lugar

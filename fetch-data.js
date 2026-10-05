@@ -2,7 +2,11 @@
 // Las credenciales viven en variables de entorno (GitHub Secrets), no en este archivo.
 
 const API_URL = 'https://config.360playvid.info/services/dashboardApi';
-const RANGE_DAYS = 30;
+// Ventana inicial SOLO para un sitio que todavía no tiene data.json (primera
+// corrida). Una vez que existe data.json, cada corrida acumula sobre lo que
+// ya hay (no pisa el historial) — solo pide a la API los días nuevos desde
+// el último que ya tiene guardado hasta "ayer".
+const BOOTSTRAP_DAYS = 30;
 
 // Todos los sitios comparten el mismo login de 360playvid (una cuenta, varios
 // dominios) — la API devuelve todos los dominios de la cuenta en el mismo
@@ -52,20 +56,33 @@ const SITES = [
 const EMAIL = process.env.PLAYVID_EMAIL;
 const PASSWORD = process.env.PLAYVID_PASSWORD;
 
+const fs = require('fs');
+
 function isoDate(d) {
   return d.toISOString().slice(0, 10);
 }
 
-function getDateList(days) {
+function addDays(dateStr, n) {
+  const d = new Date(dateStr + 'T00:00:00Z');
+  d.setUTCDate(d.getUTCDate() + n);
+  return isoDate(d);
+}
+
+function dateRangeList(startStr, endStr) {
   const list = [];
-  const end = new Date();
-  end.setUTCDate(end.getUTCDate() - 1); // el dato más reciente disponible es "ayer"
-  const start = new Date(end);
-  start.setUTCDate(end.getUTCDate() - (days - 1));
-  for (let d = new Date(start); d <= end; d.setUTCDate(d.getUTCDate() + 1)) {
+  for (let d = new Date(startStr + 'T00:00:00Z'); isoDate(d) <= endStr; d.setUTCDate(d.getUTCDate() + 1)) {
     list.push(isoDate(d));
   }
   return list;
+}
+
+function loadExistingDaily(slug) {
+  try {
+    const parsed = JSON.parse(fs.readFileSync(`${slug}/data.json`, 'utf8'));
+    return Array.isArray(parsed.daily) ? parsed.daily : [];
+  } catch {
+    return []; // todavía no existe data.json para este sitio (primera corrida)
+  }
 }
 
 async function fetchDay(dateStr) {
@@ -98,24 +115,44 @@ async function main() {
     process.exit(1);
   }
 
-  const dates = getDateList(RANGE_DAYS);
-  const dailyBySite = {};
-  for (const site of SITES) dailyBySite[site.slug] = [];
+  const yesterday = addDays(isoDate(new Date()), -1); // el dato más reciente disponible es "ayer"
+
+  const existingBySite = {};
+  const startBySite = {};
+  for (const site of SITES) {
+    const existing = loadExistingDaily(site.slug);
+    existingBySite[site.slug] = existing;
+    const lastDate = existing.length ? existing[existing.length - 1].date : null;
+    // Si ya hay historial, seguir desde el día siguiente al último guardado.
+    // Si no hay nada (sitio nuevo), arrancar con la ventana de bootstrap.
+    startBySite[site.slug] = lastDate ? addDays(lastDate, 1) : addDays(yesterday, -(BOOTSTRAP_DAYS - 1));
+  }
+
+  const overallStart = Object.values(startBySite).reduce((min, d) => (d < min ? d : min));
+  const dates = overallStart <= yesterday ? dateRangeList(overallStart, yesterday) : [];
+
+  const newDailyBySite = {};
+  for (const site of SITES) newDailyBySite[site.slug] = [];
 
   for (const d of dates) {
     try {
       const bySite = await fetchDay(d);
-      for (const site of SITES) dailyBySite[site.slug].push(bySite[site.slug]);
+      for (const site of SITES) {
+        if (d >= startBySite[site.slug]) newDailyBySite[site.slug].push(bySite[site.slug]);
+      }
     } catch (err) {
       console.error('Error consultando', d, '-', err.message);
       for (const site of SITES) {
-        dailyBySite[site.slug].push({ date: d, inventory: 0, impression: 0, revenue: 0, ecpm: 0 });
+        if (d >= startBySite[site.slug]) {
+          newDailyBySite[site.slug].push({ date: d, inventory: 0, impression: 0, revenue: 0, ecpm: 0 });
+        }
       }
     }
   }
 
   for (const site of SITES) {
-    const daily = dailyBySite[site.slug];
+    // Concat simple: startBySite garantiza que newDaily no se solapa con existing.
+    const daily = existingBySite[site.slug].concat(newDailyBySite[site.slug]);
     const totalInv = daily.reduce((s, r) => s + r.inventory, 0);
     const totalImpr = daily.reduce((s, r) => s + r.impression, 0);
     const totalRev = daily.reduce((s, r) => s + r.revenue, 0);
@@ -129,13 +166,13 @@ async function main() {
       displayName: site.displayName,
       titleAccent: site.titleAccent || null,
       logo: site.logo,
-      range_days: RANGE_DAYS,
+      range_days: daily.length, // historial acumulado total, no una ventana fija
       daily,
       totals: { inventory: totalInv, impression: totalImpr, revenue: totalRev, rpm, fillrate },
     };
 
-    require('fs').writeFileSync(`${site.slug}/data.json`, JSON.stringify(output, null, 2));
-    console.log(`${site.slug}/data.json actualizado:`, output.updated_at);
+    fs.writeFileSync(`${site.slug}/data.json`, JSON.stringify(output, null, 2));
+    console.log(`${site.slug}/data.json actualizado (${daily.length} días acumulados):`, output.updated_at);
   }
 }
 

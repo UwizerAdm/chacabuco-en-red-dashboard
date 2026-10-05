@@ -67,10 +67,14 @@ sitio hardcodeado: lee `displayName`/`domain`/`logo` desde su propio
 ## Funcionamiento diario
 
 - Todos los días a las 07:00 UTC (~04:00 hora Argentina) el Action corre
-  solo: llama a la API de 360playvid día por día de los últimos 30 días
-  (un solo fetch por día para los 4 sitios, porque la API devuelve todos
-  los dominios de la cuenta en la misma respuesta) y comitea los 4
-  `data.json` actualizados.
+  solo: mira hasta qué día tiene datos cada `data.json` y le pide a la API
+  solo los días que le faltan hasta ayer (un solo fetch por día para los 4
+  sitios, porque la API devuelve todos los dominios de la cuenta en la misma
+  respuesta), y **suma** esos días al histórico existente — nunca lo pisa.
+  El historial de cada sitio crece para siempre desde el día que se sumó
+  (ver botón "Todo el historial" en el dashboard). Si el cron se saltea un
+  día (pasa — ver "Si algo no actualiza" abajo), la corrida siguiente
+  rellena el hueco sola.
 - Cada página pública (`index.html`) solo lee su propio `data.json` — nunca
   ve ni necesita el email/contraseña.
 - Si querés cambiar el horario, editar la línea `cron:` en
@@ -98,7 +102,10 @@ Cada sitio define su logo en `fetch-data.js` (array `SITES`, campo `logo`):
 
 Para reemplazar un placeholder por el logo real: subir el archivo a la
 carpeta del sitio y cambiar ese `logo` en `fetch-data.js` — es el único lugar
-a tocar, el `index.html` no cambia.
+a tocar, el `index.html` no cambia. Si el logo no es horizontal (por ejemplo
+un isotipo cuadrado o circular con texto chico abajo), agregar un campo
+`height` en píxeles (ej. `{ type: 'image', file: '...png', height: 64 }`)
+para que se lea bien en el chip — el default sin ese campo es 40px.
 
 ## Si algo no actualiza
 
@@ -108,3 +115,10 @@ a tocar, el `index.html` no cambia.
 - Cada página muestra "(desactualizado)" en rojo si su `data.json` tiene más
   de 30 horas sin refrescar, para que se note de un vistazo si el cron
   dejó de correr.
+- GitHub a veces demora o directamente saltea una corrida de `schedule` en
+  repos de poca actividad (no es un bug nuestro). Si un número no coincide
+  con el panel nativo de 360playvid, antes que nada correr
+  `gh run list --workflow=update-data.yml` para ver si el `data.json` le
+  falta el día más reciente, y si es así, `gh workflow run update-data.yml`
+  a mano — la corrida siguiente rellena el hueco sola gracias al historial
+  acumulativo.
