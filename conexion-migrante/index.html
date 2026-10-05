@@ -269,7 +269,7 @@
       <div class="range-group">
         <button class="range-btn" data-range="1" data-i18n="rangeYesterday">Yesterday</button>
         <button class="range-btn" data-range="7" data-i18n="range7">Last 7 Days</button>
-        <button class="range-btn" data-range="30" data-i18n="range30">Last 30 Days</button>
+        <button class="range-btn" data-range="prevMonth" data-i18n="rangePrevMonth">Previous Month</button>
         <button class="range-btn active" data-range="mtd" data-i18n="rangeMtd">Month to Date</button>
         <button class="range-btn" data-range="all" data-i18n="rangeAll">All Time</button>
       </div>
@@ -402,7 +402,7 @@ const TRANSLATIONS = {
   poweredBy: { en: 'Powered by', es: 'Desarrollado por' },
   rangeYesterday: { en: 'Yesterday', es: 'Ayer' },
   range7: { en: 'Last 7 Days', es: 'Últimos 7 días' },
-  range30: { en: 'Last 30 Days', es: 'Últimos 30 días' },
+  rangePrevMonth: { en: 'Previous Month', es: 'Mes anterior' },
   rangeMtd: { en: 'Month to Date', es: 'Mes en curso' },
   rangeAll: { en: 'All Time', es: 'Todo el historial' },
   dateFromAria: { en: 'From', es: 'Desde' },
@@ -558,7 +558,10 @@ document.querySelectorAll('.range-btn').forEach(btn=>{
   btn.addEventListener('click', ()=>{
     setActiveRangeBtn(btn);
     const r = btn.dataset.range;
-    currentMode = r === 'mtd' ? { type: 'mtd' } : r === 'all' ? { type: 'all' } : { type: 'days', value: parseInt(r, 10) };
+    currentMode = r === 'mtd' ? { type: 'mtd' }
+      : r === 'all' ? { type: 'all' }
+      : r === 'prevMonth' ? { type: 'prevMonth' }
+      : { type: 'days', value: parseInt(r, 10) };
     render();
   });
 });
@@ -671,6 +674,13 @@ function getTrimmedDaily(){
   return firstActive === -1 ? [] : all.slice(firstActive);
 }
 
+function prevMonthPrefix(monthPrefix){
+  const [y, m] = monthPrefix.split('-').map(Number);
+  const d = new Date(Date.UTC(y, m - 1, 1));
+  d.setUTCMonth(d.getUTCMonth() - 1);
+  return d.getUTCFullYear() + '-' + String(d.getUTCMonth() + 1).padStart(2, '0');
+}
+
 function getRows(){
   const trimmed = getTrimmedDaily();
   let rows;
@@ -679,6 +689,10 @@ function getRows(){
   } else if (currentMode.type === 'mtd') {
     const lastDate = trimmed.length ? trimmed[trimmed.length-1].date : null;
     const monthPrefix = lastDate ? lastDate.slice(0,7) : null;
+    rows = monthPrefix ? trimmed.filter(r => r.date.slice(0,7) === monthPrefix) : [];
+  } else if (currentMode.type === 'prevMonth') {
+    const lastDate = trimmed.length ? trimmed[trimmed.length-1].date : null;
+    const monthPrefix = lastDate ? prevMonthPrefix(lastDate.slice(0,7)) : null;
     rows = monthPrefix ? trimmed.filter(r => r.date.slice(0,7) === monthPrefix) : [];
   } else if (currentMode.type === 'all') {
     rows = trimmed;
@@ -699,10 +713,13 @@ function getRangeInfo(){
   if (currentMode.type === 'mtd') {
     return { label: TRANSLATIONS.rangeMtd[currentLang], slug: 'month-to-date' };
   }
+  if (currentMode.type === 'prevMonth') {
+    return { label: TRANSLATIONS.rangePrevMonth[currentLang], slug: 'previous-month' };
+  }
   if (currentMode.type === 'all') {
     return { label: TRANSLATIONS.rangeAll[currentLang], slug: 'all-time' };
   }
-  const byDays = { 1: ['rangeYesterday','yesterday'], 7: ['range7','last-7-days'], 30: ['range30','last-30-days'] };
+  const byDays = { 1: ['rangeYesterday','yesterday'], 7: ['range7','last-7-days'] };
   const [key, slug] = byDays[currentMode.value] || ['range7', `last-${currentMode.value}-days`];
   return { label: TRANSLATIONS[key][currentLang], slug };
 }
