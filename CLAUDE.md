@@ -87,6 +87,13 @@ Para reemplazar un placeholder por el logo real: subir el archivo a la
 carpeta del sitio y cambiar ese `logo` en `fetch-data.js` — es el único lugar
 a tocar, `index.html` no cambia (lee el `logo` desde `data.json`).
 
+Ojo: en la raíz del repo hay dos PNG sueltos, `conexion-migrante-logo.png`
+y `tsn-necochea-logo.png` (sin trackear en git). Son copias idénticas de
+`conexion-migrante/conexion-migrante-logo.png` y
+`tsn-necochea/tsn-necochea-logo.png`. Ni `fetch-data.js` ni `index.html`
+los usan (el logo siempre se busca dentro de `<slug>/`), así que se pueden
+ignorar.
+
 `titleAccent` (opcional, por sitio): qué substring del `displayName` se
 muestra con el degradé violeta en el `<h1>`. Chacabuco en Red usa
 `'en Red'` (mantiene el look original: "Chacabuco" plano + "en Red"
