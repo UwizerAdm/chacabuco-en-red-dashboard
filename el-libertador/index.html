@@ -1,0 +1,919 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard</title>
+<link rel="icon" type="image/png" href="uwizer-favicon-32.png">
+<script>
+  (function(){
+    var saved = localStorage.getItem('theme');
+    var theme = saved || (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
+    document.documentElement.setAttribute('data-theme', theme);
+  })();
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500;600&family=Poppins:wght@400;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>
+<style>
+  :root, :root[data-theme="dark"]{
+    --bg:#0a0714; --panel:#140f26; --ink:#f5f2fb; --muted:#9b93b8;
+    --line:rgba(255,255,255,.09); --brand:#8b5cf6; --brand-bright:#a78bfa;
+    --brand-deep:#5b21b6; --mint:#7ee0c3; --radius:16px;
+    --chip-bg:#0e0a1c; --body-glow:rgba(139,92,246,.20);
+    --header-1:#150c2c; --header-2:#0a0616; --header-ink:#f5f2fb;
+    --glow-1:rgba(167,139,250,.35); --glow-2:rgba(139,92,246,.12);
+    --net-stroke:#a78bfa; --net-fill:#c4b5fd; --net-opacity:.5;
+    --wordmark-fill:#ffffff; --accent-soft:#c4b5fd; --stale:#f0a3a3;
+    --picker-scheme:dark; --placeholder-bg:rgba(139,92,246,.22);
+  }
+  :root[data-theme="light"]{
+    --bg:#f7f5fb; --panel:#ffffff; --ink:#1a1625; --muted:#6b6380;
+    --line:rgba(123,42,183,.14); --brand:#7c3aed; --brand-bright:#7c3aed;
+    --brand-deep:#5b21b6; --mint:#0f9d78; --radius:16px;
+    --chip-bg:#efe9fa; --body-glow:rgba(139,92,246,.10);
+    --header-1:#efe7fb; --header-2:#f7f5fb; --header-ink:#1a1625;
+    --glow-1:rgba(139,92,246,.18); --glow-2:rgba(139,92,246,.08);
+    --net-stroke:#8b5cf6; --net-fill:#7c3aed; --net-opacity:.35;
+    --wordmark-fill:#7B2AB7; --accent-soft:#6d28d9; --stale:#c23b5b;
+    --picker-scheme:light; --placeholder-bg:rgba(124,58,237,.14);
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:radial-gradient(ellipse 900px 500px at 85% -10%, var(--body-glow), transparent 60%), var(--bg);
+    color:var(--ink); font-family:'IBM Plex Sans', sans-serif; -webkit-font-smoothing:antialiased;
+    transition:background-color .2s, color .2s;
+  }
+  .wrap{max-width:1800px; margin:0 auto; padding:28px 24px 60px;}
+
+  header{
+    position:relative; background:linear-gradient(135deg,var(--header-1),var(--header-2) 65%);
+    border:1px solid var(--line); border-radius:20px; padding:28px 30px 56px; color:var(--header-ink);
+    overflow:hidden; margin-bottom:18px; transition:background .2s, color .2s;
+  }
+  header .glow{
+    position:absolute; right:-60px; top:-80px; width:340px; height:340px; border-radius:50%;
+    background:radial-gradient(circle, var(--glow-1), var(--glow-2) 55%, transparent 72%);
+    filter:blur(2px);
+  }
+  header svg.net{position:absolute; right:0; top:0; height:100%; width:46%; opacity:var(--net-opacity);}
+  header svg.net .lines{stroke:var(--net-stroke);}
+  header svg.net .dots{fill:var(--net-fill);}
+
+  .publisher-badge{
+    position:relative; z-index:1; display:inline-block; margin-bottom:18px;
+    background:#fff; border-radius:12px; padding:12px 16px; line-height:0;
+    box-shadow:0 4px 14px rgba(0,0,0,.18);
+  }
+  .publisher-logo{display:block; height:40px; width:auto;}
+  .publisher-badge.is-placeholder{background:var(--placeholder-bg);}
+  .publisher-placeholder{
+    display:flex; align-items:center; justify-content:center; height:40px; min-width:40px;
+    padding:0 6px; font-family:'Space Grotesk', sans-serif; font-weight:700; font-size:15px;
+    letter-spacing:.02em; color:var(--brand-bright);
+  }
+
+  header .eyebrow{
+    font-family:'IBM Plex Mono', monospace; font-size:12px; letter-spacing:.12em;
+    text-transform:uppercase; color:var(--brand-bright); position:relative; z-index:1;
+  }
+  header h1{
+    font-family:'Space Grotesk', sans-serif; font-weight:700; font-size:32px;
+    margin:8px 0 4px; position:relative; z-index:1; letter-spacing:-.01em;
+  }
+  header h1 .accent{
+    background:linear-gradient(90deg,var(--brand-bright),var(--accent-soft));
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+  }
+  header p{margin:0; color:var(--muted); font-size:14px; position:relative; z-index:1;}
+
+  .powered-by{
+    position:absolute; right:20px; bottom:14px; z-index:1;
+    display:flex; align-items:center; gap:6px; opacity:.7;
+  }
+  .powered-by span{
+    font-family:'IBM Plex Mono', monospace; font-size:10px; letter-spacing:.06em;
+    text-transform:uppercase; color:var(--muted);
+  }
+  .powered-by .powered-logo{height:14px; width:auto; display:block;}
+  .powered-by .powered-logo .wordmark{fill:var(--wordmark-fill);}
+
+  .toolbar-panel{
+    background:var(--panel); border:1px solid var(--line); border-radius:var(--radius);
+    padding:12px 16px; margin-bottom:20px;
+  }
+  .toolbar{
+    display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;
+  }
+  .range-group{display:flex; gap:6px; background:var(--chip-bg); border:1px solid var(--line); border-radius:10px; padding:4px;}
+  .range-btn{
+    border:none; background:transparent; padding:8px 14px; font-size:13px; font-weight:600;
+    color:var(--muted); border-radius:7px; cursor:pointer; font-family:'IBM Plex Sans', sans-serif;
+  }
+  .range-btn.active{background:linear-gradient(135deg,var(--brand),var(--brand-deep)); color:#fff;}
+  .updated{font-size:12px; color:var(--muted); font-family:'IBM Plex Mono', monospace;}
+  .updated .stale{color:var(--stale);}
+
+  .toolbar-right{display:flex; align-items:center; gap:14px;}
+  .lang-toggle{display:flex; gap:6px; background:var(--chip-bg); border:1px solid var(--line); border-radius:10px; padding:4px;}
+  .lang-btn{
+    border:none; background:transparent; padding:6px 12px; font-size:12px; font-weight:600;
+    color:var(--muted); border-radius:7px; cursor:pointer; font-family:'IBM Plex Mono', monospace;
+  }
+  .lang-btn.active{background:linear-gradient(135deg,var(--brand),var(--brand-deep)); color:#fff;}
+
+  .theme-toggle{
+    display:flex; align-items:center; justify-content:center; width:32px; height:32px;
+    background:var(--chip-bg); border:1px solid var(--line); border-radius:10px; cursor:pointer; padding:0;
+  }
+  .theme-toggle svg{width:16px; height:16px; stroke:var(--muted);}
+  .theme-toggle .icon-sun{display:none;}
+  .theme-toggle .icon-moon{display:none;}
+  :root[data-theme="dark"] .theme-toggle .icon-sun{display:block;}
+  :root[data-theme="light"] .theme-toggle .icon-moon{display:block;}
+
+  .date-range{
+    display:flex; align-items:center; gap:6px; background:var(--chip-bg); border:1px solid var(--line);
+    border-radius:10px; padding:4px 6px 4px 10px; transition:border-color .15s;
+  }
+  .date-range.active{border-color:var(--brand-bright);}
+  .date-range span{color:var(--muted); font-size:12px;}
+  .date-range input[type="date"]{
+    border:none; background:transparent; color:var(--ink); font-size:13px; padding:4px 2px;
+    font-family:'IBM Plex Mono', monospace; color-scheme:var(--picker-scheme);
+  }
+  .date-range button{
+    border:none; background:linear-gradient(135deg,var(--brand),var(--brand-deep)); color:#fff;
+    padding:7px 12px; font-size:12px; font-weight:600; border-radius:7px; cursor:pointer;
+    font-family:'IBM Plex Sans', sans-serif;
+  }
+
+  .export-group{display:flex; gap:6px; background:var(--chip-bg); border:1px solid var(--line); border-radius:10px; padding:4px;}
+  .export-btn{
+    display:flex; align-items:center; gap:5px; border:none; background:transparent;
+    padding:8px 12px; font-size:13px; font-weight:600; color:var(--muted);
+    border-radius:7px; cursor:pointer; font-family:'IBM Plex Sans', sans-serif;
+  }
+  .export-btn:hover, .export-btn:focus-visible{color:var(--brand-bright);}
+  .export-icon{flex-shrink:0;}
+
+  .kpis{display:grid; grid-template-columns:repeat(4,1fr); gap:16px; margin-bottom:20px;}
+  .kpi{
+    background:var(--panel); border:1px solid var(--line); border-radius:var(--radius);
+    padding:18px 20px; position:relative; overflow:hidden;
+  }
+  .kpi::after{
+    content:''; position:absolute; right:-30px; top:-30px; width:110px; height:110px;
+    border-radius:50%; background:radial-gradient(circle, rgba(139,92,246,.22), transparent 70%);
+  }
+  .kpi .label{
+    font-size:13px; color:var(--muted); font-weight:500; position:relative; z-index:1;
+    display:flex; align-items:center; gap:6px;
+  }
+  .info-btn{
+    display:inline-flex; align-items:center; justify-content:center;
+    width:16px; height:16px; padding:0; border:none; background:none;
+    color:var(--muted); cursor:pointer; border-radius:50%; flex-shrink:0;
+  }
+  .info-btn svg{display:block;}
+  .info-btn:hover, .info-btn:focus-visible{color:var(--brand-bright);}
+  .info-btn:focus-visible{outline:2px solid var(--brand-bright); outline-offset:2px;}
+
+  .kpi-tooltip{
+    position:fixed; z-index:50; max-width:260px; min-width:180px;
+    background:var(--panel); border:1px solid var(--line); border-radius:10px;
+    padding:10px 12px; font-family:'IBM Plex Sans', sans-serif; font-size:12.5px;
+    line-height:1.45; color:var(--ink); box-shadow:0 8px 24px rgba(0,0,0,.28);
+    opacity:0; pointer-events:none; transform:translateY(4px);
+    transition:opacity .12s, transform .12s;
+  }
+  .kpi-tooltip.visible{opacity:1; transform:translateY(0);}
+  .kpi .value{
+    font-family:'IBM Plex Mono', monospace; font-size:28px; font-weight:600; margin-top:8px;
+    background:linear-gradient(90deg,var(--ink),var(--brand-bright));
+    -webkit-background-clip:text; background-clip:text; color:transparent; position:relative; z-index:1;
+  }
+
+  .charts{display:grid; grid-template-columns:1.4fr 1fr; gap:16px;}
+  .chart-card{background:var(--panel); border:1px solid var(--line); border-radius:var(--radius); padding:18px 20px;}
+  .chart-card .head{display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;}
+  .chart-card .head h3{
+    font-family:'Space Grotesk', sans-serif; font-size:15px; margin:0; color:var(--ink);
+    display:flex; align-items:center; gap:8px;
+  }
+  .chart-card .head h3 .bar{width:3px; height:15px; background:var(--brand-bright); display:inline-block; border-radius:2px;}
+  select{
+    border:1px solid var(--line); border-radius:7px; padding:6px 10px; font-size:13px;
+    font-family:'IBM Plex Sans', sans-serif; background:var(--chip-bg); color:var(--ink);
+  }
+  .chart-wrap{height:280px;}
+  .empty-state{text-align:center; color:var(--muted); font-size:13px; padding:60px 10px;}
+  .footer-note{
+    text-align:center; font-size:12px; color:var(--muted); margin-top:26px;
+    font-family:'IBM Plex Mono', monospace;
+  }
+
+  @media (min-width:1400px){
+    .kpis{gap:20px;}
+    .kpi{padding:22px 26px;}
+    .kpi .value{font-size:32px;}
+    .charts{gap:20px;}
+    .chart-wrap{height:310px;}
+  }
+
+  @media (max-width:800px){
+    .kpis{grid-template-columns:repeat(2,1fr);} .charts{grid-template-columns:1fr;} header svg.net{display:none;}
+    .toolbar{justify-content:center;}
+    .range-group{flex-wrap:wrap; justify-content:center;}
+    .date-range{flex-wrap:wrap; justify-content:center;}
+    .toolbar-right{justify-content:center; flex-wrap:wrap;}
+    .export-group{justify-content:center;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="glow"></div>
+    <svg class="net" viewBox="0 0 300 200" xmlns="http://www.w3.org/2000/svg">
+      <g class="lines" stroke-width="1" opacity=".8">
+        <line x1="30" y1="40" x2="110" y2="80"/><line x1="110" y1="80" x2="90" y2="150"/>
+        <line x1="110" y1="80" x2="190" y2="60"/><line x1="190" y1="60" x2="250" y2="120"/>
+        <line x1="190" y1="60" x2="160" y2="20"/><line x1="90" y1="150" x2="180" y2="170"/>
+        <line x1="180" y1="170" x2="250" y2="120"/><line x1="30" y1="40" x2="90" y2="150"/>
+      </g>
+      <g class="dots">
+        <circle cx="30" cy="40" r="4"/><circle cx="110" cy="80" r="5"/><circle cx="90" cy="150" r="4"/>
+        <circle cx="190" cy="60" r="5"/><circle cx="250" cy="120" r="4"/><circle cx="160" cy="20" r="3.5"/>
+        <circle cx="180" cy="170" r="3.5"/>
+      </g>
+    </svg>
+    <div class="publisher-badge" id="publisherBadge"></div>
+    <div class="eyebrow" data-i18n="eyebrow">Performance Dashboard</div>
+    <h1 id="siteName">—</h1>
+    <p id="siteDomain"></p>
+
+    <div class="powered-by">
+      <span data-i18n="poweredBy">Powered by</span>
+      <svg class="powered-logo" viewBox="0 0 486 240" xmlns="http://www.w3.org/2000/svg">
+        <text class="wordmark" x="243" y="170" font-family="Poppins, sans-serif" font-weight="700" font-size="120" text-anchor="middle">uwizer</text>
+      </svg>
+    </div>
+  </header>
+
+  <div class="toolbar-panel">
+    <div class="toolbar">
+      <div class="range-group">
+        <button class="range-btn" data-range="1" data-i18n="rangeYesterday">Yesterday</button>
+        <button class="range-btn" data-range="7" data-i18n="range7">Last 7 Days</button>
+        <button class="range-btn" data-range="prevMonth" data-i18n="rangePrevMonth">Previous Month</button>
+        <button class="range-btn active" data-range="mtd" data-i18n="rangeMtd">Month to Date</button>
+        <button class="range-btn" data-range="all" data-i18n="rangeAll">All Time</button>
+      </div>
+      <div class="date-range" id="dateRangeBox">
+        <input type="date" id="dateFrom" data-i18n-aria="dateFromAria" aria-label="From">
+        <span>–</span>
+        <input type="date" id="dateTo" data-i18n-aria="dateToAria" aria-label="To">
+        <button id="applyDateRange" type="button" data-i18n="apply">Apply</button>
+      </div>
+      <div class="export-group">
+        <button class="export-btn" id="exportCsvBtn" type="button" data-i18n-aria="exportCsvAria" aria-label="">
+          <svg class="export-icon" viewBox="0 0 16 16" width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M8 1.5v8M8 9.5 5 6.5M8 9.5l3-3"/>
+            <path d="M2.5 11v2a1 1 0 0 0 1 1h9a1 1 0 0 0 1-1v-2"/>
+          </svg>
+          CSV
+        </button>
+        <button class="export-btn" id="exportXlsxBtn" type="button" data-i18n-aria="exportXlsxAria" aria-label="">
+          <svg class="export-icon" viewBox="0 0 16 16" width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M8 1.5v8M8 9.5 5 6.5M8 9.5l3-3"/>
+            <path d="M2.5 11v2a1 1 0 0 0 1 1h9a1 1 0 0 0 1-1v-2"/>
+          </svg>
+          Excel
+        </button>
+      </div>
+      <div class="toolbar-right">
+        <button class="theme-toggle" id="themeToggle" type="button" aria-label="Toggle theme">
+          <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="4"/>
+            <line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/>
+            <line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/>
+            <line x1="4.6" y1="4.6" x2="6.7" y2="6.7"/><line x1="17.3" y1="17.3" x2="19.4" y2="19.4"/>
+            <line x1="4.6" y1="19.4" x2="6.7" y2="17.3"/><line x1="17.3" y1="6.7" x2="19.4" y2="4.6"/>
+          </svg>
+          <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 12.8A9 9 0 1 1 11.2 3 7 7 0 0 0 21 12.8Z"/>
+          </svg>
+        </button>
+        <div class="lang-toggle">
+          <button class="lang-btn" data-lang="en">EN</button>
+          <button class="lang-btn" data-lang="es">ES</button>
+        </div>
+        <div class="updated" id="updatedAt" data-i18n="loading">Loading data...</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="kpis">
+    <div class="kpi">
+      <div class="label">
+        <span data-i18n="lblInventory">Inventory</span>
+        <button class="info-btn" type="button" data-tip="tipInventory" data-i18n-aria="tipInventory" aria-label="" aria-describedby="kpiTooltip">
+          <svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.4">
+            <circle cx="8" cy="8" r="6.5"/><line x1="8" y1="7" x2="8" y2="11"/>
+            <circle cx="8" cy="5.2" r="0.9" fill="currentColor" stroke="none"/>
+          </svg>
+        </button>
+      </div>
+      <div class="value" id="kpiInventory">—</div>
+    </div>
+    <div class="kpi">
+      <div class="label">
+        <span data-i18n="lblImpressions">Impressions</span>
+        <button class="info-btn" type="button" data-tip="tipImpressions" data-i18n-aria="tipImpressions" aria-label="" aria-describedby="kpiTooltip">
+          <svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.4">
+            <circle cx="8" cy="8" r="6.5"/><line x1="8" y1="7" x2="8" y2="11"/>
+            <circle cx="8" cy="5.2" r="0.9" fill="currentColor" stroke="none"/>
+          </svg>
+        </button>
+      </div>
+      <div class="value" id="kpiImpressions">—</div>
+    </div>
+    <div class="kpi">
+      <div class="label">
+        <span data-i18n="lblRpm">RPM</span>
+        <button class="info-btn" type="button" data-tip="tipRpm" data-i18n-aria="tipRpm" aria-label="" aria-describedby="kpiTooltip">
+          <svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.4">
+            <circle cx="8" cy="8" r="6.5"/><line x1="8" y1="7" x2="8" y2="11"/>
+            <circle cx="8" cy="5.2" r="0.9" fill="currentColor" stroke="none"/>
+          </svg>
+        </button>
+      </div>
+      <div class="value" id="kpiRpm">—</div>
+    </div>
+    <div class="kpi">
+      <div class="label">
+        <span data-i18n="lblRevenue">Revenue</span>
+        <button class="info-btn" type="button" data-tip="tipRevenue" data-i18n-aria="tipRevenue" aria-label="" aria-describedby="kpiTooltip">
+          <svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.4">
+            <circle cx="8" cy="8" r="6.5"/><line x1="8" y1="7" x2="8" y2="11"/>
+            <circle cx="8" cy="5.2" r="0.9" fill="currentColor" stroke="none"/>
+          </svg>
+        </button>
+      </div>
+      <div class="value" id="kpiRevenue">—</div>
+    </div>
+  </div>
+
+  <div class="kpi-tooltip" id="kpiTooltip" role="tooltip"></div>
+
+  <div class="charts">
+    <div class="chart-card">
+      <div class="head">
+        <h3><span class="bar"></span><span data-i18n="chartDaily">Daily Data</span></h3>
+        <select id="metricSelect">
+          <option value="inventory" data-i18n="optInventory">Inventory</option>
+          <option value="impression" data-i18n="optImpressions">Impressions</option>
+          <option value="revenue" data-i18n="optRevenue">Revenue</option>
+        </select>
+      </div>
+      <div class="chart-wrap"><canvas id="lineChart"></canvas></div>
+      <div class="empty-state" id="lineEmpty" style="display:none;" data-i18n="emptyState">No data available yet.</div>
+    </div>
+    <div class="chart-card">
+      <div class="head"><h3><span class="bar"></span><span data-i18n="chartRevenue">Revenue</span></h3></div>
+      <div class="chart-wrap"><canvas id="barChart"></canvas></div>
+      <div class="empty-state" id="barEmpty" style="display:none;" data-i18n="emptyState">No data available yet.</div>
+    </div>
+  </div>
+
+  <div class="footer-note" data-i18n="footer1">Data provided by Uwizer · daily automatic update</div>
+  <div class="footer-note" style="margin-top:6px; opacity:.75;" data-i18n="footer2">Inventory: player calls. Impressions: ads actually served (can be more than 1 per call in long sessions).</div>
+</div>
+
+<script>
+const UWIZER_FEE = 0.125; // % que se descuenta del revenue crudo de 360playvid antes de mostrarlo/exportarlo
+
+const TRANSLATIONS = {
+  eyebrow: { en: 'Performance Dashboard', es: 'Dashboard de Rendimiento' },
+  poweredBy: { en: 'Powered by', es: 'Desarrollado por' },
+  rangeYesterday: { en: 'Yesterday', es: 'Ayer' },
+  range7: { en: 'Last 7 Days', es: 'Últimos 7 días' },
+  rangePrevMonth: { en: 'Previous Month', es: 'Mes anterior' },
+  rangeMtd: { en: 'Month to Date', es: 'Mes en curso' },
+  rangeAll: { en: 'All Time', es: 'Todo el historial' },
+  dateFromAria: { en: 'From', es: 'Desde' },
+  dateToAria: { en: 'To', es: 'Hasta' },
+  apply: { en: 'Apply', es: 'Aplicar' },
+  loading: { en: 'Loading data...', es: 'Cargando datos...' },
+  updatedPrefix: { en: 'Updated: ', es: 'Actualizado: ' },
+  stale: { en: '(outdated)', es: '(desactualizado)' },
+  noUpdateDate: { en: 'No update date available.', es: 'Sin fecha de actualización.' },
+  errorLoad: {
+    en: 'Could not load data.json — check that the file exists and the Action ran successfully.',
+    es: 'No se pudo cargar data.json — revisar que el archivo exista y que la Action haya corrido.'
+  },
+  lblInventory: { en: 'Inventory', es: 'Inventario' },
+  lblImpressions: { en: 'Impressions', es: 'Impresiones' },
+  lblRpm: { en: 'RPM', es: 'RPM' },
+  lblRevenue: { en: 'Total Revenue', es: 'Ingresos Totales' },
+  tipInventory: {
+    en: 'Number of available opportunities to show a video ad — i.e., how many times the player generated an ad opportunity.',
+    es: 'Cantidad de oportunidades disponibles para mostrar un anuncio de video. Es decir, cuántas veces el player generó una oportunidad publicitaria.'
+  },
+  tipImpressions: {
+    en: 'Number of ads that were actually served out of that inventory.',
+    es: 'Cantidad de anuncios que efectivamente fueron servidos sobre ese inventario.'
+  },
+  tipRpm: {
+    en: 'Average revenue per 1,000 units of inventory. Shows how the site is performing economically on average, regardless of whether each individual impression sold at a different price.',
+    es: 'Ingreso promedio por cada 1.000 unidades de inventario. Permite saber cuánto está rindiendo económicamente el sitio en promedio, más allá de si cada impresión individual se vendió a un precio distinto.'
+  },
+  tipRevenue: {
+    en: 'Money generated by those ad impressions.',
+    es: 'Dinero generado por esas impresiones publicitarias.'
+  },
+  chartDaily: { en: 'Daily Data', es: 'Datos diarios' },
+  chartRevenue: { en: 'Total Revenue', es: 'Ingresos Totales' },
+  optInventory: { en: 'Inventory', es: 'Inventario' },
+  optImpressions: { en: 'Impressions', es: 'Impresiones' },
+  optRevenue: { en: 'Total Revenue', es: 'Ingresos Totales' },
+  emptyState: { en: 'No data available yet.', es: 'No hay datos disponibles todavía.' },
+  footer1: { en: 'Data provided by Uwizer · daily automatic update', es: 'Datos provistos por Uwizer · actualización automática diaria' },
+  footer2: {
+    en: 'Inventory: player calls. Impressions: ads actually served (can be more than 1 per call in long sessions).',
+    es: 'Inventario: llamadas al player. Impresiones: ads efectivamente servidos (pueden ser más de 1 por llamada en sesiones largas).'
+  },
+  csvRangePrefix: { en: 'Range: ', es: 'Rango: ' },
+  csvDateCol: { en: 'Date', es: 'Fecha' },
+  csvTotal: { en: 'Total', es: 'Total' },
+  csvTo: { en: 'to', es: 'a' },
+  csvCustomRange: { en: 'Custom Range', es: 'Rango personalizado' },
+  exportCsvAria: { en: 'Export current range as CSV', es: 'Exportar el rango actual como CSV' },
+  exportXlsxAria: { en: 'Export current range as Excel', es: 'Exportar el rango actual como Excel' }
+};
+
+let fullData = null;
+let hadLoadError = false;
+let currentLang = localStorage.getItem('lang') === 'es' ? 'es' : 'en';
+let currentTheme = document.documentElement.getAttribute('data-theme') || 'dark';
+let currentMode = { type: 'mtd' };
+let lineChart = null, barChart = null;
+let activeInfoBtn = null;
+
+function applyTheme(theme){
+  currentTheme = theme;
+  document.documentElement.setAttribute('data-theme', theme);
+  localStorage.setItem('theme', theme);
+  if (fullData) render();
+}
+
+document.getElementById('themeToggle').addEventListener('click', ()=>{
+  applyTheme(currentTheme === 'dark' ? 'light' : 'dark');
+});
+
+if (window.matchMedia){
+  window.matchMedia('(prefers-color-scheme: light)').addEventListener('change', e=>{
+    if (localStorage.getItem('theme')) return; // el usuario ya elige a mano, no lo pisamos
+    applyTheme(e.matches ? 'light' : 'dark');
+  });
+}
+
+function translate(lang){
+  currentLang = lang;
+  localStorage.setItem('lang', lang);
+  document.documentElement.lang = lang;
+  document.querySelectorAll('[data-i18n]').forEach(el=>{
+    const key = el.dataset.i18n;
+    if (TRANSLATIONS[key]) el.textContent = TRANSLATIONS[key][lang];
+  });
+  document.querySelectorAll('[data-i18n-aria]').forEach(el=>{
+    const key = el.dataset.i18nAria;
+    if (TRANSLATIONS[key]) el.setAttribute('aria-label', TRANSLATIONS[key][lang]);
+  });
+  document.querySelectorAll('.lang-btn').forEach(b=>b.classList.toggle('active', b.dataset.lang === lang));
+  if (hadLoadError) showLoadError();
+  else if (fullData) renderUpdatedAt();
+  if (activeInfoBtn) showTooltip(activeInfoBtn);
+}
+
+document.querySelectorAll('.lang-btn').forEach(btn=>{
+  btn.addEventListener('click', ()=> translate(btn.dataset.lang));
+});
+
+const kpiTooltip = document.getElementById('kpiTooltip');
+const supportsHover = window.matchMedia('(hover: hover)').matches;
+
+function showTooltip(btn){
+  kpiTooltip.textContent = TRANSLATIONS[btn.dataset.tip][currentLang];
+  kpiTooltip.classList.add('visible');
+  activeInfoBtn = btn;
+  positionTooltip(btn);
+}
+function hideTooltip(){
+  kpiTooltip.classList.remove('visible');
+  activeInfoBtn = null;
+}
+function positionTooltip(btn){
+  const iconRect = btn.getBoundingClientRect();
+  const margin = 8;
+  const tipRect = kpiTooltip.getBoundingClientRect();
+  const left = Math.max(margin, Math.min(
+    iconRect.left + iconRect.width / 2 - tipRect.width / 2,
+    window.innerWidth - tipRect.width - margin
+  ));
+  let top = iconRect.top - tipRect.height - 8;
+  if (top < margin) top = iconRect.bottom + 8;
+  kpiTooltip.style.left = left + 'px';
+  kpiTooltip.style.top = top + 'px';
+}
+
+document.querySelectorAll('.info-btn').forEach(btn=>{
+  let justFocused = false; // el click de un mismo tap no debe cerrar lo que el focus recién abrió
+  if (supportsHover) {
+    btn.addEventListener('mouseenter', ()=> showTooltip(btn));
+    btn.addEventListener('mouseleave', ()=> { if (activeInfoBtn === btn) hideTooltip(); });
+  }
+  btn.addEventListener('focus', ()=> { justFocused = true; showTooltip(btn); });
+  btn.addEventListener('blur', ()=> { if (activeInfoBtn === btn) hideTooltip(); });
+  btn.addEventListener('click', e=>{
+    e.stopPropagation();
+    if (justFocused) { justFocused = false; return; }
+    activeInfoBtn === btn ? hideTooltip() : showTooltip(btn);
+  });
+});
+document.addEventListener('click', hideTooltip);
+window.addEventListener('resize', ()=> { if (activeInfoBtn) positionTooltip(activeInfoBtn); });
+
+function setActiveRangeBtn(btn){
+  document.querySelectorAll('.range-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('dateRangeBox').classList.remove('active');
+  if (btn) btn.classList.add('active');
+}
+
+document.querySelectorAll('.range-btn').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    setActiveRangeBtn(btn);
+    const r = btn.dataset.range;
+    currentMode = r === 'mtd' ? { type: 'mtd' }
+      : r === 'all' ? { type: 'all' }
+      : r === 'prevMonth' ? { type: 'prevMonth' }
+      : { type: 'days', value: parseInt(r, 10) };
+    render();
+  });
+});
+document.getElementById('metricSelect').addEventListener('change', render);
+
+document.getElementById('applyDateRange').addEventListener('click', ()=>{
+  const fromEl = document.getElementById('dateFrom');
+  const toEl = document.getElementById('dateTo');
+  let from = fromEl.value, to = toEl.value;
+  if (!from || !to) return;
+  if (from > to) { [from, to] = [to, from]; fromEl.value = from; toEl.value = to; }
+  setActiveRangeBtn(null);
+  document.getElementById('dateRangeBox').classList.add('active');
+  currentMode = { type: 'custom', from, to };
+  render();
+});
+
+function renderBranding(){
+  const name = fullData.displayName || '';
+  document.title = name ? `${name} — Dashboard` : 'Dashboard';
+  document.getElementById('siteDomain').textContent = fullData.domain || '';
+
+  const h1 = document.getElementById('siteName');
+  const accent = fullData.titleAccent;
+  if (accent && name.includes(accent)) {
+    const idx = name.indexOf(accent);
+    const before = name.slice(0, idx);
+    h1.innerHTML = '';
+    h1.appendChild(document.createTextNode(before));
+    const span = document.createElement('span');
+    span.className = 'accent';
+    span.textContent = accent;
+    h1.appendChild(span);
+    h1.appendChild(document.createTextNode(name.slice(idx + accent.length)));
+  } else {
+    h1.textContent = name;
+  }
+
+  const badge = document.getElementById('publisherBadge');
+  const logo = fullData.logo;
+  badge.className = 'publisher-badge';
+  badge.innerHTML = '';
+  if (logo && logo.type === 'image' && logo.file) {
+    const img = document.createElement('img');
+    img.className = 'publisher-logo';
+    img.src = logo.file;
+    img.alt = name;
+    if (logo.height) img.style.height = logo.height + 'px';
+    badge.appendChild(img);
+  } else {
+    badge.classList.add('is-placeholder');
+    const chip = document.createElement('span');
+    chip.className = 'publisher-placeholder';
+    chip.textContent = logo && logo.initials ? logo.initials : name.slice(0, 2).toUpperCase();
+    badge.appendChild(chip);
+  }
+}
+
+async function load(){
+  try {
+    const res = await fetch('data.json', { cache: 'no-store' });
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    fullData = await res.json();
+    hadLoadError = false;
+    renderBranding();
+    renderUpdatedAt();
+    setDateBounds();
+    render();
+  } catch (err) {
+    hadLoadError = true;
+    showLoadError();
+    console.error(err);
+  }
+}
+
+function showLoadError(){
+  document.getElementById('updatedAt').innerHTML = '<span class="stale">' + TRANSLATIONS.errorLoad[currentLang] + '</span>';
+}
+
+function formatUpdatedLabel(){
+  if (!fullData || !fullData.updated_at) return TRANSLATIONS.noUpdateDate[currentLang];
+  const updated = new Date(fullData.updated_at);
+  const locale = currentLang === 'es' ? 'es-AR' : 'en-US';
+  return TRANSLATIONS.updatedPrefix[currentLang] + updated.toLocaleString(locale, { dateStyle:'medium', timeStyle:'short' });
+}
+
+function renderUpdatedAt(){
+  const el = document.getElementById('updatedAt');
+  const label = formatUpdatedLabel();
+  if (!fullData || !fullData.updated_at){ el.textContent = label; return; }
+  const hoursAgo = (Date.now() - new Date(fullData.updated_at).getTime()) / 36e5;
+  el.innerHTML = hoursAgo > 30 ? label + ' <span class="stale">' + TRANSLATIONS.stale[currentLang] + '</span>' : label;
+}
+
+function setDateBounds(){
+  const all = fullData.daily;
+  const firstActive = all.findIndex(r => (r.inventory ?? r.impression) > 0 || r.revenue > 0);
+  const trimmed = firstActive === -1 ? all : all.slice(firstActive);
+  if (!trimmed.length) return;
+  const min = trimmed[0].date, max = trimmed[trimmed.length-1].date;
+  ['dateFrom','dateTo'].forEach(id=>{
+    const el = document.getElementById(id);
+    el.min = min; el.max = max;
+  });
+}
+
+function getTrimmedDaily(){
+  const all = fullData.daily;
+  const firstActive = all.findIndex(r => (r.inventory ?? r.impression) > 0 || r.revenue > 0);
+  return firstActive === -1 ? [] : all.slice(firstActive);
+}
+
+function prevMonthPrefix(monthPrefix){
+  const [y, m] = monthPrefix.split('-').map(Number);
+  const d = new Date(Date.UTC(y, m - 1, 1));
+  d.setUTCMonth(d.getUTCMonth() - 1);
+  return d.getUTCFullYear() + '-' + String(d.getUTCMonth() + 1).padStart(2, '0');
+}
+
+function getRows(){
+  const trimmed = getTrimmedDaily();
+  let rows;
+  if (currentMode.type === 'custom') {
+    rows = trimmed.filter(r => r.date >= currentMode.from && r.date <= currentMode.to);
+  } else if (currentMode.type === 'mtd') {
+    const lastDate = trimmed.length ? trimmed[trimmed.length-1].date : null;
+    const monthPrefix = lastDate ? lastDate.slice(0,7) : null;
+    rows = monthPrefix ? trimmed.filter(r => r.date.slice(0,7) === monthPrefix) : [];
+  } else if (currentMode.type === 'prevMonth') {
+    const lastDate = trimmed.length ? trimmed[trimmed.length-1].date : null;
+    const monthPrefix = lastDate ? prevMonthPrefix(lastDate.slice(0,7)) : null;
+    rows = monthPrefix ? trimmed.filter(r => r.date.slice(0,7) === monthPrefix) : [];
+  } else if (currentMode.type === 'all') {
+    rows = trimmed;
+  } else {
+    rows = trimmed.slice(-currentMode.value);
+  }
+  return rows.map(r => ({
+    ...r,
+    inventory: r.inventory ?? r.impression, // fallback por si data.json todavía no tiene el campo nuevo
+    revenue: (r.revenue ?? 0) * (1 - UWIZER_FEE) // data.json guarda el revenue crudo de 360playvid; acá se descuenta nuestro fee para todo lo que se muestra/exporta
+  }));
+}
+
+function getRangeInfo(){
+  if (currentMode.type === 'custom') {
+    return { label: TRANSLATIONS.csvCustomRange[currentLang], slug: `custom-${currentMode.from}-to-${currentMode.to}` };
+  }
+  if (currentMode.type === 'mtd') {
+    return { label: TRANSLATIONS.rangeMtd[currentLang], slug: 'month-to-date' };
+  }
+  if (currentMode.type === 'prevMonth') {
+    return { label: TRANSLATIONS.rangePrevMonth[currentLang], slug: 'previous-month' };
+  }
+  if (currentMode.type === 'all') {
+    return { label: TRANSLATIONS.rangeAll[currentLang], slug: 'all-time' };
+  }
+  const byDays = { 1: ['rangeYesterday','yesterday'], 7: ['range7','last-7-days'] };
+  const [key, slug] = byDays[currentMode.value] || ['range7', `last-${currentMode.value}-days`];
+  return { label: TRANSLATIONS[key][currentLang], slug };
+}
+
+function buildExportData(){
+  const rows = getRows();
+  const totalInv = rows.reduce((s,r)=>s+r.inventory, 0);
+  const totalImpr = rows.reduce((s,r)=>s+r.impression, 0);
+  const totalRev = rows.reduce((s,r)=>s+r.revenue, 0);
+  const totalRpm = totalInv > 0 ? (totalRev/totalInv)*1000 : 0;
+  const { label: rangeLabel, slug } = getRangeInfo();
+  const dateSpan = rows.length ? `${rows[0].date} ${TRANSLATIONS.csvTo[currentLang]} ${rows[rows.length-1].date}` : '';
+
+  return {
+    slug,
+    metaLines: [
+      fullData.displayName || '',
+      fullData.domain || '',
+      TRANSLATIONS.csvRangePrefix[currentLang] + rangeLabel + (dateSpan ? ` (${dateSpan})` : ''),
+      formatUpdatedLabel()
+    ],
+    headers: [
+      TRANSLATIONS.csvDateCol[currentLang], TRANSLATIONS.lblInventory[currentLang],
+      TRANSLATIONS.lblImpressions[currentLang], TRANSLATIONS.lblRevenue[currentLang], TRANSLATIONS.lblRpm[currentLang]
+    ],
+    dataRows: rows.map(r => {
+      const rpm = r.inventory > 0 ? (r.revenue/r.inventory)*1000 : 0;
+      return [r.date, r.inventory, r.impression, r.revenue, rpm];
+    }),
+    totalRow: [TRANSLATIONS.csvTotal[currentLang], totalInv, totalImpr, totalRev, totalRpm]
+  };
+}
+
+function buildExportFilename(slug, ext){
+  const today = new Date();
+  const todayStr = today.getFullYear() + '-' + String(today.getMonth()+1).padStart(2,'0') + '-' + String(today.getDate()).padStart(2,'0');
+  return `${fullData.slug || 'dashboard'}_${slug}_${todayStr}.${ext}`;
+}
+
+function csvEscape(field){
+  const s = String(field);
+  return /[",\n]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s;
+}
+
+function formatNumberForCsv(v){
+  return typeof v === 'number' && !Number.isInteger(v) ? v.toFixed(2) : v;
+}
+
+function exportCsv(){
+  if (!fullData) return;
+  const data = buildExportData();
+  const lines = [];
+  data.metaLines.forEach(l => lines.push([l]));
+  lines.push([]);
+  lines.push(data.headers);
+  data.dataRows.forEach(row => lines.push(row.map(formatNumberForCsv)));
+  lines.push(data.totalRow.map(formatNumberForCsv));
+  const csv = lines.map(fields => fields.map(csvEscape).join(',')).join('\r\n');
+  const blob = new Blob(['﻿' + csv], { type: 'text/csv;charset=utf-8;' });
+  downloadBlob(blob, buildExportFilename(data.slug, 'csv'));
+}
+
+function exportXlsx(){
+  if (!fullData) return;
+  const data = buildExportData();
+  const aoa = [];
+  data.metaLines.forEach(l => aoa.push([l]));
+  aoa.push([]);
+  const headerRowIdx = aoa.length;
+  aoa.push(data.headers);
+  data.dataRows.forEach(row => aoa.push(row));
+  aoa.push(data.totalRow);
+  const ws = XLSX.utils.aoa_to_sheet(aoa);
+  // Revenue (col D) y RPM (col E) con 2 decimales, no el float crudo
+  for (let r = headerRowIdx + 1; r < aoa.length; r++){
+    [3, 4].forEach(c=>{
+      const cell = ws[XLSX.utils.encode_cell({ r, c })];
+      if (cell && cell.t === 'n') cell.z = '0.00';
+    });
+  }
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, 'Report');
+  XLSX.writeFile(wb, buildExportFilename(data.slug, 'xlsx'));
+}
+
+function downloadBlob(blob, filename){
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
+document.getElementById('exportCsvBtn').addEventListener('click', exportCsv);
+document.getElementById('exportXlsxBtn').addEventListener('click', exportXlsx);
+
+function render(){
+  if (!fullData) return;
+  const rows = getRows();
+
+  const totalInv = rows.reduce((s,r)=>s+r.inventory, 0);
+  const totalImpr = rows.reduce((s,r)=>s+r.impression, 0);
+  const totalRev = rows.reduce((s,r)=>s+r.revenue, 0);
+  const rpm = totalInv > 0 ? (totalRev/totalInv)*1000 : 0;
+
+  document.getElementById('kpiInventory').textContent = totalInv.toLocaleString('en-US');
+  document.getElementById('kpiImpressions').textContent = totalImpr.toLocaleString('en-US');
+  document.getElementById('kpiRpm').textContent = '$' + rpm.toFixed(2);
+  document.getElementById('kpiRevenue').textContent = '$' + totalRev.toFixed(2);
+
+  renderLineChart(rows);
+  renderBarChart(rows);
+}
+
+function formatMoneyARS(value){
+  return '$' + value.toLocaleString('es-AR', { minimumFractionDigits:2, maximumFractionDigits:2 });
+}
+
+function getChartPalette(){
+  return currentTheme === 'light'
+    ? { grid:'rgba(26,22,37,.08)', tick:'#6b6380', datasets:{ inventory:'#8b5cf6', impression:'#7c3aed', revenue:'#6d28d9' } }
+    : { grid:'rgba(255,255,255,.06)', tick:'#9b93b8', datasets:{ inventory:'#c4b5fd', impression:'#a78bfa', revenue:'#8b5cf6' } };
+}
+
+function renderLineChart(rows){
+  const metric = document.getElementById('metricSelect').value;
+  const canvas = document.getElementById('lineChart');
+  const empty = document.getElementById('lineEmpty');
+  if (!rows.length){ empty.style.display='block'; canvas.style.display='none'; return; }
+  empty.style.display='none'; canvas.style.display='block';
+
+  const labels = rows.map(r=>r.date);
+  const data = rows.map(r=>r[metric]);
+  const palette = getChartPalette();
+  const color = palette.datasets[metric];
+
+  if (lineChart) lineChart.destroy();
+  lineChart = new Chart(canvas, {
+    type: 'line',
+    data: { labels, datasets:[{
+      data, borderColor: color, backgroundColor: color+'26',
+      fill:true, tension:.35, pointRadius:3, pointBackgroundColor: color
+    }]},
+    options: {
+      responsive:true, maintainAspectRatio:false,
+      plugins:{
+        legend:{display:false},
+        tooltip: metric === 'revenue' ? { callbacks:{ label: ctx => formatMoneyARS(ctx.parsed.y) } } : {}
+      },
+      scales:{
+        y:{ beginAtZero:false, grid:{color:palette.grid}, ticks:{color:palette.tick} },
+        x:{ grid:{display:false}, ticks:{color:palette.tick} }
+      }
+    }
+  });
+}
+
+function renderBarChart(rows){
+  const canvas = document.getElementById('barChart');
+  const empty = document.getElementById('barEmpty');
+  if (!rows.length){ empty.style.display='block'; canvas.style.display='none'; return; }
+  empty.style.display='none'; canvas.style.display='block';
+
+  const labels = rows.map(r=>r.date.slice(5));
+  const data = rows.map(r=>r.revenue);
+  const palette = getChartPalette();
+
+  if (barChart) barChart.destroy();
+  const barGradient = canvas.getContext('2d').createLinearGradient(0,0,0,280);
+  barGradient.addColorStop(0, palette.datasets.impression);
+  barGradient.addColorStop(1, '#5b21b6');
+
+  barChart = new Chart(canvas, {
+    type: 'bar',
+    data: { labels, datasets:[{ data, backgroundColor: barGradient, borderRadius:5, maxBarThickness:36 }]},
+    options: {
+      responsive:true, maintainAspectRatio:false,
+      plugins:{
+        legend:{display:false},
+        tooltip:{ callbacks:{ label: ctx => formatMoneyARS(ctx.parsed.y) } }
+      },
+      scales:{
+        y:{ beginAtZero:true, grid:{color:palette.grid}, ticks:{color:palette.tick} },
+        x:{ grid:{display:false}, ticks:{color:palette.tick} }
+      }
+    }
+  });
+}
+
+translate(currentLang);
+load();
+</script>
+</body>
+</html>

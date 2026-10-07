@@ -16,12 +16,13 @@ así que las URLs que se comparten con cada publisher son:
 | Conexión Migrante | conexionmigrante.com | https://dashboard.uwizer.com/conexion-migrante/ |
 | TSN Necochea | tsnnecochea.com.ar | https://dashboard.uwizer.com/tsn-necochea/ |
 | La Hora | lahora.com.ec | https://dashboard.uwizer.com/la-hora/ |
+| El Libertador de Corrientes | diarioellibertador.com.ar | https://dashboard.uwizer.com/el-libertador/ |
 
 (La URL de GitHub Pages sin dominio propio también sirve como fallback:
 `https://uwizeradm.github.io/chacabuco-en-red-dashboard/<slug>/`.)
 
 Cada sitio vive en su propia carpeta (`<slug>/index.html` + `<slug>/data.json`)
-pero comparte el mismo `index.html` (misma plantilla para los 4, sin nombre de
+pero comparte el mismo `index.html` (misma plantilla para los 5, sin nombre de
 sitio hardcodeado: lee `displayName`/`domain`/`logo` desde su propio
 `data.json`).
 
@@ -30,7 +31,8 @@ sitio hardcodeado: lee `displayName`/`domain`/`logo` desde su propio
 1. Crear un repo en GitHub (puede ser privado o público, no afecta el resultado)
    y subir estos archivos manteniendo la estructura:
    - `chacabuco-en-red/index.html`, `conexion-migrante/index.html`,
-     `tsn-necochea/index.html`, `la-hora/index.html` (y sus `data.json`)
+     `tsn-necochea/index.html`, `la-hora/index.html`,
+     `el-libertador/index.html` (y sus `data.json`)
    - `fetch-data.js`
    - `.github/workflows/update-data.yml`
    - `CNAME` (solo si se usa un dominio propio, ver paso 3)
@@ -42,7 +44,7 @@ sitio hardcodeado: lee `displayName`/`domain`/`logo` desde su propio
 
    Estos valores quedan encriptados. Nadie que abra el repo o las páginas
    públicas los puede ver, ni siquiera en los logs del Action. Son los
-   mismos para los 4 sitios — no hace falta crear secretos nuevos al sumar
+   mismos para los 5 sitios — no hace falta crear secretos nuevos al sumar
    un sitio más.
 
 3. Ir a **Settings → Pages** → en "Build and deployment" elegir
@@ -62,13 +64,13 @@ sitio hardcodeado: lee `displayName`/`domain`/`logo` desde su propio
 
 4. Ir a la pestaña **Actions** del repo → elegir el workflow
    "Actualizar datos de los dashboards" → **Run workflow** (botón manual)
-   para generar el primer `data.json` real de los 4 sitios sin esperar al cron.
+   para generar el primer `data.json` real de los 5 sitios sin esperar al cron.
 
 ## Funcionamiento diario
 
 - Todos los días a las 07:00 UTC (~04:00 hora Argentina) el Action corre
   solo: mira hasta qué día tiene datos cada `data.json` y le pide a la API
-  solo los días que le faltan hasta ayer (un solo fetch por día para los 4
+  solo los días que le faltan hasta ayer (un solo fetch por día para los 5
   sitios, porque la API devuelve todos los dominios de la cuenta en la misma
   respuesta), y **suma** esos días al histórico existente — nunca lo pisa.
   El historial de cada sitio crece para siempre desde el día que se sumó
@@ -111,7 +113,7 @@ para que se lea bien en el chip — el default sin ese campo es 40px.
 
 - Revisar la pestaña **Actions**: ahí se ve si el job de un día falló
   (por ejemplo, si 360playvid cambia credenciales o bloquea el request) —
-  afecta a los 4 sitios por igual, porque comparten el mismo fetch.
+  afecta a los 5 sitios por igual, porque comparten el mismo fetch.
 - Cada página muestra "(desactualizado)" en rojo si su `data.json` tiene más
   de 30 horas sin refrescar, para que se note de un vistazo si el cron
   dejó de correr.

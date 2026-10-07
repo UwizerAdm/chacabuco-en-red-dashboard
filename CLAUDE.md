@@ -13,8 +13,9 @@ pensadas para compartir con cada publisher un link fijo que se actualiza solo.
 | `conexion-migrante` | Conexión Migrante | `conexionmigrante.com` |
 | `tsn-necochea` | TSN Necochea | `tsnnecochea.com.ar` |
 | `la-hora` | La Hora | `lahora.com.ec` |
+| `el-libertador` | El Libertador de Corrientes | `diarioellibertador.com.ar` |
 
-Estos 4 dominios están confirmados (se corrió un fetch de un día y se logueó
+Estos 5 dominios están confirmados (se corrió un fetch de un día y se logueó
 `data.success.map(r => r.domain)` antes de implementar, tal como indica el
 proceso de abajo). Si se suma un sitio nuevo, repetir ese chequeo — nunca
 adivinar el dominio a partir del nombre del sitio.
@@ -27,13 +28,13 @@ adivinar el dominio a partir del nombre del sitio.
   prefijo `sites/` — se decidió mantener el patrón que ya existía para
   Chacabuco en Red (carpeta en la raíz) y no romper su URL pública ya
   compartida con el publisher.
-- `<slug>/index.html` — es el **mismo archivo para los 4 sitios**, sin nombre
+- `<slug>/index.html` — es el **mismo archivo para los 5 sitios**, sin nombre
   de sitio hardcodeado. Lee `displayName`, `domain`, `titleAccent`, `slug` y
   `logo` desde el `data.json` de su propia carpeta (fetch relativo, sin
   credenciales) y los usa para el header, el `<title>`, y los export
   CSV/Excel. Estilo: paleta violeta/negra de Uwizer (ver sección Estilo).
   Para editar el dashboard de cualquier sitio hay que tocar este archivo en
-  las 4 carpetas (o resolverlo con un script que las sincronice) — hoy son
+  las 5 carpetas (o resolverlo con un script que las sincronice) — hoy son
   copias idénticas.
 - `<slug>/data.json` — generado automáticamente por `fetch-data.js`. NO
   editar a mano salvo para debug (o para una migración puntual, como se hizo
@@ -62,12 +63,12 @@ adivinar el dominio a partir del nombre del sitio.
   Ayer/7 días/30 días/Mes en curso/rango personalizado — muestra todos los
   días que haya en `daily` desde que el sitio arrancó.
 - `.github/workflows/update-data.yml` — cron diario (07:00 UTC) que corre
-  `fetch-data.js` con los secrets del repo y comitea los 4 `data.json`
+  `fetch-data.js` con los secrets del repo y comitea los 5 `data.json`
   actualizados.
 
 ## Logo por sitio
 
-En `fetch-data.js`, cada entrada de `SITES` tiene un campo `logo`. Los 4
+En `fetch-data.js`, cada entrada de `SITES` tiene un campo `logo`. Los 5
 sitios ya tienen logo real (ninguno quedó con placeholder):
 - `{ type: 'image', file: 'archivo.png' }` — el archivo vive en
   `<slug>/archivo.png` (ej. Chacabuco en Red: `chacabuco-logo.png`).
@@ -75,7 +76,8 @@ sitios ya tienen logo real (ninguno quedó con placeholder):
   opcional, default 40px si no está. Se usa cuando el logo no es horizontal
   como el de Chacabuco sino cuadrado/circular con texto chico abajo (isotipo
   + wordmark en 2 líneas) — a 40px ese texto queda ilegible. Caso de
-  Conexión Migrante, TSN Necochea y La Hora, los tres con `height: 64`.
+  Conexión Migrante, TSN Necochea, La Hora y El Libertador de Corrientes,
+  los cuatro con `height: 64`.
 - `{ type: 'placeholder', initials: 'XX' }` — todavía no hay logo real; el
   header dibuja un chip con esas iniciales sobre fondo violeta suave (mismo
   tamaño/radio que el chip con imagen). Usar si se suma un sitio nuevo sin
@@ -100,12 +102,12 @@ muestra completo en color plano.
   arriba): `https://dashboard.uwizer.com/<slug>/`
   (fallback sin dominio propio: `https://uwizeradm.github.io/chacabuco-en-red-dashboard/<slug>/`).
 - Pages configurado: deploy from branch `main`, carpeta `/ (root)`.
-- Secrets ya cargados: `PLAYVID_EMAIL`, `PLAYVID_PASSWORD` (mismos para los 4
+- Secrets ya cargados: `PLAYVID_EMAIL`, `PLAYVID_PASSWORD` (mismos para los 5
   sitios, no hace falta agregar secrets nuevos al sumar un sitio más).
 
 ## Sumar otro sitio nuevo
 
-El proceso que se siguió para los 4 sitios de arriba (y que hay que repetir
+El proceso que se siguió para los 5 sitios de arriba (y que hay que repetir
 si se suma un quinto, mismo login de 360playvid):
 
 1. Correr un fetch de un solo día y loguear `data.success.map(r => r.domain)`
@@ -148,7 +150,7 @@ por request, solo hay que filtrar un dominio más sobre la misma respuesta.
   recortan del lado del front (`<slug>/index.html`, función `render()`)
   buscando el primer día con `inventory > 0 || revenue > 0`. No se borran de
   `data.json` por si hace falta el histórico completo en el futuro. Aplica
-  a los 4 sitios por igual porque comparten el mismo `index.html`.
+  a los 5 sitios por igual porque comparten el mismo `index.html`.
 - **Fee de Uwizer sobre el revenue (ago 2026):** cada `data.json` guarda el
   `revenue` crudo tal cual lo reporta 360playvid — **no** es el número que
   ve el publisher. `index.html` descuenta un 12,5% (constante `UWIZER_FEE`
@@ -171,10 +173,11 @@ por request, solo hay que filtrar un dominio más sobre la misma respuesta.
 
 ## Convenciones de trabajo
 
-- `index.html` es el mismo archivo en las 4 carpetas de sitio — un cambio de
-  estilo/funcionalidad hay que aplicarlo en las 4 (`chacabuco-en-red/`,
-  `conexion-migrante/`, `tsn-necochea/`, `la-hora/`), no solo en una.
-- Después de cualquier cambio en `index.html` (en las 4 carpetas) o en
+- `index.html` es el mismo archivo en las 5 carpetas de sitio — un cambio de
+  estilo/funcionalidad hay que aplicarlo en las 5 (`chacabuco-en-red/`,
+  `conexion-migrante/`, `tsn-necochea/`, `la-hora/`, `el-libertador/`), no
+  solo en una.
+- Después de cualquier cambio en `index.html` (en las 5 carpetas) o en
   `fetch-data.js`, hacer `git add`, `git commit` con mensaje descriptivo en
   español, y `git push`.
 - No es necesario correr el workflow manualmente después de cambios de estilo

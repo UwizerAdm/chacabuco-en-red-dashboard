@@ -51,6 +51,14 @@ const SITES = [
     // Logo circular cuadrado, mismo caso que Conexión Migrante/TSN Necochea.
     logo: { type: 'image', file: 'la-hora-logo.png', height: 64 },
   },
+  {
+    slug: 'el-libertador',
+    domain: 'diarioellibertador.com.ar',
+    displayName: 'El Libertador de Corrientes',
+    // Logo cuadrado (isotipo + wordmark + tagline), mismo caso que los
+    // otros 3 sitios con logo no horizontal.
+    logo: { type: 'image', file: 'el-libertador-logo.png', height: 64 },
+  },
 ];
 
 const EMAIL = process.env.PLAYVID_EMAIL;
