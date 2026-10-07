@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-06T13:43:39.288Z",
+  "updated_at": "2026-10-07T11:50:55.297Z",
   "slug": "chacabuco-en-red",
   "domain": "chacabucoenred.com",
   "displayName": "Chacabuco en Red",
@@ -8,7 +8,7 @@
     "type": "image",
     "file": "chacabuco-logo.png"
   },
-  "range_days": 86,
+  "range_days": 87,
   "daily": [
     {
       "date": "2026-07-12",
@@ -611,13 +611,20 @@
       "impression": 2362,
       "revenue": 1.0081739239999998,
       "ecpm": 0.4268306198137173
+    },
+    {
+      "date": "2026-10-06",
+      "inventory": 576,
+      "impression": 912,
+      "revenue": 0.023369620800000004,
+      "ecpm": 0.025624584210526314
     }
   ],
   "totals": {
-    "inventory": 1192317,
-    "impression": 631162,
-    "revenue": 375.3446804359998,
-    "rpm": 0.3148027583570475,
-    "fillrate": 52.935754501529374
+    "inventory": 1192893,
+    "impression": 632074,
+    "revenue": 375.3680500567998,
+    "rpm": 0.31467034348998596,
+    "fillrate": 52.986646748702526
   }
 }
