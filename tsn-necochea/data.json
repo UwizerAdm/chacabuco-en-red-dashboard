@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-08T14:08:15.571Z",
+  "updated_at": "2026-10-08T15:20:09.985Z",
   "slug": "tsn-necochea",
   "domain": "tsnnecochea.com.ar",
   "displayName": "TSN Necochea",
@@ -8,6 +8,9 @@
     "type": "image",
     "file": "tsn-necochea-logo.png",
     "height": 64
+  },
+  "grossEcpm": {
+    "platformShare": 0.2
   },
   "range_days": 50,
   "daily": [

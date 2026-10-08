@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-08T14:08:15.571Z",
+  "updated_at": "2026-10-08T15:20:09.984Z",
   "slug": "conexion-migrante",
   "domain": "conexionmigrante.com",
   "displayName": "Conexión Migrante",
@@ -9,6 +9,7 @@
     "file": "conexion-migrante-logo.png",
     "height": 64
   },
+  "grossEcpm": null,
   "range_days": 50,
   "daily": [
     {

@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-08T14:08:15.571Z",
+  "updated_at": "2026-10-08T15:20:09.985Z",
   "slug": "el-libertador",
   "domain": "diarioellibertador.com.ar",
   "displayName": "El Libertador de Corrientes",
@@ -9,6 +9,7 @@
     "file": "el-libertador-logo.png",
     "height": 64
   },
+  "grossEcpm": null,
   "range_days": 31,
   "daily": [
     {
