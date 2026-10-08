@@ -179,11 +179,13 @@ por request, solo hay que filtrar un dominio más sobre la misma respuesta.
   `grossEcpm: { platformShare: 0.20 }` en `SITES` (`fetch-data.js` → llega a
   `data.json`), `index.html` muestra una 6ª tarjeta "eCPM Bruto" =
   `(revenue_crudo / impresiones * 1000) / (1 - platformShare)` (dividir por
-  0,8 = +25%, no +20%). En esos sitios "Ingresos Totales" (y por lo tanto el
-  RPM y la columna del export) también se muestra en bruto: `grossRevenue` en
+  0,8 = +25%, no +20%). En esos sitios "Ingresos Totales" (y la columna del
+  export) también se muestra en bruto: `grossRevenue` en
   `getRows()` = revenue crudo / (1 - platformShare) = impresiones × eCPM
   bruto / 1000. "Ingresos Netos" NO cambia: sigue siendo revenue crudo de
   360playvid × (1 - UWIZER_FEE), que es lo que efectivamente se le paga.
+  El RPM tampoco cambia: usa `playvidRevenue` (crudo, sin llevar a bruto) para
+  coincidir con el del panel de 360playvid — decisión de Juani (oct 2026).
   Sin ese campo la tarjeta queda oculta y todo se calcula como en el resto.
   Para sumarlo a otro sitio: agregar el campo en `SITES` y correr el workflow.
 
