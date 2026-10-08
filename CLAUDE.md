@@ -28,14 +28,14 @@ adivinar el dominio a partir del nombre del sitio.
   prefijo `sites/` — se decidió mantener el patrón que ya existía para
   Chacabuco en Red (carpeta en la raíz) y no romper su URL pública ya
   compartida con el publisher.
-- `<slug>/index.html` — es el **mismo archivo para los 5 sitios**, sin nombre
-  de sitio hardcodeado. Lee `displayName`, `domain`, `titleAccent`, `slug` y
+- `<slug>/index.html` — **hay dos variantes** (ver "Dos variantes de
+  index.html" abajo): una para TSN Necochea y otra, idéntica, para los otros
+  4 sitios. Ninguna tiene el nombre del sitio hardcodeado. Lee `displayName`, `domain`, `titleAccent`, `slug` y
   `logo` desde el `data.json` de su propia carpeta (fetch relativo, sin
   credenciales) y los usa para el header, el `<title>`, y los export
   CSV/Excel. Estilo: paleta violeta/negra de Uwizer (ver sección Estilo).
-  Para editar el dashboard de cualquier sitio hay que tocar este archivo en
-  las 5 carpetas (o resolverlo con un script que las sincronice) — hoy son
-  copias idénticas.
+  Un cambio de estilo/funcionalidad común hay que aplicarlo en las dos
+  variantes (las 4 copias iguales + la de Necochea).
 - `<slug>/data.json` — generado automáticamente por `fetch-data.js`. NO
   editar a mano salvo para debug (o para una migración puntual, como se hizo
   para agregar campos nuevos sin perder el histórico real). Estructura:
@@ -122,7 +122,8 @@ si se suma un quinto, mismo login de 360playvid):
    API — nunca adivinarlo a partir del nombre del sitio.
 2. Agregar una entrada a `SITES` en `fetch-data.js` (slug/domain/displayName/logo).
 3. Crear `<slug>/` con una copia de `index.html` y `uwizer-favicon-32.png` de
-   cualquier otro sitio (son idénticos).
+   cualquier sitio que no sea TSN Necochea (salvo que el sitio nuevo tenga
+   que mostrar lo mismo que Necochea, ver "Dos variantes de index.html").
 4. Sumar `<slug>/data.json` al `git add` en `.github/workflows/update-data.yml`.
 5. Correr el workflow a mano una vez para generar el primer `data.json`.
 
@@ -157,41 +158,40 @@ por request, solo hay que filtrar un dominio más sobre la misma respuesta.
   recortan del lado del front (`<slug>/index.html`, función `render()`)
   buscando el primer día con `inventory > 0 || revenue > 0`. No se borran de
   `data.json` por si hace falta el histórico completo en el futuro. Aplica
-  a los 5 sitios por igual porque comparten el mismo `index.html`.
-- **Fee de Uwizer sobre el revenue (ago 2026, cambiado oct 2026):** cada
-  `data.json` guarda el `revenue` crudo tal cual lo reporta 360playvid.
-  Desde oct 2026 el dashboard muestra los dos números en tarjetas separadas:
-  "Total Revenue" / "Ingresos Totales" = revenue crudo de 360playvid, y
-  "Net Revenue" / "Ingresos Netos" = crudo menos el 12,5% (constante
-  `UWIZER_FEE` en el `<script>`). `getRows()` arma ambos campos por fila:
-  `grossRevenue` (crudo) y `revenue` (neto). El RPM usa el revenue crudo
-  (`grossRevenue / inventory * 1000`), así que coincide con el del panel de
-  360playvid (salvo en sitios con `grossEcpm`, ver abajo). `fetch-data.js` solo guarda `inventory`, `impression`,
-  `revenue` y `ecpm` (no se verificó si la API manda además un campo de
-  RPM); igual, para cualquier rango de varios días el RPM hay que
-  calcularlo sobre los totales, como hace el panel. Los
-  charts (Datos diarios → Ingresos Netos, y el de barras) muestran el neto.
-  El export CSV/Excel trae las dos columnas, Ingresos Totales e Ingresos
-  Netos, y el RPM. Si el % del fee cambia, solo hay que tocar `UWIZER_FEE`.
+  a los 5 sitios por igual (está en las dos variantes de `index.html`).
+- **Fee de Uwizer sobre el revenue (ago 2026):** cada `data.json` guarda el
+  `revenue` crudo tal cual lo reporta 360playvid — **no** es el número que
+  ve el publisher. `index.html` descuenta un 12,5% (constante `UWIZER_FEE`
+  en el `<script>`) dentro de `getRows()`. Cómo se muestra depende de la
+  variante de `index.html` (ver abajo). `fetch-data.js` solo guarda
+  `inventory`, `impression`, `revenue` y `ecpm` (no se verificó si la API
+  manda además un campo de RPM). Si el % del fee cambia, hay que tocar
+  `UWIZER_FEE` en las dos variantes.
 
-- **eCPM bruto (oct 2026, solo TSN Necochea):** el eCPM/revenue que reporta
-  360playvid ya viene neto de su comisión (20%). Para los sitios con
-  `grossEcpm: { platformShare: 0.20 }` en `SITES` (`fetch-data.js` → llega a
-  `data.json`), `index.html` muestra una 6ª tarjeta "eCPM Bruto" =
-  `(revenue_crudo / impresiones * 1000) / (1 - platformShare)` (dividir por
-  0,8 = +25%, no +20%). En esos sitios "Ingresos Totales" (y por lo tanto el
-  RPM Inventario y las columnas del export) también se muestran en bruto: `grossRevenue` en
-  `getRows()` = revenue crudo / (1 - platformShare) = impresiones × eCPM
-  bruto / 1000. "Ingresos Netos" NO cambia: sigue siendo revenue crudo de
-  360playvid × (1 - UWIZER_FEE), que es lo que efectivamente se le paga.
-  Sin ese campo la tarjeta queda oculta y todo se calcula como en el resto.
-  Para sumarlo a otro sitio: agregar el campo en `SITES` y correr el workflow.
+## Dos variantes de index.html (oct 2026)
 
-- **RPM Inventario (oct 2026):** la tarjeta se llama "RPM Inventory" / "RPM
-  Inventario" porque no es un RPM por página vista (360playvid no tiene ese
-  dato): es Ingresos Totales / inventario (llamadas al player) × 1000. En
-  sitios con `grossEcpm` usa los Ingresos Totales en bruto, así que no
-  coincide con el RPM del panel de 360playvid — decisión de Juani.
+- **Los otros 4 sitios** (`chacabuco-en-red/`, `conexion-migrante/`,
+  `la-hora/`, `el-libertador/`): 4 tarjetas — Inventario, Impresiones, RPM e
+  "Ingresos Totales" / "Total Revenue". Ojo: ese "Ingresos Totales" es el
+  revenue **neto** (crudo × (1 - UWIZER_FEE)), y el RPM también se calcula
+  sobre el neto (`revenue / inventory * 1000`), así que da 12,5% menos que
+  el del panel de 360playvid. Es la versión anterior a los cambios de
+  oct 2026; Juani pidió dejarla así para estos sitios.
+- **TSN Necochea** (`tsn-necochea/`): 6 tarjetas. El eCPM/revenue que reporta
+  360playvid ya viene neto de su comisión (20%); `fetch-data.js` define
+  `grossEcpm: { platformShare: 0.20 }` para este sitio (llega a `data.json`).
+  - "eCPM Bruto" = (revenue crudo / impresiones × 1000) / (1 - platformShare)
+    (dividir por 0,8 = +25%, no +20%).
+  - "Ingresos Totales" = revenue crudo / (1 - platformShare) = impresiones ×
+    eCPM bruto / 1000 (`grossRevenue` en `getRows()`).
+  - "Ingresos Netos" = revenue crudo × (1 - UWIZER_FEE) — lo que
+    efectivamente se le paga (= Ingresos Totales × 0,70).
+  - "RPM Inventory" / "RPM Inventario" = Ingresos Totales / inventario ×
+    1000. Se llama así porque no es un RPM por página vista (360playvid no
+    tiene ese dato). No coincide con el RPM del panel de 360playvid —
+    decisión de Juani.
+  - Charts: muestran Ingresos Netos. Export CSV/Excel: Ingresos Totales,
+    Ingresos Netos y RPM Inventario.
 
 ## Estilo / marca (Uwizer)
 
@@ -205,11 +205,12 @@ por request, solo hay que filtrar un dominio más sobre la misma respuesta.
 
 ## Convenciones de trabajo
 
-- `index.html` es el mismo archivo en las 5 carpetas de sitio — un cambio de
-  estilo/funcionalidad hay que aplicarlo en las 5 (`chacabuco-en-red/`,
-  `conexion-migrante/`, `tsn-necochea/`, `la-hora/`, `el-libertador/`), no
-  solo en una.
-- Después de cualquier cambio en `index.html` (en las 5 carpetas) o en
+- `index.html` tiene dos variantes (ver "Dos variantes de index.html"): un
+  cambio común de estilo/funcionalidad hay que aplicarlo en las 4 copias
+  iguales (`chacabuco-en-red/`, `conexion-migrante/`, `la-hora/`,
+  `el-libertador/`) **y** en `tsn-necochea/`, sin pisar una variante con la
+  otra.
+- Después de cualquier cambio en `index.html` o en
   `fetch-data.js`, hacer `git add`, `git commit` con mensaje descriptivo en
   español, y `git push`.
 - No es necesario correr el workflow manualmente después de cambios de estilo

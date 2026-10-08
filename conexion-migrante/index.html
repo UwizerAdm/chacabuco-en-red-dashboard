@@ -159,8 +159,7 @@
   .export-btn:hover, .export-btn:focus-visible{color:var(--brand-bright);}
   .export-icon{flex-shrink:0;}
 
-  .kpis{display:grid; grid-template-columns:repeat(5,1fr); gap:16px; margin-bottom:20px;}
-  .kpis.six{grid-template-columns:repeat(3,1fr);} /* 6 tarjetas (sitios con eCPM bruto): 2 filas de 3 */
+  .kpis{display:grid; grid-template-columns:repeat(4,1fr); gap:16px; margin-bottom:20px;}
   .kpi{
     background:var(--panel); border:1px solid var(--line); border-radius:var(--radius);
     padding:18px 20px; position:relative; overflow:hidden;
@@ -224,12 +223,8 @@
     .chart-wrap{height:310px;}
   }
 
-  @media (max-width:1200px){
-    .kpis{grid-template-columns:repeat(3,1fr);}
-  }
-
   @media (max-width:800px){
-    .kpis, .kpis.six{grid-template-columns:repeat(2,1fr);} .charts{grid-template-columns:1fr;} header svg.net{display:none;}
+    .kpis{grid-template-columns:repeat(2,1fr);} .charts{grid-template-columns:1fr;} header svg.net{display:none;}
     .toolbar{justify-content:center;}
     .range-group{flex-wrap:wrap; justify-content:center;}
     .date-range{flex-wrap:wrap; justify-content:center;}
@@ -349,7 +344,7 @@
     </div>
     <div class="kpi">
       <div class="label">
-        <span data-i18n="lblRpm">RPM Inventory</span>
+        <span data-i18n="lblRpm">RPM</span>
         <button class="info-btn" type="button" data-tip="tipRpm" data-i18n-aria="tipRpm" aria-label="" aria-describedby="kpiTooltip">
           <svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.4">
             <circle cx="8" cy="8" r="6.5"/><line x1="8" y1="7" x2="8" y2="11"/>
@@ -371,30 +366,6 @@
       </div>
       <div class="value" id="kpiRevenue">—</div>
     </div>
-    <div class="kpi">
-      <div class="label">
-        <span data-i18n="lblNetRevenue">Net Revenue</span>
-        <button class="info-btn" type="button" data-tip="tipNetRevenue" data-i18n-aria="tipNetRevenue" aria-label="" aria-describedby="kpiTooltip">
-          <svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.4">
-            <circle cx="8" cy="8" r="6.5"/><line x1="8" y1="7" x2="8" y2="11"/>
-            <circle cx="8" cy="5.2" r="0.9" fill="currentColor" stroke="none"/>
-          </svg>
-        </button>
-      </div>
-      <div class="value" id="kpiNetRevenue">—</div>
-    </div>
-    <div class="kpi" id="kpiGrossEcpmCard" hidden>
-      <div class="label">
-        <span data-i18n="lblGrossEcpm">Gross eCPM</span>
-        <button class="info-btn" type="button" data-tip="tipGrossEcpm" data-i18n-aria="tipGrossEcpm" aria-label="" aria-describedby="kpiTooltip">
-          <svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.4">
-            <circle cx="8" cy="8" r="6.5"/><line x1="8" y1="7" x2="8" y2="11"/>
-            <circle cx="8" cy="5.2" r="0.9" fill="currentColor" stroke="none"/>
-          </svg>
-        </button>
-      </div>
-      <div class="value" id="kpiGrossEcpm">—</div>
-    </div>
   </div>
 
   <div class="kpi-tooltip" id="kpiTooltip" role="tooltip"></div>
@@ -406,14 +377,14 @@
         <select id="metricSelect">
           <option value="inventory" data-i18n="optInventory">Inventory</option>
           <option value="impression" data-i18n="optImpressions">Impressions</option>
-          <option value="revenue" data-i18n="optRevenue">Net Revenue</option>
+          <option value="revenue" data-i18n="optRevenue">Revenue</option>
         </select>
       </div>
       <div class="chart-wrap"><canvas id="lineChart"></canvas></div>
       <div class="empty-state" id="lineEmpty" style="display:none;" data-i18n="emptyState">No data available yet.</div>
     </div>
     <div class="chart-card">
-      <div class="head"><h3><span class="bar"></span><span data-i18n="chartRevenue">Net Revenue</span></h3></div>
+      <div class="head"><h3><span class="bar"></span><span data-i18n="chartRevenue">Revenue</span></h3></div>
       <div class="chart-wrap"><canvas id="barChart"></canvas></div>
       <div class="empty-state" id="barEmpty" style="display:none;" data-i18n="emptyState">No data available yet.</div>
     </div>
@@ -424,7 +395,7 @@
 </div>
 
 <script>
-const UWIZER_FEE = 0.125; // % que se descuenta del revenue crudo de 360playvid para obtener los Ingresos Netos
+const UWIZER_FEE = 0.125; // % que se descuenta del revenue crudo de 360playvid antes de mostrarlo/exportarlo
 
 const TRANSLATIONS = {
   eyebrow: { en: 'Performance Dashboard', es: 'Dashboard de Rendimiento' },
@@ -447,10 +418,8 @@ const TRANSLATIONS = {
   },
   lblInventory: { en: 'Inventory', es: 'Inventario' },
   lblImpressions: { en: 'Impressions', es: 'Impresiones' },
-  lblRpm: { en: 'RPM Inventory', es: 'RPM Inventario' },
+  lblRpm: { en: 'RPM', es: 'RPM' },
   lblRevenue: { en: 'Total Revenue', es: 'Ingresos Totales' },
-  lblNetRevenue: { en: 'Net Revenue', es: 'Ingresos Netos' },
-  lblGrossEcpm: { en: 'Gross eCPM', es: 'eCPM Bruto' },
   tipInventory: {
     en: 'Number of available opportunities to show a video ad — i.e., how many times the player generated an ad opportunity.',
     es: 'Cantidad de oportunidades disponibles para mostrar un anuncio de video. Es decir, cuántas veces el player generó una oportunidad publicitaria.'
@@ -460,26 +429,18 @@ const TRANSLATIONS = {
     es: 'Cantidad de anuncios que efectivamente fueron servidos sobre ese inventario.'
   },
   tipRpm: {
-    en: 'Average total revenue per 1,000 units of inventory. Shows how the site is performing economically on average, regardless of whether each individual impression sold at a different price.',
-    es: 'Ingreso total promedio por cada 1.000 unidades de inventario. Permite saber cuánto está rindiendo económicamente el sitio en promedio, más allá de si cada impresión individual se vendió a un precio distinto.'
+    en: 'Average revenue per 1,000 units of inventory. Shows how the site is performing economically on average, regardless of whether each individual impression sold at a different price.',
+    es: 'Ingreso promedio por cada 1.000 unidades de inventario. Permite saber cuánto está rindiendo económicamente el sitio en promedio, más allá de si cada impresión individual se vendió a un precio distinto.'
   },
   tipRevenue: {
     en: 'Money generated by those ad impressions.',
     es: 'Dinero generado por esas impresiones publicitarias.'
   },
-  tipGrossEcpm: {
-    en: 'Average revenue per 1,000 impressions before the video platform fee.',
-    es: 'Ingreso promedio por cada 1.000 impresiones, antes de la comisión de la plataforma de video.'
-  },
-  tipNetRevenue: {
-    en: 'Total revenue minus the Uwizer fee.',
-    es: 'Ingresos totales menos la comisión de Uwizer.'
-  },
   chartDaily: { en: 'Daily Data', es: 'Datos diarios' },
-  chartRevenue: { en: 'Net Revenue', es: 'Ingresos Netos' },
+  chartRevenue: { en: 'Total Revenue', es: 'Ingresos Totales' },
   optInventory: { en: 'Inventory', es: 'Inventario' },
   optImpressions: { en: 'Impressions', es: 'Impresiones' },
-  optRevenue: { en: 'Net Revenue', es: 'Ingresos Netos' },
+  optRevenue: { en: 'Total Revenue', es: 'Ingresos Totales' },
   emptyState: { en: 'No data available yet.', es: 'No hay datos disponibles todavía.' },
   footer1: { en: 'Data provided by Uwizer · daily automatic update', es: 'Datos provistos por Uwizer · actualización automática diaria' },
   footer2: {
@@ -666,9 +627,6 @@ async function load(){
     fullData = await res.json();
     hadLoadError = false;
     renderBranding();
-    // Tarjeta de eCPM bruto: solo para los sitios que la tienen configurada en fetch-data.js
-    document.getElementById('kpiGrossEcpmCard').hidden = !fullData.grossEcpm;
-    document.querySelector('.kpis').classList.toggle('six', !!fullData.grossEcpm);
     renderUpdatedAt();
     setDateBounds();
     render();
@@ -744,10 +702,7 @@ function getRows(){
   return rows.map(r => ({
     ...r,
     inventory: r.inventory ?? r.impression, // fallback por si data.json todavía no tiene el campo nuevo
-    // Ingresos Totales, eCPM Bruto y RPM Inventario. En sitios con grossEcpm se lleva a bruto (antes de la comisión de 360playvid):
-    // = impresiones × eCPM bruto / 1000. Si no, es el revenue crudo de 360playvid tal cual está en data.json.
-    grossRevenue: (r.revenue ?? 0) / (fullData.grossEcpm ? 1 - fullData.grossEcpm.platformShare : 1),
-    revenue: (r.revenue ?? 0) * (1 - UWIZER_FEE) // neto: se descuenta nuestro fee (Ingresos Netos y charts)
+    revenue: (r.revenue ?? 0) * (1 - UWIZER_FEE) // data.json guarda el revenue crudo de 360playvid; acá se descuenta nuestro fee para todo lo que se muestra/exporta
   }));
 }
 
@@ -773,9 +728,8 @@ function buildExportData(){
   const rows = getRows();
   const totalInv = rows.reduce((s,r)=>s+r.inventory, 0);
   const totalImpr = rows.reduce((s,r)=>s+r.impression, 0);
-  const totalGross = rows.reduce((s,r)=>s+r.grossRevenue, 0);
   const totalRev = rows.reduce((s,r)=>s+r.revenue, 0);
-  const totalRpm = totalInv > 0 ? (totalGross/totalInv)*1000 : 0;
+  const totalRpm = totalInv > 0 ? (totalRev/totalInv)*1000 : 0;
   const { label: rangeLabel, slug } = getRangeInfo();
   const dateSpan = rows.length ? `${rows[0].date} ${TRANSLATIONS.csvTo[currentLang]} ${rows[rows.length-1].date}` : '';
 
@@ -789,14 +743,13 @@ function buildExportData(){
     ],
     headers: [
       TRANSLATIONS.csvDateCol[currentLang], TRANSLATIONS.lblInventory[currentLang],
-      TRANSLATIONS.lblImpressions[currentLang], TRANSLATIONS.lblRevenue[currentLang],
-      TRANSLATIONS.lblNetRevenue[currentLang], TRANSLATIONS.lblRpm[currentLang]
+      TRANSLATIONS.lblImpressions[currentLang], TRANSLATIONS.lblRevenue[currentLang], TRANSLATIONS.lblRpm[currentLang]
     ],
     dataRows: rows.map(r => {
-      const rpm = r.inventory > 0 ? (r.grossRevenue/r.inventory)*1000 : 0;
-      return [r.date, r.inventory, r.impression, r.grossRevenue, r.revenue, rpm];
+      const rpm = r.inventory > 0 ? (r.revenue/r.inventory)*1000 : 0;
+      return [r.date, r.inventory, r.impression, r.revenue, rpm];
     }),
-    totalRow: [TRANSLATIONS.csvTotal[currentLang], totalInv, totalImpr, totalGross, totalRev, totalRpm]
+    totalRow: [TRANSLATIONS.csvTotal[currentLang], totalInv, totalImpr, totalRev, totalRpm]
   };
 }
 
@@ -840,9 +793,9 @@ function exportXlsx(){
   data.dataRows.forEach(row => aoa.push(row));
   aoa.push(data.totalRow);
   const ws = XLSX.utils.aoa_to_sheet(aoa);
-  // Ingresos Totales (col D), Ingresos Netos (col E) y RPM (col F) con 2 decimales, no el float crudo
+  // Revenue (col D) y RPM (col E) con 2 decimales, no el float crudo
   for (let r = headerRowIdx + 1; r < aoa.length; r++){
-    [3, 4, 5].forEach(c=>{
+    [3, 4].forEach(c=>{
       const cell = ws[XLSX.utils.encode_cell({ r, c })];
       if (cell && cell.t === 'n') cell.z = '0.00';
     });
@@ -872,20 +825,13 @@ function render(){
 
   const totalInv = rows.reduce((s,r)=>s+r.inventory, 0);
   const totalImpr = rows.reduce((s,r)=>s+r.impression, 0);
-  const totalGross = rows.reduce((s,r)=>s+r.grossRevenue, 0);
   const totalRev = rows.reduce((s,r)=>s+r.revenue, 0);
-  const rpm = totalInv > 0 ? (totalGross/totalInv)*1000 : 0; // Ingresos Totales por cada 1.000 llamadas al player
+  const rpm = totalInv > 0 ? (totalRev/totalInv)*1000 : 0;
 
   document.getElementById('kpiInventory').textContent = totalInv.toLocaleString('en-US');
   document.getElementById('kpiImpressions').textContent = totalImpr.toLocaleString('en-US');
   document.getElementById('kpiRpm').textContent = '$' + rpm.toFixed(2);
-  document.getElementById('kpiRevenue').textContent = '$' + totalGross.toFixed(2);
-  document.getElementById('kpiNetRevenue').textContent = '$' + totalRev.toFixed(2);
-  if (fullData.grossEcpm) {
-    // totalGross ya está llevado a bruto en getRows()
-    const ecpm = totalImpr > 0 ? (totalGross/totalImpr)*1000 : 0;
-    document.getElementById('kpiGrossEcpm').textContent = '$' + ecpm.toFixed(2);
-  }
+  document.getElementById('kpiRevenue').textContent = '$' + totalRev.toFixed(2);
 
   renderLineChart(rows);
   renderBarChart(rows);
