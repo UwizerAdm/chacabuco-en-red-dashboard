@@ -158,15 +158,19 @@ por request, solo hay que filtrar un dominio más sobre la misma respuesta.
   buscando el primer día con `inventory > 0 || revenue > 0`. No se borran de
   `data.json` por si hace falta el histórico completo en el futuro. Aplica
   a los 5 sitios por igual porque comparten el mismo `index.html`.
-- **Fee de Uwizer sobre el revenue (ago 2026):** cada `data.json` guarda el
-  `revenue` crudo tal cual lo reporta 360playvid — **no** es el número que
-  ve el publisher. `index.html` descuenta un 12,5% (constante `UWIZER_FEE`
-  en el `<script>`) dentro de `getRows()`, el único punto donde se arma el
-  revenue para todo lo demás (KPI card, ambos charts, tooltips, export
-  CSV/Excel). Por eso el RPM mostrado también es más bajo que
-  `revenue_crudo / inventory * 1000` — usa el revenue ya neto. Si el % del
-  fee cambia, solo hay que tocar `UWIZER_FEE`. El label de esta métrica es
-  "Total Revenue" / "Ingresos Totales" (no "Revenue"/"Ingresos" a secas).
+- **Fee de Uwizer sobre el revenue (ago 2026, cambiado oct 2026):** cada
+  `data.json` guarda el `revenue` crudo tal cual lo reporta 360playvid.
+  Desde oct 2026 el dashboard muestra los dos números en tarjetas separadas:
+  "Total Revenue" / "Ingresos Totales" = revenue crudo de 360playvid, y
+  "Net Revenue" / "Ingresos Netos" = crudo menos el 12,5% (constante
+  `UWIZER_FEE` en el `<script>`). `getRows()` arma ambos campos por fila:
+  `grossRevenue` (crudo) y `revenue` (neto). El RPM usa el revenue crudo
+  (`grossRevenue / inventory * 1000`), así que coincide con el del panel de
+  360playvid. La API no devuelve RPM (solo `inventory`, `impression`,
+  `revenue`, `ecpm`), así que se calcula igual que lo hace el panel. Los
+  charts (Datos diarios → Ingresos Netos, y el de barras) muestran el neto.
+  El export CSV/Excel trae las dos columnas, Ingresos Totales e Ingresos
+  Netos, y el RPM. Si el % del fee cambia, solo hay que tocar `UWIZER_FEE`.
 
 ## Estilo / marca (Uwizer)
 
