@@ -174,6 +174,14 @@ por request, solo hay que filtrar un dominio más sobre la misma respuesta.
   El export CSV/Excel trae las dos columnas, Ingresos Totales e Ingresos
   Netos, y el RPM. Si el % del fee cambia, solo hay que tocar `UWIZER_FEE`.
 
+- **eCPM bruto (oct 2026, solo TSN Necochea):** el eCPM/revenue que reporta
+  360playvid ya viene neto de su comisión (20%). Para los sitios con
+  `grossEcpm: { platformShare: 0.20 }` en `SITES` (`fetch-data.js` → llega a
+  `data.json`), `index.html` muestra una 6ª tarjeta "eCPM Bruto" =
+  `(revenue_crudo / impresiones * 1000) / (1 - platformShare)` (dividir por
+  0,8 = +25%, no +20%). Sin ese campo la tarjeta queda oculta. Para sumarla a
+  otro sitio: agregar el campo en `SITES` y correr el workflow.
+
 ## Estilo / marca (Uwizer)
 
 - Fondo: negro-violeta (`#0a0714`), glow radial violeta en el header.

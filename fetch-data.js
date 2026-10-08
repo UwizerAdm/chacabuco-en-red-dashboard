@@ -43,6 +43,9 @@ const SITES = [
     // Logo cuadrado (isotipo "tsn" + "necochea" abajo), mismo caso que
     // Conexión Migrante: necesita más alto que el default para leerse.
     logo: { type: 'image', file: 'tsn-necochea-logo.png', height: 64 },
+    // Muestra una tarjeta extra con el eCPM bruto, antes de la comisión de
+    // 360playvid: eCPM reportado / (1 - platformShare). Opcional, solo este sitio.
+    grossEcpm: { platformShare: 0.20 },
   },
   {
     slug: 'la-hora',
@@ -174,6 +177,7 @@ async function main() {
       displayName: site.displayName,
       titleAccent: site.titleAccent || null,
       logo: site.logo,
+      grossEcpm: site.grossEcpm || null,
       range_days: daily.length, // historial acumulado total, no una ventana fija
       daily,
       totals: { inventory: totalInv, impression: totalImpr, revenue: totalRev, rpm, fillrate },
