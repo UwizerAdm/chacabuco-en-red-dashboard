@@ -166,8 +166,10 @@ por request, solo hay que filtrar un dominio más sobre la misma respuesta.
   `UWIZER_FEE` en el `<script>`). `getRows()` arma ambos campos por fila:
   `grossRevenue` (crudo) y `revenue` (neto). El RPM usa el revenue crudo
   (`grossRevenue / inventory * 1000`), así que coincide con el del panel de
-  360playvid. La API no devuelve RPM (solo `inventory`, `impression`,
-  `revenue`, `ecpm`), así que se calcula igual que lo hace el panel. Los
+  360playvid. `fetch-data.js` solo guarda `inventory`, `impression`,
+  `revenue` y `ecpm` (no se verificó si la API manda además un campo de
+  RPM); igual, para cualquier rango de varios días el RPM hay que
+  calcularlo sobre los totales, como hace el panel. Los
   charts (Datos diarios → Ingresos Netos, y el de barras) muestran el neto.
   El export CSV/Excel trae las dos columnas, Ingresos Totales e Ingresos
   Netos, y el RPM. Si el % del fee cambia, solo hay que tocar `UWIZER_FEE`.
