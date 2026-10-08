@@ -166,7 +166,7 @@ por request, solo hay que filtrar un dominio más sobre la misma respuesta.
   `UWIZER_FEE` en el `<script>`). `getRows()` arma ambos campos por fila:
   `grossRevenue` (crudo) y `revenue` (neto). El RPM usa el revenue crudo
   (`grossRevenue / inventory * 1000`), así que coincide con el del panel de
-  360playvid. `fetch-data.js` solo guarda `inventory`, `impression`,
+  360playvid (salvo en sitios con `grossEcpm`, ver abajo). `fetch-data.js` solo guarda `inventory`, `impression`,
   `revenue` y `ecpm` (no se verificó si la API manda además un campo de
   RPM); igual, para cualquier rango de varios días el RPM hay que
   calcularlo sobre los totales, como hace el panel. Los
@@ -179,15 +179,19 @@ por request, solo hay que filtrar un dominio más sobre la misma respuesta.
   `grossEcpm: { platformShare: 0.20 }` en `SITES` (`fetch-data.js` → llega a
   `data.json`), `index.html` muestra una 6ª tarjeta "eCPM Bruto" =
   `(revenue_crudo / impresiones * 1000) / (1 - platformShare)` (dividir por
-  0,8 = +25%, no +20%). En esos sitios "Ingresos Totales" (y la columna del
-  export) también se muestra en bruto: `grossRevenue` en
+  0,8 = +25%, no +20%). En esos sitios "Ingresos Totales" (y por lo tanto el
+  RPM Inventario y las columnas del export) también se muestran en bruto: `grossRevenue` en
   `getRows()` = revenue crudo / (1 - platformShare) = impresiones × eCPM
   bruto / 1000. "Ingresos Netos" NO cambia: sigue siendo revenue crudo de
   360playvid × (1 - UWIZER_FEE), que es lo que efectivamente se le paga.
-  El RPM tampoco cambia: usa `playvidRevenue` (crudo, sin llevar a bruto) para
-  coincidir con el del panel de 360playvid — decisión de Juani (oct 2026).
   Sin ese campo la tarjeta queda oculta y todo se calcula como en el resto.
   Para sumarlo a otro sitio: agregar el campo en `SITES` y correr el workflow.
+
+- **RPM Inventario (oct 2026):** la tarjeta se llama "RPM Inventory" / "RPM
+  Inventario" porque no es un RPM por página vista (360playvid no tiene ese
+  dato): es Ingresos Totales / inventario (llamadas al player) × 1000. En
+  sitios con `grossEcpm` usa los Ingresos Totales en bruto, así que no
+  coincide con el RPM del panel de 360playvid — decisión de Juani.
 
 ## Estilo / marca (Uwizer)
 
