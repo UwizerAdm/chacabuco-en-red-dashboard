@@ -744,7 +744,9 @@ function getRows(){
   return rows.map(r => ({
     ...r,
     inventory: r.inventory ?? r.impression, // fallback por si data.json todavía no tiene el campo nuevo
-    grossRevenue: r.revenue ?? 0, // revenue crudo de 360playvid, tal cual está en data.json (Ingresos Totales y RPM)
+    // Ingresos Totales y RPM. En sitios con grossEcpm se lleva a bruto (antes de la comisión de 360playvid):
+    // = impresiones × eCPM bruto / 1000. Si no, es el revenue crudo de 360playvid tal cual está en data.json.
+    grossRevenue: (r.revenue ?? 0) / (fullData.grossEcpm ? 1 - fullData.grossEcpm.platformShare : 1),
     revenue: (r.revenue ?? 0) * (1 - UWIZER_FEE) // neto: se descuenta nuestro fee (Ingresos Netos y charts)
   }));
 }
@@ -880,9 +882,9 @@ function render(){
   document.getElementById('kpiRevenue').textContent = '$' + totalGross.toFixed(2);
   document.getElementById('kpiNetRevenue').textContent = '$' + totalRev.toFixed(2);
   if (fullData.grossEcpm) {
-    // grossRevenue / impresiones * 1000 = eCPM que reporta 360playvid (ya neto de su comisión); se lleva a bruto
+    // totalGross ya está llevado a bruto en getRows()
     const ecpm = totalImpr > 0 ? (totalGross/totalImpr)*1000 : 0;
-    document.getElementById('kpiGrossEcpm').textContent = '$' + (ecpm / (1 - fullData.grossEcpm.platformShare)).toFixed(2);
+    document.getElementById('kpiGrossEcpm').textContent = '$' + ecpm.toFixed(2);
   }
 
   renderLineChart(rows);
