@@ -182,14 +182,16 @@ por request, solo hay que filtrar un dominio más sobre la misma respuesta.
   `grossEcpm: { platformShare: 0.20 }` para este sitio (llega a `data.json`).
   - "eCPM Bruto" = (revenue crudo / impresiones × 1000) / (1 - platformShare)
     (dividir por 0,8 = +25%, no +20%).
-  - "Ingresos Totales" = revenue crudo / (1 - platformShare) = impresiones ×
-    eCPM bruto / 1000 (`grossRevenue` en `getRows()`).
+  - "Ingresos Totales" = revenue crudo de 360playvid tal cual (`totalRevenue`
+    en `getRows()`). Antes se llevaba a bruto (÷0,8) y la diferencia con
+    Netos daba 30%; Juani pidió (oct 2026) que no se lleve a bruto, así la
+    diferencia con Netos es solo el fee de Uwizer (12,5%).
   - "Ingresos Netos" = revenue crudo × (1 - UWIZER_FEE) — lo que
-    efectivamente se le paga (= Ingresos Totales × 0,70).
+    efectivamente se le paga (= Ingresos Totales × 0,875).
   - "RPM Inventory" / "RPM Inventario" = Ingresos Totales / inventario ×
     1000. Se llama así porque no es un RPM por página vista (360playvid no
-    tiene ese dato). No coincide con el RPM del panel de 360playvid —
-    decisión de Juani.
+    tiene ese dato).
+  - El eCPM Bruto es la única métrica que se sigue llevando a bruto.
   - Charts: muestran Ingresos Netos. Export CSV/Excel: Ingresos Totales,
     Ingresos Netos y RPM Inventario.
 

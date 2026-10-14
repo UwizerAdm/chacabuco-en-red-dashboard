@@ -744,9 +744,8 @@ function getRows(){
   return rows.map(r => ({
     ...r,
     inventory: r.inventory ?? r.impression, // fallback por si data.json todavía no tiene el campo nuevo
-    // Ingresos Totales, eCPM Bruto y RPM Inventario. En sitios con grossEcpm se lleva a bruto (antes de la comisión de 360playvid):
-    // = impresiones × eCPM bruto / 1000. Si no, es el revenue crudo de 360playvid tal cual está en data.json.
-    grossRevenue: (r.revenue ?? 0) / (fullData.grossEcpm ? 1 - fullData.grossEcpm.platformShare : 1),
+    // Ingresos Totales y RPM Inventario: revenue crudo de 360playvid tal cual está en data.json (ya neto de su comisión)
+    totalRevenue: r.revenue ?? 0,
     revenue: (r.revenue ?? 0) * (1 - UWIZER_FEE) // neto: se descuenta nuestro fee (Ingresos Netos y charts)
   }));
 }
@@ -773,9 +772,9 @@ function buildExportData(){
   const rows = getRows();
   const totalInv = rows.reduce((s,r)=>s+r.inventory, 0);
   const totalImpr = rows.reduce((s,r)=>s+r.impression, 0);
-  const totalGross = rows.reduce((s,r)=>s+r.grossRevenue, 0);
+  const totalRevenue = rows.reduce((s,r)=>s+r.totalRevenue, 0);
   const totalRev = rows.reduce((s,r)=>s+r.revenue, 0);
-  const totalRpm = totalInv > 0 ? (totalGross/totalInv)*1000 : 0;
+  const totalRpm = totalInv > 0 ? (totalRevenue/totalInv)*1000 : 0;
   const { label: rangeLabel, slug } = getRangeInfo();
   const dateSpan = rows.length ? `${rows[0].date} ${TRANSLATIONS.csvTo[currentLang]} ${rows[rows.length-1].date}` : '';
 
@@ -793,10 +792,10 @@ function buildExportData(){
       TRANSLATIONS.lblNetRevenue[currentLang], TRANSLATIONS.lblRpm[currentLang]
     ],
     dataRows: rows.map(r => {
-      const rpm = r.inventory > 0 ? (r.grossRevenue/r.inventory)*1000 : 0;
-      return [r.date, r.inventory, r.impression, r.grossRevenue, r.revenue, rpm];
+      const rpm = r.inventory > 0 ? (r.totalRevenue/r.inventory)*1000 : 0;
+      return [r.date, r.inventory, r.impression, r.totalRevenue, r.revenue, rpm];
     }),
-    totalRow: [TRANSLATIONS.csvTotal[currentLang], totalInv, totalImpr, totalGross, totalRev, totalRpm]
+    totalRow: [TRANSLATIONS.csvTotal[currentLang], totalInv, totalImpr, totalRevenue, totalRev, totalRpm]
   };
 }
 
@@ -872,18 +871,18 @@ function render(){
 
   const totalInv = rows.reduce((s,r)=>s+r.inventory, 0);
   const totalImpr = rows.reduce((s,r)=>s+r.impression, 0);
-  const totalGross = rows.reduce((s,r)=>s+r.grossRevenue, 0);
+  const totalRevenue = rows.reduce((s,r)=>s+r.totalRevenue, 0);
   const totalRev = rows.reduce((s,r)=>s+r.revenue, 0);
-  const rpm = totalInv > 0 ? (totalGross/totalInv)*1000 : 0; // Ingresos Totales por cada 1.000 llamadas al player
+  const rpm = totalInv > 0 ? (totalRevenue/totalInv)*1000 : 0; // Ingresos Totales por cada 1.000 llamadas al player
 
   document.getElementById('kpiInventory').textContent = totalInv.toLocaleString('en-US');
   document.getElementById('kpiImpressions').textContent = totalImpr.toLocaleString('en-US');
   document.getElementById('kpiRpm').textContent = '$' + rpm.toFixed(2);
-  document.getElementById('kpiRevenue').textContent = '$' + totalGross.toFixed(2);
+  document.getElementById('kpiRevenue').textContent = '$' + totalRevenue.toFixed(2);
   document.getElementById('kpiNetRevenue').textContent = '$' + totalRev.toFixed(2);
   if (fullData.grossEcpm) {
-    // totalGross ya está llevado a bruto en getRows()
-    const ecpm = totalImpr > 0 ? (totalGross/totalImpr)*1000 : 0;
+    // eCPM Bruto: se lleva a bruto (antes de la comisión de 360playvid) dividiendo por (1 - platformShare)
+    const ecpm = totalImpr > 0 ? (totalRevenue/totalImpr)*1000 / (1 - fullData.grossEcpm.platformShare) : 0;
     document.getElementById('kpiGrossEcpm').textContent = '$' + ecpm.toFixed(2);
   }
 
