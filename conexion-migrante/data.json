@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-14T12:31:35.124Z",
+  "updated_at": "2026-10-15T12:13:30.121Z",
   "slug": "conexion-migrante",
   "domain": "conexionmigrante.com",
   "displayName": "Conexión Migrante",
@@ -10,7 +10,7 @@
     "height": 64
   },
   "grossEcpm": null,
-  "range_days": 56,
+  "range_days": 57,
   "daily": [
     {
       "date": "2026-08-19",
@@ -403,13 +403,20 @@
       "impression": 1065,
       "revenue": 1.2863073300000003,
       "ecpm": 1.2078003098591548
+    },
+    {
+      "date": "2026-10-14",
+      "inventory": 1188,
+      "impression": 1065,
+      "revenue": 1.09743354,
+      "ecpm": 1.030454028169014
     }
   ],
   "totals": {
-    "inventory": 74235,
-    "impression": 40785,
-    "revenue": 62.027469700000005,
-    "rpm": 0.8355555964167847,
-    "fillrate": 54.94039199838351
+    "inventory": 75423,
+    "impression": 41850,
+    "revenue": 63.12490324,
+    "rpm": 0.8369450066955704,
+    "fillrate": 55.487053020961774
   }
 }
