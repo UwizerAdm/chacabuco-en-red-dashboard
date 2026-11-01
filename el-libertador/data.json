@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-31T13:09:46.692Z",
+  "updated_at": "2026-11-01T13:53:22.662Z",
   "slug": "el-libertador",
   "domain": "diarioellibertador.com.ar",
   "displayName": "El Libertador de Corrientes",
@@ -10,7 +10,7 @@
     "height": 64
   },
   "grossEcpm": null,
-  "range_days": 54,
+  "range_days": 55,
   "daily": [
     {
       "date": "2026-09-07",
@@ -389,13 +389,20 @@
       "impression": 3171,
       "revenue": 0.9001507200000002,
       "ecpm": 0.2838696688741722
+    },
+    {
+      "date": "2026-10-31",
+      "inventory": 2699,
+      "impression": 2452,
+      "revenue": 0.7644042000000001,
+      "ecpm": 0.31174722675367045
     }
   ],
   "totals": {
-    "inventory": 55511,
-    "impression": 72325,
-    "revenue": 30.800550679999997,
-    "rpm": 0.5548549058745113,
-    "fillrate": 130.28949217272253
+    "inventory": 58210,
+    "impression": 74777,
+    "revenue": 31.56495488,
+    "rpm": 0.5422600048101701,
+    "fillrate": 128.46074557636143
   }
 }
