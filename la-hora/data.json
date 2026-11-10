@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-11-09T16:56:57.759Z",
+  "updated_at": "2026-11-10T15:16:29.498Z",
   "slug": "la-hora",
   "domain": "lahora.com.ec",
   "displayName": "La Hora",
@@ -10,7 +10,7 @@
     "height": 64
   },
   "grossEcpm": null,
-  "range_days": 82,
+  "range_days": 83,
   "daily": [
     {
       "date": "2026-08-19",
@@ -585,13 +585,20 @@
       "impression": 2502,
       "revenue": 1.2025668199999993,
       "ecpm": 0.4806422142286169
+    },
+    {
+      "date": "2026-11-09",
+      "inventory": 4632,
+      "impression": 3159,
+      "revenue": 1.6397531149999995,
+      "ecpm": 0.5190734773662551
     }
   ],
   "totals": {
-    "inventory": 373505,
-    "impression": 363413,
-    "revenue": 224.19399080999997,
-    "rpm": 0.6002436133652828,
-    "fillrate": 97.29802813884687
+    "inventory": 378137,
+    "impression": 366572,
+    "revenue": 225.83374392499996,
+    "rpm": 0.5972273115960617,
+    "fillrate": 96.94158466375943
   }
 }
