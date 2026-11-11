@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-11-10T15:16:29.497Z",
+  "updated_at": "2026-11-11T14:46:40.076Z",
   "slug": "tsn-necochea",
   "domain": "tsnnecochea.com.ar",
   "displayName": "TSN Necochea",
@@ -12,7 +12,7 @@
   "grossEcpm": {
     "platformShare": 0.2
   },
-  "range_days": 83,
+  "range_days": 84,
   "daily": [
     {
       "date": "2026-08-19",
@@ -594,13 +594,20 @@
       "impression": 4288,
       "revenue": 2.182861205,
       "ecpm": 0.509062781016791
+    },
+    {
+      "date": "2026-11-10",
+      "inventory": 7675,
+      "impression": 6566,
+      "revenue": 3.443050037000001,
+      "ecpm": 0.5243755767590618
     }
   ],
   "totals": {
-    "inventory": 357862,
-    "impression": 381220,
-    "revenue": 223.23126153300004,
-    "rpm": 0.6237914657968715,
-    "fillrate": 106.52709703740548
+    "inventory": 365537,
+    "impression": 387786,
+    "revenue": 226.67431157000004,
+    "rpm": 0.6201131802526147,
+    "fillrate": 106.08666154178647
   }
 }
